@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.2.1'
+SYSTEM_VERSION = '2.2.2'
 
 import datetime
 
@@ -98,5 +98,8 @@ class Note(db.Model):
     member_num = db.IntegerProperty(indexed=True)
     title = db.StringProperty(required=False, indexed=True)
     content = db.TextProperty(required=False)
+    body = db.TextProperty(required=False)
+    length = db.IntegerProperty(indexed=False, default=0)
+    edits = db.IntegerProperty(indexed=False, default=1)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)

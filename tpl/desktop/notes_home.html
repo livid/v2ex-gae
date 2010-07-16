@@ -11,6 +11,15 @@
         <div id="Content">
             <div class="box">
                 <div class="cell"><div class="fr"><div class="sep5"></div><a href="/notes/new" class="super normal button">新建</a><div class="sep5"></div></div><div class="sep5"></div><span class="fade">记事本</span><div class="sep5"></div></div>
+                {% if notes %}
+                {% for note in notes %}
+                <div class="cell">
+                <span class="bigger"><a href="/notes/{{ note.num }}" class="black">{{ note.title|escape }}</a></span>
+                <div class="sep10"></div>
+                <span class="fade">{{ note.length }} 个字符，创建于 {{ note.created|timesince }} 前，{{ note.edits }} 次编辑</span>
+                </div>
+                {% endfor %}
+                {% else %}
                 <div class="inner">
                     <div align="center">
                         <div class="sep20"></div>
@@ -21,7 +30,8 @@
                         <span class="fade">V2EX Notes 是一个简单可靠的云端记事本，你的数据绝对安全，随时可以访问。</span>
                         <div class="sep20"></div>
                     </div>
-                </div>
+                </div>    
+                {% endif %}
             </div>
         </div>
     <div class="c"></div>

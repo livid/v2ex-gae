@@ -38,7 +38,7 @@ form {
 }
 
 code {
-	font-family: "Menlo", "Panic Sans", "Luxi Mono", "Courier New", Monaco;
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", Monaco;
 }
 
 ul {
@@ -243,6 +243,12 @@ td.avatar_mini {
 	display: block;
 }
 
+.note {
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", "Helvetica Neue", "Tahoma", "Verdana";
+	font-size: 14px;
+	line-height: 20px;
+}
+
 .bigger {
 	font-size: 16px;
 }
@@ -354,7 +360,7 @@ td.avatar_mini {
 	font-size: 14px;
 	border: 1px solid #ccc;
 	width: 240px;
-	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
 .sll:focus {
@@ -371,7 +377,7 @@ td.avatar_mini {
 	font-size: 14px;
 	border: 1px solid #ccc;
 	width: 630px;
-	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
 .sll:focus {
@@ -390,7 +396,7 @@ td.avatar_mini {
 	display: block;
 	width: 240px;
 	height: 120px;
-	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
 .ml:focus {
@@ -409,7 +415,7 @@ td.avatar_mini {
 	display: block;
 	width: 630px;
 	height: 160px;
-	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
 .mll:focus {
