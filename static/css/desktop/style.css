@@ -1,0 +1,424 @@
+@charset "utf-8"
+
+/*
+	V2EX CSS (Desktop)
+	
+	Author: Livid <v2ex.livid@me.com>
+	Web: http://picky.olivida.com/
+	
+	This is the desktop configuration of style for Project Babel.
+	
+	The best way to wipe IE6 from this planet is to forget it all since the beginning of your every new project.
+*/
+
+html {
+	height: 100%;
+}
+
+body {
+	padding: 0px;
+	margin: 0px;
+	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	background-color: #fff;
+	-webkit-text-size-adjust: none;
+}
+
+h1 {
+	font-size: 24px;
+	line-height: 24px;
+	font-weight: bold;
+	padding: 10px 0px 10px 0px;
+	margin: 0px;
+}
+
+form {
+	display: inline;
+	padding: none;
+	margin: none;
+}
+
+code {
+	font-family: "Menlo", "Panic Sans", "Luxi Mono", "Courier New", Monaco;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+ul li {
+	list-style: square;
+	padding: 0px;
+	margin: 0px 0px 0px 1.2em;
+}
+
+a:link {
+	color: #385f8a;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:active {
+	color: #385f8a;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #7ca0c9;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #385f8a;
+	text-decoration: underline;
+}
+
+a.white:link, a.white:visited, a.white:active {
+	font-weight: bold;
+	color: rgba(255, 255, 255, 0.5);
+	text-decoration: none;
+}
+
+a.white:hover {
+	font-weight: bold;
+	color: rgba(255, 255, 255, 1);
+	text-decoration: none;;
+}
+
+a.black:link, a.black:visited, a.black:active {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+}
+
+a.black:hover {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: underline;
+	text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+a.dark:link, a.dark:visited, a.dark:active {
+	color: gray;
+	text-decoration: none;
+}
+
+a.dark:hover {
+	color: #385f8a;
+	text-decoration: underline;
+}
+
+/* IDs */
+
+#Top {
+	background-color: #334;
+	height: 40px;
+	background-image: url("/static/img/bg_top.png");
+}
+
+#TopMain {
+	width: 960px;
+	height: 40px;
+	text-align: center;
+	margin: 0px auto 0px auto;
+}
+
+#Logo {
+	font-family: "Arial Black", "Helvetica Neue";
+	font-size: 24px;
+	line-height: 24px;
+	padding-top: 8px;
+	letter-spacing: 0px;
+	color: #fff;
+	text-align: left;
+	text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+	margin-left: 20px;
+}
+
+#Navigation {
+	float: right;
+	text-align: right;
+	font-size: 14px;
+	color: #fff;
+	margin-top: 14px;
+	line-height: 14px;
+}
+
+#Navigation ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+#Navigation ul li {
+	list-style: none;
+	float: left;
+	margin-left: 10px;
+}
+
+#Wrapper {
+	background-image: url("/static/img/bg.png");
+	border-top: 2px solid #889;
+}
+
+#Main {
+	width: 960px;
+	margin: 0px auto 0px auto;
+	padding: 12px 0px 30px 0px;
+}
+
+#Sidebar {
+	float: left;
+	width: 0px;
+	background-color: red;
+}
+
+#Rightbar {
+	float: right;
+	width: 270px;
+	padding: 10px 0px 10px 10px;
+}
+
+#Content {
+	margin: 0px 280px 0px 0px;
+	padding: 10px;
+}
+
+#Bottom {
+	background-color: #fff;
+	border-top: 1px solid #ccc;
+}
+
+#BottomMain {
+	margin: 0px auto 0px auto;
+	width: 920px;
+	padding: 20px 0px 20px 0px;
+	font-size: 12px;
+	color: #e2e2e2;
+}
+
+/* CLASSes */
+
+.box {
+	background-color: #fff;
+	border: 1px solid #ccc;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.glass {
+	background-color: transparent;
+	border: 1px solid transparent;
+}
+
+.box .inner, .glass .inner {
+	padding: 10px;
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.box .cell {
+	padding: 10px;
+	border-bottom: 1px solid #e2e2e2;
+	font-size: 12px;
+	line-height: 13px;
+}
+
+td.avatar {
+	width: 48px;
+	text-align: center;
+	vertical-align: top;
+}
+
+td.avatar_mini {
+	width: 24px;
+	text-align: center;
+	vertical-align: top;
+}
+
+.created {
+	font-size: 10px;
+	font-weight: bold;
+	color: #ccc;
+	display: block;
+}
+
+.bigger {
+	font-size: 16px;
+}
+
+.header, .footer {
+	font-size: 12px;
+	line-height: 18px;
+	color: #aaa;
+}
+
+.content {
+	font-size: 14px;
+	line-height: 20px;
+	color: #000;
+}
+
+.green {
+	color: #393;
+}
+
+.fade {
+	color: #999;
+}
+
+.snow {
+	color: rgba(0, 0, 0, 0.15);
+}
+
+.chevron {
+	color: #666;
+	font-family: "Lucida Grande";
+}
+
+.sep3 {
+	height: 3px;
+}
+
+.sep5 {
+	height: 5px;
+}
+
+.sep10 {
+	height: 10px;
+}
+
+.sep20 {
+	height: 20px;
+}
+
+.c {
+	clear: both;
+}
+
+.fr {
+	float: right;
+}
+
+.item_node {
+	background-color: #fff;
+	font-size: 14px;
+	line-height: 14px;
+	padding: 2px 7px 2px 7px;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
+	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
+	display: inline-block;
+}
+
+.topics td, .topics th {
+	line-height: 24px;
+	font-size: 14px;
+}
+
+.topics th {
+	color: #ccc;
+	font-weight: bold;
+}
+
+.topics .odd {
+	background-color: transparent;
+}
+
+.topics .even {
+	background-color: #f9f9f9;
+}
+
+.topics .lend {
+	-moz-border-radius: 3px 0px 0px 3px;
+}
+
+.topics .rend {
+	-moz-border-radius: 0px 3px 3px 0px;
+}
+
+.super.button { background-image: url("/static/img/bg_blended.png"); padding: 4px 15px 4px 15px; border: 1px solid rgba(0,0,0,.25); border-bottom-color: rgba(0,0,0,.35); -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; font-size: 12px; line-height: 12px; outline: none; }
+.normal.button { background-color: #f5f5f5; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; font-weight: bold; -moz-box-shadow: 0px 1px 3px rgba(66, 66, 77, 0.4); }
+.normal.button:hover { background-color: #fff; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; text-decoration: none; font-weight: bold; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.2); }
+.normal.button:active { background-color: #e2e2e2; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; text-decoration: none; font-weight: bold; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.2); }
+
+/* FORM */
+
+.sl {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	width: 240px;
+	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+}
+
+.sll:focus {
+	border: 1px solid rgba(128, 128, 160, 0.6);
+	-moz-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	-webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	outline: none;
+}
+
+.sll {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	width: 630px;
+	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+}
+
+.sll:focus {
+	border: 1px solid rgba(128, 128, 160, 0.6);
+	-moz-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	-webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	outline: none;
+}
+
+.ml {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	display: block;
+	width: 240px;
+	height: 120px;
+	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+}
+
+.ml:focus {
+	border: 1px solid rgba(128, 128, 160, 0.6);
+	-moz-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	-webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	outline: none;
+}
+
+.mll {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	display: block;
+	width: 630px;
+	height: 160px;
+	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+}
+
+.mll:focus {
+	border: 1px solid rgba(128, 128, 160, 0.6);
+	-moz-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	-webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
+	outline: none;
+}
+
+.tall {
+	height: 400px;
+}

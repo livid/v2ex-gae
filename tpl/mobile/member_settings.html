@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>V2EX › Settings</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+		<div class="section"><a href="/" class="black">V2EX</a> › 选项及设置</div>
+		<div class="cell">
+			<form action="/settings" method="post">
+			{% if errors %}
+			<strong>请解决以下错误之后继续。</strong>
+			<div class="sep10"></div>
+			<ul>
+				{% if member_email_error %}
+				<li>{{ member_email_error_message }}</li>
+				{% endif %}
+				{% if member_website_error %}
+				<li>{{ member_website_error_message }}</li>
+				{% endif %}
+				{% if member_twitter_error %}
+				<li>{{ member_twitter_error_message }}</li>
+				{% endif %}
+				{% if member_tagline_error %}
+				<li>{{ member_tagline_error_message }}</li>
+				{% endif %}
+			</ul>
+			{% endif %}
+			<table cellpadding="5" cellspacing="0" border="0">
+			    <tr>
+			        <td width="80" align="right">
+			            用户名
+			        </td>
+			        <td width="200" align="left">
+			            {{ member_username|escape }}
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            电子邮件地址
+			        </td>
+			        <td width="200" align="left">
+			            <input type="text" class="sl" name="email" value="{{ member_email|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            个人网站
+			        </td>
+			        <td width="200" align="left">
+			            <input type="text" class="sl" name="website" value="{{ member_website|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            Twitter 用户名
+			        </td>
+			        <td width="200" align="left">
+			            <input type="text" class="sl" name="twitter" value="{{ member_twitter|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            个人签名
+			        </td>
+			        <td width="200" align="left">
+			            <input type="text" class="sl" name="tagline" value="{{ member_tagline|escape }}" />
+			        </td>
+			    </tr>
+                <tr>
+			        <td width="80" align="right">
+			        </td>
+			        <td width="200" align="left">
+			            <input type="submit" value="更改设置" class="btn" />
+			        </td>
+			    </tr>
+			</table>
+            </form>
+		</div>
+		<div class="section">头像设置</div>
+		<div class="cell">	
+			{% if member.avatar_mini_url %}
+			<table cellpadding="5" cellspacing="0" border="0">
+			    <tr>
+			        <td width="80" align="right">
+			            当前的头像
+			        </td>
+			        <td width="200" align="left">
+			            <img src="{{ member.avatar_large_url }}" align="absmiddle" />&nbsp; 
+						<img src="{{ member.avatar_normal_url }}" align="absmiddle" />&nbsp; 
+						<img src="{{ member.avatar_mini_url }}" align="absmiddle" />&nbsp; 
+			        </td>
+			    </tr>
+				<tr>
+			        <td width="80" align="right">
+			            
+			        </td>
+			        <td width="200" align="left">
+			            <a href="/settings/avatar">上传新头像</a>
+			        </td>
+			    </tr>
+			</table>
+            {% else %}
+            目前尚未上传头像。
+            <div class="sep10"></div>
+            <a href="/settings/avatar">现在就上传</a>
+            {% endif %}
+		</div>
+		<div class="section">密码设置</div>
+		<div class="cell">
+            <form action="/settings/password" method="post">
+            {% if password_error %}
+			<strong>请解决以下错误之后继续。</strong>
+			<div class="sep10"></div>
+			<ul>
+				{% if password_error %}
+				<li>{{ password_error_message }}</li>
+				{% endif %}
+			</ul>
+			{% else %}
+			<strong class="fade">如果不希望修改密码，请留空以下。</strong>
+			{% endif %}
+			<div class="sep5"></div>
+			<table cellpadding="5" cellspacing="0" border="0">
+			    <tr>
+			        <td width="80" align="right">
+			            当前密码
+			        </td>
+			        <td width="200" align="left">
+			            <input type="password" class="sl" name="password_current" value="{{ password_current|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            新密码
+			        </td>
+			        <td width="200" align="left">
+			            <input type="password" class="sl" name="password_new" value="{{ password_new|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			        </td>
+			        <td width="200" align="left">
+			            <input type="submit" value="更改密码" class="btn" />
+			        </td>
+			    </tr>
+			</table>
+            </form>
+            {% if message %}
+            <div class="sep"></div>
+            {{ message }}
+            {% endif %}
+		</div>
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

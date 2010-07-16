@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>{% if topic %}V2EX › {{ topic.title|escape }}{% else %}V2EX › Topic Not Found{% endif %}</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+        <div class="section"><a href="/" class="black">V2EX</a> › <a href="/go/{{ node.name }}" class="black">{{ node.title }}</a></div>
+        <div class="cell">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+    			<td valign="top" class="avatar"><a href="/member/{{ topic.created_by }}">{% if topic.member.avatar_normal_url %}<img src="{{ topic.member.avatar_normal_url }}" align="absmiddle" border="0" />{% else %}<img src="/static/img/avatar_normal.png" align="absmiddle" border="0" />{% endif %}</a></td>
+    			<td style="padding-left: 5px" valign="top">
+    			    <div class="fr"><span class="snow">{% if member %}{% ifequal member.num 1 %}<a href="/edit/topic/{{ topic.num }}">EDIT</a> | <a href="/backstage/tidy/topic/{{ topic.num }}">TIDY</a>{% endifequal %}{% endif %}</span></div>
+    			    <h1>{{ topic.title|escape }}</h1>
+    			    <div class="sep5"></div>
+                    <span class="fade">By <a href="/member/{{ topic.created_by }}">{{ topic.created_by }}</a>{% if topic.source %} <span class="fade">via {{ topic.source }}</span>{% endif %} at {{ topic.created|timesince }} ago - {{ topic.hits }} views</span>
+                    <div class="sep10"></div>
+                    {{ topic.content|escape|imgly|mentions|urlize|linebreaksbr }}
+    			</td>
+    			</tr>
+    		</table>
+        </div>
+		<div class="cell">
+        <strong class="fade">共收到 {{ topic.replies }} 条回复</strong>
+        </div>
+        {% for reply in replies %}
+        <div class="cell">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+    			<td valign="top" class="avatar_mini">{% if reply.member.avatar_mini_url %}<img src="{{ reply.member.avatar_mini_url }}" align="absmiddle" />{% else %}<img src="/static/img/avatar_mini.png" align="absmiddle" />{% endif %}</td>
+    			<td style="padding-left: 5px" valign="top"><div class="fr"><span class="ago">#{{ forloop.counter }} - {{ reply.created|timesince }} ago{% ifequal member.num 1 %} | <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">DEL</a> | <a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a>{% endifequal %}</span></div>
+    				<a href="/member/{{ reply.created_by|escape }}">{{ reply.created_by|escape }}</a>{% if reply.source %} <span class="fade">via {{ reply.source }}</span>{% endif %}
+    				<div class="sep5"></div>
+    				{{ reply.content|escape|imgly|mentions|urlize|linebreaksbr }}
+    			</td>
+    			</tr>
+    		</table>
+        </div>
+        {% endfor %}
+        {% if member %}
+        <div class="cell">
+        {% if errors %}
+        <strong class="black">{{ reply_content_error_message }}</strong>
+        {% else %}
+        <span class="fade">现在就加盖一层</span>{% endif %}<form action="/t/{{ topic.num }}" method="post">
+        <div class="sep5"></div>
+        <textarea name="content" class="mll">{{ reply_content|escape }}</textarea>
+        <div class="sep5"></div>
+        <input type="submit" value="Reply" />
+        </textarea></form>
+        </div>
+        {% else %}
+        <div class="cell">
+        希望参与讨论？请先 <a href="/signin">登入</a> 或 <a href="/signup">注册</a>
+        </div>
+        {% endif %}
+	</div>
+	{% include 'common/bottom.html' %}
+	{% include 'common/ads.html' %}
+</body>
+</html>

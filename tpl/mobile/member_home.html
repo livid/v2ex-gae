@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>{% if one %}V2EX › {{ one.username|escape }}{% else %}V2EX › Member Not Found{% endif %}</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+		{% if one %}
+		<div class="section"><div class="fr">第 {{ one.num }} 号会员，于 {{ one.created|timezone:8|date:"Y-n-j" }} 加入</div><a href="/" class="black">V2EX</a> › {{ one.username|escape }}</a></div>
+		<div class="cell">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+				<td valign="top" class="avatar">{% if one.avatar_normal_url %}<img src="{{ one.avatar_normal_url }}" align="absmiddle" />{% endif %}</td>
+				<td style="padding-left: 8px" valign="top">
+					<h1>{{ one.username|escape }}</h1>
+					{% ifnotequal one.website '' %}
+					<div class="sep10"></div>
+			        个人网站 <a href="{{ one.website }}" target="_blank">{{ one.website }}</a>
+					{% endifnotequal %}
+					{% ifnotequal one.twitter '' %}
+					<div class="sep10"></div>
+			        Twitter @<a href="https://twitter.com/{{ one.twitter }}" target="_blank">{{ one.twitter }}</a>
+					{% endifnotequal %}
+				</td>
+				</tr>
+			</table>
+		</div>
+		{% for topic in topics %}
+        	<div class="cell">
+				<table cellpadding="5" cellspacing="0" border="0">
+				    <tr>
+				        <td width="80" align="right">{% if topic.node %}<a href="/go/{{ topic.node.name }}">{{ topic.node.title }}</a>{% endif %}</td>
+				        <td align="left"><a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a>{% ifequal topic.replies 0 %}{% else %}<small class="fade"> &nbsp;收到 {{ topic.replies }} 回复</small>{% endifequal %}</td>
+				    </tr>
+			    </table>
+			</div>
+		{% endfor %}
+		{% else %}
+        <div class="section"><a href="/" class="black">V2EX</a> › Member Not Found</div>
+        {% endif %}
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

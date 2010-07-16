@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>V2EX › 最近的 50 个主题</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+	<div id="Main">
+		<div class="section"><a href="/" class="black">V2EX</a> › 最近的 50 个主题</div>
+		{% for topic in recent %}
+		<div class="cell">
+		<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+			<td valign="top" class="avatar"><a href="/member/{{ topic.created_by }}">{% if topic.member.avatar_normal_url %}<img src="{{ topic.member.avatar_normal_url }}" align="absmiddle" border="0" />{% else %}<img src="/static/img/avatar_normal.png" align="absmiddle" border="0" />{% endif %}</a></td>
+			<td style="padding-left: 8px" valign="top">
+				<span class="fade"><a href="/member/{{ topic.created_by|escape }}">{{ topic.created_by|escape }}</a>{% if topic.node_name %} in <a href="/go/{{ topic.node_name }}">{{ topic.node_title|escape }}</a>{% endif %}{% ifequal topic.replies 0 %}{% else %}<small class="fade"> &nbsp;收到 {{ topic.replies }} 回复</small>{% endifequal %}</span>
+				<div class="sep5"></div>
+				<span class="bigger"><a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a></span>
+				<span class="created">{{ topic.last_touched|timesince }} ago</span>
+			</td>
+			</tr>
+		</table>
+		</div>
+		{% endfor %}
+		{{ s }}
+	</div>
+	{% include 'common/bottom.html' %}
+	{% include 'common/ads.html' %}
+</body>
+</html>

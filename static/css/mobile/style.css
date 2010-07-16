@@ -1,0 +1,387 @@
+@charset "utf-8"
+
+/*
+	V2EX CSS (Mobile)
+	
+	Author: Livid <v2ex.livid@me.com>
+	Web: http://picky.olivida.com/
+	
+	This is the mobile configuration of style for Project Babel.
+	
+	The best way to wipe IE6 from this planet is to forget it all since the beginning of your every new project.
+*/
+
+html {
+	height: 100%;
+}
+
+body {
+	padding: 0px;
+	margin: 0px;
+	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	background-color: #fff;
+	-webkit-text-size-adjust: none;
+}
+
+a:link {
+	color: #385f8a;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+a:active {
+	color: #385f8a;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #7ca0c9;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #385f8a;
+	text-decoration: underline;
+}
+
+a.white:link, a.white:visited, a.white:active {
+	color: rgba(255, 255, 255, 1);
+	text-decoration: none;
+}
+
+a.white:hover {
+	color: rgba(255, 255, 255, 1);
+	text-decoration: underline;
+}
+
+a.black:link, a.black:visited, a.black:active {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: none;
+}
+
+a.black:hover {
+	color: rgba(0, 0, 0, 1);
+	text-decoration: underline;
+	text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+form {
+	display: inline;
+	padding: none;
+	margin: none;
+}
+
+code {
+	font-family: "Menlo", "Panic Sans", "Luxi Mono", "Courier New", Monaco;
+}
+
+ul {
+	margin: 0px;
+	padding: 0px;
+}
+
+ul li {
+	list-style: square;
+	padding: 0px;
+	margin: 0px 0px 0px 1.2em;
+}
+
+h1 {
+	color: #333;
+	font-size: 18px;
+	line-height: 18px;
+	padding: 0px;
+	margin: 0px;
+	font-weight: bold;
+}
+
+/* IDs */
+
+#Top {
+	background-image: url("/static/img/bg_top_1006.jpg");
+	height: 80px;
+	padding: 10px;
+	background-repeat: repeat-x;
+	background-color: #000;
+}
+
+#Logo {
+	background-image: url("http://web.me.com/v2ex.livid/v2ex/static/img/logo.png");
+	width: 211px;
+	height: 21px;
+	margin-top: 40px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+#Member {
+	font-weight: bold;
+	float: right;
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.25);
+}
+
+#Main {
+	padding: 0px;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+/* CLASSes */
+
+.section {
+	background-color: #bbb;
+	background-image: url("http://web.me.com/v2ex.livid/v2ex/static/img/bg_section.png");
+	font-size: 12px;
+	line-height: 12px;
+	height: 12px;
+	color: #333;
+	font-weight: bold;
+	padding: 3px 5px 5px 5px;
+	text-shadow: 0px 1px 1px rgba(255, 255, 255, 1);
+}
+
+.cell {
+	padding: 5px 5px 5px 5px;
+	font-size: 12px;
+	line-height: 14px;
+	border-bottom: 1px solid #ccc;
+}
+
+.cell_bottom {
+	padding: 4px 5px 5px 5px;
+	font-size: 11px;
+	line-height: 11px;
+	color: #999;
+}
+
+td.avatar {
+	width: 48px;
+	text-align: center;
+	vertical-align: top;
+}
+
+td.avatar_mini {
+	width: 24px;
+	text-align: center;
+	vertical-align: top;
+}
+
+.created {
+	font-size: 10px;
+	font-weight: bold;
+	color: #ccc;
+	display: block;
+}
+
+.bigger {
+	font-size: 16px;
+}
+
+.caption {
+	color: #999;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.caption_alternative {
+	color: #ccc;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.sep10 {
+	height: 10px;
+}
+
+.sep5 {
+	height: 5px;
+}
+
+.sep0 {
+	height: 0px;
+}
+
+.sep {
+	height: 1px;
+	background-color: #e2e2e2;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.dot {
+	border-top: 1px dotted #e2e2e2;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.signin {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	width: 150px;
+}
+
+.signin:focus {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 12px;
+	font-weight: bold;
+	border: 1px solid #889fb9;
+	width: 150px;
+	-moz-box-shadow: 0px 0px 5px #889fb9;
+	-webkit-box-shadow: 0px 0px 5px #889fb9;
+	outline: none;
+}
+
+.sl {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	width: 150px;
+}
+
+.sl:focus {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	font-weight: bold;
+	border: 1px solid #889fb9;
+	width: 150px;
+	-moz-box-shadow: 0px 0px 5px #889fb9;
+	-webkit-box-shadow: 0px 0px 5px #889fb9;
+	outline: none;
+}
+
+.sll {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	font-weight: bold;
+	border: 1px solid #ccc;
+	width: 280px;
+}
+
+.sll:focus {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	font-weight: bold;
+	border: 1px solid #889fb9;
+	width: 280px;
+	-moz-box-shadow: 0px 0px 5px #889fb9;
+	-webkit-box-shadow: 0px 0px 5px #889fb9;
+	outline: none;
+}
+
+.mll {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	font-weight: normal;
+	border: 1px solid #ccc;
+	display: block;
+	width: 280px;
+	height: 160px;
+	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+}
+
+.mll:focus {
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 3px;
+	font-size: 14px;
+	font-weight: normal;
+	border: 1px solid #889fb9;
+	width: 280px;
+	height: 160px;
+	-moz-box-shadow: 0px 0px 5px #889fb9;
+	-webkit-box-shadow: 0px 0px 5px #889fb9;
+	outline: none;
+}
+
+.fr {
+	float: right;
+}
+
+.topic_stats {
+	font-size: 10px;
+	font-weight: bold;
+	color: #ccc;
+}
+
+.fade {
+	color: #999;
+}
+
+.snow {
+	color: rgba(0, 0, 0, 0.15);
+}
+
+.black {
+	color: #000;
+}
+
+a.topic:link {
+	color: #555;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+a.topic:active {
+	color: #555;
+	text-decoration: none;
+	font-size: 16px;
+}
+
+a.topic:visited {
+	color: #999;
+	text-decoration: none;
+	font-size: 16px;
+}
+
+a.topic:hover {
+	color: #555;
+	text-decoration: underline;
+	font-size: 16px;
+}
+
+.reply {
+	color: #333;
+	border-top: 1px dotted #ccc;
+	padding: 5px 0px 0px 0px;
+}
+
+.ago {
+	font-size: 10px;
+	font-weight: bold;
+	color: #ccc;
+	line-height: 10px;
+}
+
+.imgly {
+	padding: 2px;
+	border: 1px solid #e2e2e2;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.33);
+}
+
+input.btn {
+	font-size: 13px;
+	font-weight: bold;
+	color: #333;
+}

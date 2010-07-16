@@ -1,0 +1,12 @@
+{% include 'common/head.html' %}
+<body>
+	{% include 'common/top.html' %}
+	<div id="Main">
+		<div class="section"><div class="fr">DEVELOPER FEATURE</div><a href="/" class="black">V2EX</a> › User Agent</div>
+		<div class="cell">
+		{{ ua|escape }}
+		</div>
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>V2EX › 新用户注册</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+		<div class="section"><a href="/" class="black">V2EX</a> › 新用户注册</div>
+		<div class="cell">
+			<form action="/signup" method="post">
+			{% if errors %}
+			<strong>请解决以下错误之后继续。</strong>
+			<div class="sep10"></div>
+			<ul>
+				{% if member_username_error %}
+				<li>{{ member_username_error_message }}</li>
+				{% endif %}
+				{% if member_password_error %}
+				<li>{{ member_password_error_message }}</li>
+				{% endif %}
+				{% if member_email_error %}
+				<li>{{ member_email_error_message }}</li>
+				{% endif %}
+			</ul>
+			<div class="sep5"></div>
+			{% endif %}
+			<table cellpadding="5" cellspacing="0" border="0">
+			    <tr>
+			        <td width="80" align="right">
+			            用户名
+			        </td>
+			        <td width="200" align="left">
+			            <input type="text" class="sl" name="username" value="{{ member_username|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            密码
+			        </td>
+			        <td width="200" align="left">
+			            <input type="password" class="sl" name="password" value="{{ member_password|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			            电子邮件地址
+			        </td>
+			        <td width="200" align="left">
+			            <input type="text" class="sl" name="email" value="{{ member_email|escape }}" />
+			        </td>
+			    </tr>
+			    <tr>
+			        <td width="80" align="right">
+			        </td>
+			        <td width="200" align="left">
+			            <input type="submit" value="注册新用户" class="btn" />
+			        </td>
+			    </tr>
+			</table>
+            </form>
+		</div>
+		<div class="cell">
+			<a href="/signin">登入</a>
+		</div>
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

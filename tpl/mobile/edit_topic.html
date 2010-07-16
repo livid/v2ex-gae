@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>V2EX › 编辑主题</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+		<div class="section"><a href="/" class="black">V2EX</a> › <a href="/go/{{ node.name }}" class="black">{{ node.title|escape }}</a> › <a href="/t/{{ topic.num}}" class="black">{{ topic.title|escape }}</a> › 编辑</div>
+	    <div class="cell">
+			<form action="/edit/topic/{{ topic.num }}" method="post">
+			{% if errors %}
+			<strong>请解决以下错误之后继续。</strong>
+			<div class="sep10"></div>
+			<ul>
+				{% if topic_title_error %}
+				<li>{{ topic_title_error_message }}</li>
+				{% endif %}
+				{% if topic_content_error %}
+				<li>{{ topic_content_error_message }}</li>
+				{% endif %}
+			</ul>
+			<div class="sep5"></div>
+			{% endif %}
+			<input type="text" class="sll" name="title" value="{{ topic_title|escape }}" />
+			<div class="sep5"></div>
+			<textarea class="mll" name="content">{{ topic_content|escape }}</textarea>
+			<div class="sep10"></div>
+			<input type="submit" value="提交修改" />
+			</form>
+		</div>
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

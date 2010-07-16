@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>V2EX › 后台</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+			{% if section %}
+			<div class="section"><a href="/" class="black">V2EX</a> › <a href="/backstage" class="black">后台</a> › {{ section.title|escape }}</div>
+			<div class="cell">
+			<a href="/backstage/new/node/{{ section.name }}">添加新节点</a>
+			<div class="sep10"></div>
+			<ul>
+			    {% for node in nodes %}
+			    <li><a href="/backstage/node/{{ node.name }}">{{ node.title }}</a></li>
+			    {% endfor %}
+			</ul>
+			</div class="cell">
+			{% else %}
+			<span class="caption"><a href="/">V2EX</a> › <a href="/backstage">Backstage</a> › Section Not Found</span>
+			<div class="sep10"></div>
+			<a href="/backstage">返回</a>
+			</div class="cell">
+			{% endif %}
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

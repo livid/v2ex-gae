@@ -1,0 +1,69 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">
+            
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                {% if one.bio %}
+                <div class="cell">
+                {% else %}
+                <div class="inner">
+                {% endif %}
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                        <td width="73" valign="top">{% if one.avatar_large_url %}<img src="{{ one.avatar_large_url }}" />{% else %}<img src="/static/img/avatar_large.png" />{% endif %}</td>
+                        <td width="10" valign="top"></td>
+                        <td width="auto" align="left" valign="top"><div class="sep5"></div><span class="bigger">{{ one.username }}</a></span>
+                            {% if one.tagline %}
+                            <div class="sep5"></div>
+                            <span class="fade">{{ one.tagline|escape }}</span>
+                            {% endif %}
+                            <div class="sep5"></div>
+                            <span class="snow">V2EX 第 {{ one.num }} 号会员，加入于 {{ one.created|timezone:8|date:"Y-n-j G:i:s A" }}</span>
+                            {% if one.twitter %}
+                            <div class="sep5"></div>
+                            <span style="line-height: 16px;"><img src="/static/img/twitter.png" align="absmiddle" /> &nbsp;<a href="http://twitter.com/{{ one.twitter }}">@{{ one.twitter }}</a></span>
+                            {% endif %}
+                            {% if one.website %}
+                            <div class="sep5"></div>
+                            <span style="line-height: 16px;"><img src="/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website }}" target="_blank" rel="nofollow external">@{{ one.website }}</a></span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+                </div>
+                {% if one.bio %}
+                <div class="inner">
+                    {{ one.bio|escape|imgly|mentions|urlize|linebreaksbr }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><span class="fade">最近创建的主题</span></div>
+                <div class="inner">
+                    <table cellpadding="5" cellspacing="0" border="0" width="100%" class="topics">
+                        <tr>
+                            <th align="right" width="50">回复数</td>
+                            <th align="left" width="auto">主题</td>
+                            <th align="left" width="80">最后回复者</td>
+                            <th align="left" width="110">最后回复时间</td>
+                        </tr>
+                        {% include 'common/topics.html' %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

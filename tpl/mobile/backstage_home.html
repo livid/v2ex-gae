@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8" />
+	<meta content='True' name='HandheldFriendly' />
+	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<title>V2EX › 后台</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+	{% include 'common/top.html' %}
+    <div id="Main">
+		<div class="section"><a href="/" class="black">V2EX</a> › 后台</div>
+		<div class="cell">
+			<a href="/backstage/new/section">添加新区域</a>
+			<div class="sep10"></div>
+			<ul>
+			    {% for section in sections%}
+			    <li><a href="/backstage/section/{{ section.name }}">{{ section.title }}</a></li>
+			    {% endfor %}
+			</ul>
+		</div>
+		<div class="cell">
+            {{ member_max }} 位注册会员
+		</div>
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

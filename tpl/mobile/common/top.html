@@ -1,0 +1,8 @@
+<div id="Top">
+    {% if member %}
+        <div id="Member"><a href="/member/{{ member.username_lower|escape }}" class="white">{{ member.username|escape }}</a>{% ifequal member.num 1 %} | <a href="/backstage" class="white">后台</a>{% endifequal %} | <a href="/settings" class="white">设置</a> | <a href="/signout" class="white">登出</a></div>
+    {% else %}
+        <div id="Member"><a href="/signin" class="white">登入</a> | <a href="/signup" class="white">注册</a></div>
+    {% endif %}
+    <div id="Logo" onclick="location.href='/'"></div>
+</div>

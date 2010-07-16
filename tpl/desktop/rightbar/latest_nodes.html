@@ -1,0 +1,10 @@
+<div class="box">
+    <div class="cell">
+        <span class="fade">最近新增节点</span>
+    </div>
+    <div class="inner" style="line-height: 28px;">
+        {% for node in nodes_new %}
+        <a href="/go/{{ node.name }}" class="item_node">{{ node.title|escape }}</a>&nbsp; 
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="box">
+    {% if member %}
+    {% if nodes_fav %}
+    <div class="cell">
+    {% else %}
+    <div class="inner">
+    {% endif %}
+        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+                <td width="48" valign="top"><img src="{{ member.avatar_normal_url }}" /></td>
+                <td width="10" valign="top"></td>
+                <td width="auto" align="left"><span class="bigger"><a href="/member/{{ member.username }}">{{ member.username }}</a></span>
+                    <div class="sep5"></div>
+                    <span class="fade">{{ member.tagline }}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% if nodes_fav %}
+    <div class="inner">
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="cell">
+        <strong>V2EX = way to explore</strong>
+        <div class="sep5"></div>
+        <span class="fade">V2EX 是一个关于分享和探索的地方</span>
+    </div>
+    <div class="inner">
+        <div class="sep5"></div>
+        <div align="center"><a href="/signup" class="super normal button">现在加入</a>
+        <div class="sep5"></div>
+        <div class="sep10"></div>
+        若你已有账户，<a href="/signin">请登入</a></div>
+    </div>
+    {% endif %}
+</div>

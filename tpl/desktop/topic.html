@@ -1,0 +1,68 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell">
+                    <div class="fr snow"><a href="/member/{{ topic.member.username }}">{% if topic.member.avatar_large_url %}<img src="{{ topic.member.avatar_large_url }}" border="0" alt="{{ topic.member.username }}" />{% else %}<img src="/static/img/avatar_large.png" border="0" />{% endif %}</a></div>
+                    <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a></span>
+                    <h1>{{ topic.title }}</h1>
+                    <small class="fade">By <a href="/member/{{ topic.member.username }}">{{ topic.member.username }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits</small>
+                </div>
+                <div class="inner">
+                    <div class="content">{{ topic.content|escape|imgly|mentions|urlize|linebreaksbr }}</div>
+                </div>
+            </div>
+            {% ifequal topic.replies 0 %}
+            <div class="sep20"></div>
+            <div class="glass" align="center"><div class="inner"><span class="fade">目前尚无回复</span></div></div>
+            {% else %}
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><div class="fr">{% if reply_reversed %}<a href="/t/{{ topic.num }}?r=0">按顺序显示回复</a>{% else %}<a href="/t/{{ topic.num }}?r=1">按倒序显示回复</a>{% endif %}</div><span class="fade">截至 {{ topic.last_touched|timezone:8|date:"Y-n-j G:i:s A" }} 共收到 {{ topic.replies }} 条回复</span></div>
+                {% for reply in replies %}
+                <div class="cell">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                            <td width="48" valign="top"><a href="/member/{{ reply.member.username }}">{% if reply.member.avatar_normal_url %}<img src="{{ reply.member.avatar_normal_url }}" border="0" />{% else %}<img src="/static/img/avatar_normal.png" border="0" />{% endif %}</a></td>
+                            <td width="10"></td>
+                            <td width="auto" valign="top"><div class="fr"><small class="snow">{{ reply.created|timesince }} ago{% if reply.source %} via {{ reply.source }}{% endif %}</small></div>
+                                <span class="bigger"><a href="/member/{{ reply.member.username }}">{{ reply.member.username }}</a></span>
+                                <div class="sep5"></div>
+                                <div class="content">{{ reply.content|escape|imgly|mentions|urlize|linebreaksbr }}</div>
+                            </td>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+            {% endifequal %}
+            {% if member %}
+            <div class="sep20"></div>
+            <div class="box"><form action="/t/{{ topic.num }}" method="post">
+                <div class="cell">{% if errors %}
+                <strong class="black">{{ reply_content_error_message }}</strong>
+                {% else %}
+                <span class="fade">现在就加盖一层</span>
+                {% endif %}
+                </div>
+                <div class="inner">
+                    <textarea class="mll" name="content"></textarea>
+                    <div class="sep10"></div>
+                    <input type="submit" class="super normal button" value="发送" />
+                </div></form>
+            </div>
+            {% endif %}
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

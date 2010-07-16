@@ -1,0 +1,67 @@
+application: v2ex
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /favicon.ico
+  static_files: static/img/favicon.ico
+  upload: static/img/favicon.ico
+
+- url: /apple-touch-icon.png
+  static_files: static/img/apple-touch-icon.png
+  upload: static/img/apple-touch-icon.png
+    
+- url: /static
+  static_dir: static  
+
+- url: /settings
+  script: member.py
+
+- url: /settings/.*
+  script: member.py
+
+- url: /member/.*
+  script: member.py
+
+- url: /backstage
+  script: backstage.py
+
+- url: /backstage/.*
+  script: backstage.py
+
+- url: /new/.*
+  script: topic.py
+  
+- url: /t/.*
+  script: topic.py
+  
+- url: /edit/.*
+  script: topic.py
+  
+- url: /avatar/.*
+  script: avatar.py
+
+- url: /index.xml
+  script: feed.py
+  
+- url: /feed/v2ex.rss
+  script: feed.py
+
+- url: /feed/.*
+  script: feed.py
+
+- url: /about
+  script: page.py
+  
+- url: /faq
+  script: page.py
+  
+- url: /notes/?
+  script: notes.py
+
+- url: /notes/.*
+  script: notes.py
+
+- url: .*
+  script: main.py
