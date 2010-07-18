@@ -39,8 +39,13 @@ class NotesHomeHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-            q = db.GqlQuery("SELECT * FROM Note WHERE member = :1 ORDER BY created DESC", member)
-            if (q.count() > 0):
+            q = db.GqlQuery("SELECT * FROM Note WHERE member = :1 ORDER BY last_modified DESC", member)
+            try:
+                notes_count = q.count()
+            except:
+                q = db.GqlQuery("SELECT * FROM Note WHERE member = :1 ORDER BY created DESC", member)
+                notes_count = q.count()
+            if (notes_count > 0):
                 template_values['notes'] = q
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_home.html')
             output = template.render(path, template_values)

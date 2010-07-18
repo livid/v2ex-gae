@@ -145,6 +145,7 @@ class RecentHandler(webapp.RequestHandler):
         browser = detect(self.request)
         template_values = {}
         template_values['system_version'] = SYSTEM_VERSION
+        template_values['page_title'] = u'V2EX › 最近的 50 个主题'
         template_values['member'] = CheckAuth(self)
         recent = memcache.get('q_recent_50')
         if (recent):

@@ -24,8 +24,8 @@ body {
 }
 
 h1 {
-	font-size: 24px;
-	line-height: 24px;
+	font-size: 18px;
+	line-height: 18px;
 	font-weight: bold;
 	padding: 10px 0px 10px 0px;
 	margin: 0px;
@@ -52,24 +52,13 @@ ul li {
 	margin: 0px 0px 0px 1.2em;
 }
 
-a:link {
-	color: #385f8a;
-	text-decoration: none;
-	font-weight: bold;
-}
-
-a:active {
-	color: #385f8a;
-	text-decoration: none;
-}
-
-a:visited {
-	color: #7ca0c9;
+a:link, a:visited, a:active {
+	color: #1c7fdb;
 	text-decoration: none;
 }
 
 a:hover {
-	color: #385f8a;
+	color: #1785eb;
 	text-decoration: underline;
 }
 
@@ -109,9 +98,8 @@ a.dark:hover {
 /* IDs */
 
 #Top {
-	background-color: #334;
+	background-color: #303033;
 	height: 40px;
-	background-image: url("/static/img/bg_top.png");
 }
 
 #TopMain {
@@ -155,8 +143,8 @@ a.dark:hover {
 }
 
 #Wrapper {
-	background-image: url("/static/img/bg.png");
-	border-top: 2px solid #889;
+	background-color: #e2e2e2;
+	border-top: 1px solid #777;
 }
 
 #Main {
@@ -244,7 +232,7 @@ td.avatar_mini {
 }
 
 .note {
-	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", "Helvetica Neue", "Tahoma", "Verdana";
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", "Helvetica Neue", "Tahoma", "Verdana", "Hiragino Sans GB", STHeiti !important;
 	font-size: 14px;
 	line-height: 20px;
 }
@@ -307,16 +295,9 @@ td.avatar_mini {
 }
 
 .item_node {
-	background-color: #fff;
 	font-size: 14px;
 	line-height: 14px;
 	padding: 2px 7px 2px 7px;
-	-webkit-border-radius: 15px;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
-	-moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
-	box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
 	display: inline-block;
 }
 

@@ -182,15 +182,18 @@ class TopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         template_values['member'] = member
         topic = False
-        q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
-        if (q.count() == 1):
-            topic = q[0]
-            template_values['page_title'] = u'V2EX › ' + topic.title
-            try:
-                topic.hits = topic.hits + 1
-                topic.put()
-            except:
-                topic.hits = topic.hits - 1
+        topic = memcache.get('topic_' + str(topic_num))
+        if topic is None:
+            q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
+            if (q.count() == 1):
+                topic = q[0]
+                memcache.set('topic_' + str(topic_num), topic, 86400)
+                try:
+                    topic.hits = topic.hits + 1
+                    topic.put()
+                except:
+                    topic.hits = topic.hits - 1
+        template_values['page_title'] = u'V2EX › ' + topic.title
         template_values['topic'] = topic
         if (topic):
             node = False
@@ -202,11 +205,20 @@ class TopicHandler(webapp.RequestHandler):
                 section = q3[0]
             template_values['node'] = node
             template_values['section'] = section
+            replies = False
             if reply_reversed:
-                q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
+                replies = memcache.get('topic_' + str(topic_num) + '_replies_desc')
+                if replies is None:
+                    q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
+                    replies = q4
+                    memcache.set('topic_' + str(topic_num) + '_replies_desc', q4, 86400)
             else:
-                q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
-            template_values['replies'] = q4
+                replies = memcache.get('topic_' + str(topic_num) + '_replies_asc')
+                if replies is None:
+                    q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
+                    replies = q4
+                    memcache.set('topic_' + str(topic_num) + '_replies_asc', q4, 86400)
+            template_values['replies'] = replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic.html')
             else:
@@ -303,6 +315,8 @@ class TopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc')
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc')
                 self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
             else:
                 node = False

@@ -22,7 +22,7 @@ template.register_template_library('v2ex.templatetags.filters')
 class FeedHomeHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
-        template_values['site_domain'] = 'v2ex.appspot.com'
+        template_values['site_domain'] = 'www.v2ex.com'
         template_values['site_name'] = 'V2EX'
         template_values['site_slogan'] = 'way to explore'
         template_values['feed_url'] = 'http://' + template_values['site_domain'] + '/index.xml'

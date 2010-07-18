@@ -298,8 +298,10 @@ class SettingsPasswordHandler(webapp.RequestHandler):
                 member.password = hashlib.sha1(password_new).hexdigest()
                 member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
                 member.put()
-                cookies = Cookies(self, max_age = 86400, path = '/')
+                cookies = Cookies(self, max_age = 86400 * 365, path = '/')
                 cookies['auth'] = member.auth
+                memcache.set(member.auth, member.num, 86400 * 365)
+                memcache.set('member_' + str(member.num), member, 86400 * 365)
                 self.session['message'] = '密码已成功更新，下次请用新密码登录'
                 self.redirect('/settings')
             else:
@@ -367,7 +369,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_large.num = counter1.value
                 avatar_large.put()
                 member.avatar_large_url = '/avatar/' + str(member.num) + '/large'
-                member.put() 
+                member.put()
             # Normal 48x48
             q2 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'avatar_' + str(member.num) + '_normal')
             if (q2.count() == 1):
@@ -414,6 +416,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_mini.put()
                 member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
                 member.put()
+            memcache.set('member_' + str(member.num), member, 86400 * 365)
             self.session['message'] = '新头像设置成功'
             self.redirect('/settings/avatar')
         else:

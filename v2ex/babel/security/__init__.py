@@ -8,19 +8,28 @@ from google.appengine.api import memcache
 from v2ex.babel.ext.cookies import Cookies
 
 def CheckAuth(request):
-  cookies = Cookies(request, max_age = 86400, path = '/')
+  cookies = Cookies(request, max_age = 86400 * 365, path = '/')
   if 'auth' in cookies:
       auth = cookies['auth']
       member_num = memcache.get(auth)
       if (member_num > 0):
-          q = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member_num)
-          return q[0]
+          member = memcache.get('member_' + str(member_num))
+          if member is None:
+              q = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member_num)
+              if q.count() == 1:
+                  member = q[0]
+                  memcache.set('member_' + str(member_num), member, 86400 * 365)
+              else:
+                  member = False
+          return member
       else:
           q = db.GqlQuery("SELECT * FROM Member WHERE auth = :1", auth)
           if (q.count() == 1):
               member_num = q[0].num
-              memcache.set(auth, member_num, 86400)
-              return q[0]
+              member = q[0]
+              memcache.set(auth, member_num, 86400 * 365)
+              memcache.set('member_' + str(member_num), member, 86400 * 365)
+              return member
           else:
               return False
   else:

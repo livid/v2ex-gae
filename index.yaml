@@ -48,6 +48,12 @@ indexes:
   - name: created
     direction: desc
 
+- kind: Note
+  properties:
+  - name: member
+  - name: last_modified
+    direction: desc
+
 - kind: Reply
   properties:
   - name: topic_num

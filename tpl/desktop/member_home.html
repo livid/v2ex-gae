@@ -33,7 +33,7 @@
                             {% endif %}
                             {% if one.website %}
                             <div class="sep5"></div>
-                            <span style="line-height: 16px;"><img src="/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website }}" target="_blank" rel="nofollow external">@{{ one.website }}</a></span>
+                            <span style="line-height: 16px;"><img src="/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website|escape }}" target="_blank" rel="nofollow external">{{ one.website|escape }}</a></span>
                             {% endif %}
                         </td>
                     </tr>
