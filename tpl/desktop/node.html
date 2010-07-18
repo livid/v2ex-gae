@@ -7,6 +7,8 @@
         </div>
         <div id="Rightbar">
             {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/adsense.html' %}
         </div>
         <div id="Content">
             <div class="box">
@@ -35,7 +37,33 @@
                     </table>
                 </div>
                 <div class="inner">
+                    {% if pagination %}
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td width="100" align="left">
+                                    {% if has_previous %}
+                                    <div class="sep5"></div>
+                                    <a href="/go/{{ node.name }}?p={{ previous }}" class="super normal button">上一页</a>
+                                    <div class="sep5"></div>
+                                    {% endif %}
+                                </td>
+                                <td width="auto" align="center" valign="middle">
+                                    <strong style="font-size: 13px"><span class="fade">{{ page }}/{{ pages }}</span><span class="snow"> - {{ node.topics }} Topics</span></strong>
+                                </td>
+                                <td width="100" align="right">
+                                    {% if has_more %}
+                                    <div class="sep5"></div>
+                                    <a href="/go/{{ node.name }}?p={{ more }}" class="super normal button">下一页</a>
+                                    <div class="sep5"></div>
+                                    {% endif %}
+                                </td>
+                        </table>
+                    {% else %}
+                    {% endif %}
                     {% if node.footer %}
+                        {% if pagination %}
+                        <div class="sep10"></div>
+                        {% endif %}
                         <span class="footer">{{ node.footer|escape }}</span>
                     {% endif %}
                 </div>

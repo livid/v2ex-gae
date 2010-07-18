@@ -96,9 +96,10 @@ a.dark:hover {
 /* IDs */
 
 #Top {
-	background-color: #303033;
-	height: 40px;
-	background-image: url("http://v2ex.com/static/img/bg_top_black.png");
+	background:#303033; 
+	background: -moz-linear-gradient(center top , #444, #111) repeat scroll 0 0 transparent; 
+	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111)); 
+	height:40px;
 }
 
 #TopMain {
@@ -113,11 +114,11 @@ a.dark:hover {
 	font-size: 24px;
 	line-height: 24px;
 	padding-top: 8px;
-	letter-spacing: 0px;
 	color: #fff;
 	text-align: left;
 	text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
 	margin-left: 20px;
+	font-weight: bold;
 }
 
 #Navigation {
@@ -144,6 +145,7 @@ a.dark:hover {
 #Wrapper {
 	background-color: #e2e2e2;
 	border-top: 1px solid #777;
+	background-image: url("/static/img/bg.png");
 }
 
 #Main {
@@ -160,12 +162,12 @@ a.dark:hover {
 
 #Rightbar {
 	float: right;
-	width: 270px;
+	width: 272px;
 	padding: 10px 0px 10px 10px;
 }
 
 #Content {
-	margin: 0px 280px 0px 0px;
+	margin: 0px 282px 0px 0px;
 	padding: 10px;
 }
 
@@ -343,7 +345,7 @@ td.avatar_mini {
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
-.sll:focus {
+.sl:focus {
 	border: 1px solid rgba(128, 128, 160, 0.6);
 	-moz-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
 	-webkit-box-shadow: 0px 0px 5px rgba(128, 128, 160, 0.5);
@@ -356,7 +358,7 @@ td.avatar_mini {
 	padding: 3px;
 	font-size: 14px;
 	border: 1px solid #ccc;
-	width: 630px;
+	width: 620px;
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
@@ -393,7 +395,7 @@ td.avatar_mini {
 	font-size: 14px;
 	border: 1px solid #ccc;
 	display: block;
-	width: 630px;
+	width: 620px;
 	height: 160px;
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }

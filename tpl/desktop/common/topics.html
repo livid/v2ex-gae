@@ -2,7 +2,7 @@
 <tr>
     <td align="right" width="50" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %} lend">{% ifequal topic.replies 0 %}<span class="snow">{{ topic.replies }}</span>{% else %}<strong><span class="green">{{ topic.replies }}</span></strong>{% endifequal %}</td>
     <td align="left" width="auto" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}"><a href="/t/{{ topic.num }}">{{ topic.title|escape }}</a></td>
-    <td align="left" width="80" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}"><a href="/member/{{ topic.member.username }}">{{ topic.member.username }}</a></td>
+    <td align="left" width="80" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">{% if topic.member %}<a href="/member/{{ topic.member.username }}" class="dark">{{ topic.member.username }}</a>{% else %}<a href="/member/{{ topic.created_by }}" class="dark">{{ topic.created_by }}</a>{% endif %}</td>
     <td align="left" width="110" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %} rend"><small class="fade">{{ topic.last_touched|date:"Y-n-j G:i:s"}}</small></td>
 </tr>
 {% endfor %}

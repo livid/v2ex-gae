@@ -1,32 +1,20 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import os
-import re
-import time
-import datetime
-import hashlib
-import string
-import random
-
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
-from google.appengine.ext.webapp import template
 
-from v2ex.babel import Member
 from v2ex.babel import Avatar
-from v2ex.babel import Counter
 
 from v2ex.babel.security import *
-from v2ex.babel.ext.cookies import Cookies
+from v2ex.babel.da import *
         
 class AvatarHandler(webapp.RequestHandler):
     def get(self, member_num, size):
-        q = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'avatar_' + str(member_num) + '_' + str(size))
-        if (q.count() == 1):
-            avatar = q[0]
+        avatar = GetKindByName('Avatar', 'avatar_' + str(member_num) + '_' + str(size))
+        if avatar is not None:
             self.response.headers['Content-Type'] = "image/png"
             self.response.headers['Cache-Control'] = "max-age=172800, public, must-revalidate"
             self.response.headers['Expires'] = "Sun, 25 Apr 2011 20:00:00 GMT"

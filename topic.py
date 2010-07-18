@@ -26,6 +26,7 @@ from v2ex.babel import SYSTEM_VERSION
 
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
+from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -155,6 +156,8 @@ class NewTopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
+                memcache.delete('Node_' + str(topic.node_num))
+                memcache.delete('Node::' + str(node.name))
                 self.redirect('/t/' + str(topic.num) + '#reply0')
             else:    
                 if browser['ios']:
@@ -198,11 +201,9 @@ class TopicHandler(webapp.RequestHandler):
         if (topic):
             node = False
             section = False
-            if topic:
-                q2 = db.GqlQuery("SELECT * FROM Node WHERE num = :1", topic.node_num)
-                node = q2[0]
-                q3 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                section = q3[0]
+            node = GetKindByNum('Node', topic.node_num)
+            if (node):
+                section = GetKindByNum('Section', node.section_num)
             template_values['node'] = node
             template_values['section'] = section
             replies = False
@@ -304,12 +305,12 @@ class TopicHandler(webapp.RequestHandler):
                 topic.node_title = node.title
                 topic.last_reply_by = member.username
                 topic.last_touched = datetime.datetime.now()
-                ua = os.environ['HTTP_USER_AGENT']
-                if (re.findall('Mozilla\/5.0 \(iPhone;', ua)):
+                ua = self.request.headers['User-Agent']
+                if (re.findall('Mozilla\/5.0 \(iPhone', ua)):
                     reply.source = 'iPhone'
-                if (re.findall('Mozilla\/5.0 \(iPod;', ua)):
+                if (re.findall('Mozilla\/5.0 \(iPod', ua)):
                     reply.source = 'iPod'
-                if (re.findall('Mozilla\/5.0 \(iPad;', ua)):
+                if (re.findall('Mozilla\/5.0 \(iPad', ua)):
                     reply.source = 'iPad'
                 reply.put()
                 topic.put()
@@ -478,10 +479,21 @@ class TopicDeleteHandler(webapp.RequestHandler):
                     node.put()
                     # Take care of Replies
                     q2 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1", int(topic_num))
-                    if q2.count() > 0:
+                    replies_count = q2.count()
+                    if replies_count > 0:
                         for reply in q2:
                             reply.delete()
+                        q3 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'reply.total')
+                        if q3.count() == 1:
+                            counter = q3[0]
+                            counter.value = counter.value - replies_count
+                            counter.put()
                     topic.delete()
+                    q4 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.total')
+                    if q4.count() == 1:
+                        counter2 = q4[0]
+                        counter2.value = counter2.value - 1
+                        counter2.put()
         self.redirect('/')
                     
 def main():

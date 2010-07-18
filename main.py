@@ -26,6 +26,7 @@ from v2ex.babel import SYSTEM_VERSION
 
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
+from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -39,8 +40,8 @@ class HomeHandler(webapp.RequestHandler):
         template_values['member'] = CheckAuth(self)
         new = ''
         nodes_new = []
-        new = memcache.get('home_nodes_new_neue_a')
-        nodes_new = memcache.get('home_nodes_new_a')
+        new = memcache.get('home_nodes_new_neue')
+        nodes_new = memcache.get('home_nodes_new')
         try:
             if (new == None) or (nodes_new == None):
                 nodes_new = []
@@ -61,28 +62,29 @@ class HomeHandler(webapp.RequestHandler):
             new = ''
         template_values['new'] = new
         template_values['nodes_new'] = nodes_new
-        s = ''
-        s = memcache.get('home_sections_neue')
-        if (s == None):
+        if browser['ios']:
             s = ''
-            q = db.GqlQuery("SELECT * FROM Section ORDER BY created ASC")
-            if (q.count() > 0):
-                for section in q:
-                    q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY created ASC", section.num)
-                    n = ''
-                    if (q2.count() > 0):
-                        nodes = []
-                        i = 0
-                        for node in q2:
-                            nodes.append(node)
-                            i = i + 1
-                        random.shuffle(nodes)
-                        for node in nodes:
-                            fs = random.randrange(12, 16)
-                            n = n + '<a href="/go/' + node.name + '" style="font-size: ' + str(fs) + 'px;">' + node.title + '</a>&nbsp; '
-                    s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
-            memcache.set('home_sections_neue', s, 600)
-        template_values['s'] = s
+            s = memcache.get('home_sections_neue')
+            if (s == None):
+                s = ''
+                q = db.GqlQuery("SELECT * FROM Section ORDER BY created ASC")
+                if (q.count() > 0):
+                    for section in q:
+                        q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY created ASC", section.num)
+                        n = ''
+                        if (q2.count() > 0):
+                            nodes = []
+                            i = 0
+                            for node in q2:
+                                nodes.append(node)
+                                i = i + 1
+                            random.shuffle(nodes)
+                            for node in nodes:
+                                fs = random.randrange(12, 16)
+                                n = n + '<a href="/go/' + node.name + '" style="font-size: ' + str(fs) + 'px;">' + node.title + '</a>&nbsp; '
+                        s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
+                memcache.set('home_sections_neue', s, 600)
+            template_values['s'] = s
         latest = memcache.get('q_latest_12')
         if (latest):
             template_values['latest'] = latest
@@ -369,21 +371,61 @@ class NodeHandler(webapp.RequestHandler):
         template_values = {}
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
-        q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
-        node = False
-        if (q.count() == 1):
-            node = q[0]
-            template_values['page_title'] = u'V2EX › ' + node.title
+        node = GetKindByName('Node', node_name)
         template_values['node'] = node
+        pagination = False
+        pages = 1
+        page = 1
+        page_size = 12
+        start = 0
+        has_more = False
+        more = 1
+        has_previous = False
+        previous = 1
+        if node:
+            template_values['page_title'] = u'V2EX › ' + node.title
+            # Pagination
+            if node.topics > page_size:
+                pagination = True
+            else:
+                pagination = False
+            if pagination:
+                if node.topics % page_size == 0:
+                    pages = int(node.topics / page_size)
+                else:
+                    pages = int(node.topics / page_size) + 1
+                page = self.request.get('p')
+                if (page == '') or (page is None):
+                    page = 1
+                else:
+                    page = int(page)
+                    if page > pages:
+                        page = pages
+                    else:
+                        if page < 1:
+                            page = 1
+                if page < pages:
+                    has_more = True
+                    more = page + 1
+                if page > 1:
+                    has_previous = True
+                    previous = page - 1    
+                start = (page - 1) * page_size
+        template_values['pagination'] = pagination
+        template_values['pages'] = pages
+        template_values['page'] = page
+        template_values['page_size'] = page_size
+        template_values['has_more'] = has_more
+        template_values['more'] = more
+        template_values['has_previous'] = has_previous
+        template_values['previous'] = previous
         section = False
         if node:
-            q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-            if (q2.count() == 1):
-                section = q2[0]
+            section = GetKindByNum('Section', node.section_num)
         template_values['section'] = section
         topics = False
-        if (node):
-            q3 = db.GqlQuery("SELECT * FROM Topic WHERE node_num = :1 ORDER BY last_touched DESC", node.num)
+        if node:
+            q3 = db.GqlQuery("SELECT * FROM Topic WHERE node_num = :1 ORDER BY last_touched DESC LIMIT " + str(start) + ", " + str(page_size), node.num)
             topics = q3
         template_values['topics'] = topics
         if browser['ios']:

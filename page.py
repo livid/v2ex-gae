@@ -17,11 +17,17 @@ from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
 
+from v2ex.babel.security import *
+from v2ex.babel.ua import *
+from v2ex.babel.ext.cookies import Cookies
+
 template.register_template_library('v2ex.templatetags.filters')
 
 class AboutHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        member = CheckAuth(self)
+        template_values['member'] = member
         template_values['page_title'] = 'About'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'about.html')
         output = template.render(path, template_values)
@@ -30,6 +36,8 @@ class AboutHandler(webapp.RequestHandler):
 class FAQHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        member = CheckAuth(self)
+        template_values['member'] = member
         template_values['page_title'] = 'About'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'faq.html')
         output = template.render(path, template_values)

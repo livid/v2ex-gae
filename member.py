@@ -417,6 +417,9 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
                 member.put()
             memcache.set('member_' + str(member.num), member, 86400 * 365)
+            memcache.delete('Avatar::avatar_' + str(member.num) + '_large')
+            memcache.delete('Avatar::avatar_' + str(member.num) + '_normal')
+            memcache.delete('Avatar::avatar_' + str(member.num) + '_mini')
             self.session['message'] = '新头像设置成功'
             self.redirect('/settings/avatar')
         else:
