@@ -39,6 +39,9 @@ handlers:
 - url: /edit/.*
   script: topic.py
   
+- url: /delete/.*
+  script: topic.py
+  
 - url: /avatar/.*
   script: avatar.py
 

@@ -315,6 +315,7 @@ class TopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
+                memcache.set('topic_' + str(topic.num), topic, 86400)
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc')
                 self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
@@ -463,11 +464,32 @@ class TopicEditHandler(webapp.RequestHandler):
         else:
             self.redirect('/signin')
 
+class TopicDeleteHandler(webapp.RequestHandler):
+    def get(self, topic_num):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
+                if q.count() == 1:
+                    topic = q[0]
+                    # Take care of Node                
+                    node = topic.node
+                    node.topics = node.topics - 1
+                    node.put()
+                    # Take care of Replies
+                    q2 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1", int(topic_num))
+                    if q2.count() > 0:
+                        for reply in q2:
+                            reply.delete()
+                    topic.delete()
+        self.redirect('/')
+                    
 def main():
     application = webapp.WSGIApplication([
     ('/new/(.*)', NewTopicHandler),
     ('/t/([0-9]+)', TopicHandler),
-    ('/edit/topic/([0-9]+)', TopicEditHandler)
+    ('/edit/topic/([0-9]+)', TopicEditHandler),
+    ('/delete/topic/([0-9]+)', TopicDeleteHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

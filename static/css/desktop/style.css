@@ -63,13 +63,11 @@ a:hover {
 }
 
 a.white:link, a.white:visited, a.white:active {
-	font-weight: bold;
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.8);
 	text-decoration: none;
 }
 
 a.white:hover {
-	font-weight: bold;
 	color: rgba(255, 255, 255, 1);
 	text-decoration: none;;
 }
@@ -100,6 +98,7 @@ a.dark:hover {
 #Top {
 	background-color: #303033;
 	height: 40px;
+	background-image: url("http://v2ex.com/static/img/bg_top_black.png");
 }
 
 #TopMain {
