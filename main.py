@@ -153,7 +153,7 @@ class RecentHandler(webapp.RequestHandler):
         if (recent):
             template_values['recent'] = recent
         else:
-            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 20,50")
+            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 12,50")
             memcache.set('q_recent_50', q2, 80)
             template_values['recent'] = q2
             template_values['recent_total'] = q2.count()

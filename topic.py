@@ -40,10 +40,7 @@ class NewTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if (member):
             template_values['member'] = member
-            q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
-            node = False
-            if (q.count() == 1):
-                node = q[0]
+            node = GetKindByName('Node', node_name)
             template_values['node'] = node
             section = False
             if node:
