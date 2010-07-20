@@ -15,21 +15,7 @@
         </div>
         <div id="Content">
             <div class="box">
-                {% for topic in latest %}
-        		<div class="cell">
-        		<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
-        			<td valign="top" class="avatar"><a href="/member/{{ topic.created_by }}">{% if topic.member.avatar_normal_url %}<img src="{{ topic.member.avatar_normal_url }}" align="absmiddle" border="0" />{% else %}<img src="/static/img/avatar_normal.png" align="absmiddle" border="0" />{% endif %}</a></td>
-        			<td style="padding-left: 12px" valign="top">
-        				
-        				<span class="bigger"><a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a> {% ifequal topic.replies 0 %}{% else %}<span class="fade">( {{ topic.replies }} )</span>{% endifequal %}</span>
-        				<div class="sep5"></div>
-        				<span class="fade" style="font-size: 10px;">By <a href="/member/{{ topic.created_by|escape }}" class="dark">{{ topic.created_by|escape }}</a>{% if topic.node_name %} in <a href="/go/{{ topic.node_name }}" class="dark">{{ topic.node_title|escape }}</a>{% endif %}<br />
-                        <span class="created">{{ topic.last_touched|timesince }} ago{% if topic.last_reply_by %} replied by <a href="/member/{{ topic.last_reply_by }}" class="dark">{{ topic.last_reply_by }}</a>{% endif %}</span>
-        			</td>
-        			</tr>
-        		</table>
-        		</div>
-        		{% endfor %}
+                {% include 'common/topics_index.html' %}
         		<div class="inner">
         		    » <a href="/recent">更多最近的 50 个帖子</a>
         		</div>

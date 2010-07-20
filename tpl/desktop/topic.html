@@ -16,7 +16,7 @@
                     <div class="fr snow"><a href="/member/{{ topic.member.username }}">{% if topic.member.avatar_large_url %}<img src="{{ topic.member.avatar_large_url }}" border="0" alt="{{ topic.member.username }}" />{% else %}<img src="/static/img/avatar_large.png" border="0" />{% endif %}</a></div>
                     <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a></span>
                     <h1>{{ topic.title }}</h1>
-                    <small class="fade">By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.num 1 %} - <a href="#;" onclick="if (confirm('确认删除标题为 {{ topic.title|escape }} 的第 {{ topic.num }} 号主题？')) { location = '/delete/topic/{{ topic.num }}'; }">delete</a>{% endifequal %}</small>
+                    <strong><small class="fade">By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.num 1 %} - <a href="#;" onclick="if (confirm('确认删除标题为 {{ topic.title|escape }} 的第 {{ topic.num }} 号主题？')) { location = '/delete/topic/{{ topic.num }}'; }">DELETE</a>{% endifequal %}</small></strong>
                 </div>
                 <div class="inner">
                     <div class="content">{{ topic.content|escape|imgly|mentions|urlize|linebreaksbr }}</div>

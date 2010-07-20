@@ -1,0 +1,10 @@
+{{ topic.title }} - {{ topic.created_by }} - {{ topic.node_title }}
+
+{{ topic.content }}
+{% if replies %}
+{% for reply in replies %}
+{{ reply.content }}
+
+- {{ reply.member.username }}
+{% endfor %}
+{% endif %}
