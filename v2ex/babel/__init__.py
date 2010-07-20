@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.2.5'
+SYSTEM_VERSION = '2.2.6'
 
 import datetime
 

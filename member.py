@@ -70,6 +70,9 @@ class SettingsHandler(webapp.RequestHandler):
             if (member.twitter == None):
                 member.twitter = ''
             template_values['member_twitter'] = member.twitter
+            if (member.location == None):
+                member.location = ''
+            template_values['member_location'] = member.location
             if (member.tagline == None):
                 member.tagline = ''
             template_values['member_tagline'] = member.tagline
@@ -208,6 +211,21 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_twitter'] = member_twitter
             template_values['member_twitter_error'] = member_twitter_error
             template_values['member_twitter_error_message'] = member_twitter_error_messages[member_twitter_error]
+            # Verification: location
+            member_location_error = 0
+            member_location_error_messages = ['',
+                u'所在地长度不能超过 40 个字符'
+            ]
+            member_location = self.request.get('location').strip()
+            if (len(member_location) == 0):
+                member_location = ''    
+            else:
+                if (len(member_location) > 40):
+                    errors = errors + 1
+                    member_location_error = 1
+            template_values['member_location'] = member_location
+            template_values['member_location_error'] = member_location_error
+            template_values['member_location_error_message'] = member_location_error_messages[member_location_error]
             # Verification: tagline
             member_tagline_error = 0
             member_tagline_error_messages = ['',
@@ -243,6 +261,7 @@ class SettingsHandler(webapp.RequestHandler):
                 member.email = member_email.lower()
                 member.website = member_website
                 member.twitter = member_twitter
+                member.location = member_location
                 member.tagline = member_tagline
                 member.bio = member_bio
                 member.put()

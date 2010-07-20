@@ -202,6 +202,7 @@ class NotesItemEditHandler(webapp.RequestHandler):
                         note.length = len(note_content)
                         note.edits = note.edits + 1
                         note.put()
+                        memcache.set('Note_' + str(note.num), note, 86400)
                         self.redirect('/notes/' + str(note.num))
                     else:
                         self.redirect('/notes')

@@ -29,11 +29,15 @@
                             <span class="snow">V2EX 第 {{ one.num }} 号会员，加入于 {{ one.created|timezone:8|date:"Y-n-j G:i:s A" }}</span>
                             {% if one.twitter %}
                             <div class="sep5"></div>
-                            <span style="line-height: 16px;"><img src="/static/img/twitter.png" align="absmiddle" /> &nbsp;<a href="http://twitter.com/{{ one.twitter }}">@{{ one.twitter }}</a></span>
+                            <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/twitter.png" align="absmiddle" /> &nbsp;<a href="http://twitter.com/{{ one.twitter }}">@{{ one.twitter }}</a></span>
                             {% endif %}
                             {% if one.website %}
                             <div class="sep5"></div>
-                            <span style="line-height: 16px;"><img src="/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website|escape }}" target="_blank" rel="nofollow external">{{ one.website|escape }}</a></span>
+                            <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website|escape }}" target="_blank" rel="nofollow external">{{ one.website|escape }}</a></span>
+                            {% endif %}
+                            {% if one.location %}
+                            <div class="sep5"></div>
+                            <span style="line-height: 16px;"><img src="/static/img/location.png" align="absmiddle" /> &nbsp;<a href="http://www.google.com/maps?q={{ one.location|escape }}" target="_blank" rel="nofollow external">{{ one.location|escape }}</a></span>
                             {% endif %}
                         </td>
                     </tr>
@@ -56,7 +60,14 @@
                             <th align="left" width="80">最后回复者</td>
                             <th align="left" width="110">最后回复时间</td>
                         </tr>
-                        {% include 'common/topics.html' %}
+                        {% for topic in topics %}
+                        <tr>
+                            <td align="right" width="50" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %} lend">{% ifequal topic.replies 0 %}<span class="snow">{{ topic.replies }}</span>{% else %}<strong><span class="green">{{ topic.replies }}</span></strong>{% endifequal %}</td>
+                            <td align="left" width="auto" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}"><a href="/t/{{ topic.num }}">{{ topic.title|escape }}</a></td>
+                            <td align="left" width="80" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %}">{% if topic.last_reply_by %}<a href="/member/{{ topic.last_reply_by }}" class="dark">{{ topic.last_reply_by }}</a>{% else %}<a href="/member/{{ topic.created_by }}" class="dark">{{ topic.created_by }}</a>{% endif %}</td>
+                            <td align="left" width="110" class="{% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %} rend"><small class="fade">{{ topic.last_touched|timezone:8|date:"Y-n-j G:i:s"}}</small></td>
+                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
             </div>
