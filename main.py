@@ -6,6 +6,7 @@ import re
 import time
 import datetime
 import hashlib
+import urllib
 import string
 import random
 
@@ -149,14 +150,14 @@ class RecentHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = u'V2EX › 最近的 50 个主题'
         template_values['member'] = CheckAuth(self)
-        recent = memcache.get('q_recent_50')
-        if (recent):
-            template_values['recent'] = recent
+        latest = memcache.get('q_recent_50')
+        if (latest):
+            template_values['latest'] = latest
         else:
             q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 12,50")
             memcache.set('q_recent_50', q2, 80)
-            template_values['recent'] = q2
-            template_values['recent_total'] = q2.count()
+            template_values['latest'] = q2
+            template_values['latest_total'] = q2.count()
         if browser['ios']:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'recent.html')
         else:
@@ -441,6 +442,34 @@ class NodeHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
+class SearchHandler(webapp.RequestHandler):
+    def get(self, q):
+        q = urllib.unquote(q)
+        template_values = {}
+        template_values['page_title'] = u'V2EX › 搜索 ' + str(q)
+        template_values['q'] = q
+        # Fetch result
+        q_lowered = q.lower()
+        self.response.out.write(self.request.headers)
+        if self.request.headers['Host'] == 'localhost:10000':
+            fts = 'http://localhost:20000/search?q=yeah'
+        else:
+            fts = 'http://fts.v2ex.com/search?q=yeah'
+        response = urlfetch.fetch(fts)
+        self.response.out.write(response)
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'search.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
+class DispatcherHandler(webapp.RequestHandler):
+    def post(self):
+        referer = self.request.headers['Referer']
+        q = self.request.get('q').strip()
+        if len(q) > 0:
+            self.redirect('/q/' + str(q))
+        else:
+            self.redirect(referer)
+
 def main():
     application = webapp.WSGIApplication([
     ('/', HomeHandler),
@@ -449,7 +478,9 @@ def main():
     ('/signin', SigninHandler),
     ('/signup', SignupHandler),
     ('/signout', SignoutHandler),
-    ('/go/(.*)', NodeHandler)
+    ('/go/(.*)', NodeHandler),
+    ('/q/(.*)', SearchHandler),
+    ('/_dispatcher', DispatcherHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

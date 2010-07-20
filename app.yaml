@@ -61,12 +61,21 @@ handlers:
   
 - url: /faq
   script: page.py
+
+- url: /mission
+  script: page.py
+
+- url: /advertise
+  script: page.py
   
 - url: /notes/?
   script: notes.py
 
 - url: /notes/.*
   script: notes.py
+
+- url: /api/.*
+  script: api.py
 
 - url: .*
   script: main.py

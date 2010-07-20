@@ -32,8 +32,9 @@ class AboutHandler(webapp.RequestHandler):
             note = GetKindByNum('Note', 2)
         template_values['note'] = note
         member = CheckAuth(self)
-        template_values['member'] = member
-        template_values['page_title'] = 'About'
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › About'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'about.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -42,16 +43,41 @@ class FAQHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
         member = CheckAuth(self)
-        template_values['member'] = member
-        template_values['page_title'] = 'About'
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › FAQ'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'faq.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
+class MissionHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › Mission'
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'mission.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
+class AdvertiseHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › Advertise'
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'advertise.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
 
 def main():
     application = webapp.WSGIApplication([
     ('/about', AboutHandler),
-    ('/faq', FAQHandler)
+    ('/faq', FAQHandler),
+    ('/mission', MissionHandler),
+    ('/advertise', AdvertiseHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

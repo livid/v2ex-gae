@@ -141,13 +141,15 @@ class NewTopicHandler(webapp.RequestHandler):
                 topic.member = member
                 topic.member_num = member.num
                 topic.last_touched = datetime.datetime.now()
-                ua = os.environ['HTTP_USER_AGENT']
+                ua = self.request.headers['User-Agent']
                 if (re.findall('Mozilla\/5.0 \(iPhone;', ua)):
                     topic.source = 'iPhone'
                 if (re.findall('Mozilla\/5.0 \(iPod;', ua)):
                     topic.source = 'iPod'
                 if (re.findall('Mozilla\/5.0 \(iPad;', ua)):
                     topic.source = 'iPad'
+                if (re.findall('Android', ua)):
+                    topic.source = 'Android'
                 node.topics = node.topics + 1
                 node.put()
                 topic.put()
@@ -309,6 +311,8 @@ class TopicHandler(webapp.RequestHandler):
                     reply.source = 'iPod'
                 if (re.findall('Mozilla\/5.0 \(iPad', ua)):
                     reply.source = 'iPad'
+                if (re.findall('Android', ua)):
+                    reply.source = 'Android'
                 reply.put()
                 topic.put()
                 counter.put()
@@ -493,10 +497,32 @@ class TopicDeleteHandler(webapp.RequestHandler):
                         counter2.put()
         self.redirect('/')
                     
+
+class TopicPlainTextHandler(webapp.RequestHandler):
+    def get(self, topic_num):
+        topic = GetKindByNum('topic', topic_num)
+        if topic:
+            template_values = {}
+            template_values['topic'] = topic
+            replies = memcache.get('topic_' + str(topic_num) + '_replies_asc')
+            if replies is None:
+                q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
+                replies = q4
+                memcache.set('topic_' + str(topic_num) + '_replies_asc', q4, 86400)
+            if replies:
+                template_values['replies'] = replies
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'topic.txt')
+            output = template.render(path, template_values)
+            self.response.headers['Content-type'] = 'text/plain;charset=UTF-8'
+            self.response.out.write(output)
+        else:
+            self.error(404)
+
 def main():
     application = webapp.WSGIApplication([
     ('/new/(.*)', NewTopicHandler),
     ('/t/([0-9]+)', TopicHandler),
+    ('/t/([0-9]+).txt', TopicPlainTextHandler),
     ('/edit/topic/([0-9]+)', TopicEditHandler),
     ('/delete/topic/([0-9]+)', TopicDeleteHandler)
     ],
