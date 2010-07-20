@@ -506,9 +506,9 @@ class TopicPlainTextHandler(webapp.RequestHandler):
             template_values['topic'] = topic
             replies = memcache.get('topic_' + str(topic_num) + '_replies_asc')
             if replies is None:
-                q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
-                replies = q4
-                memcache.set('topic_' + str(topic_num) + '_replies_asc', q4, 86400)
+                q = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
+                replies = q
+                memcache.set('topic_' + str(topic_num) + '_replies_asc', q, 86400)
             if replies:
                 template_values['replies'] = replies
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'topic.txt')

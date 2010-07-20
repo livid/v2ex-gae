@@ -12,6 +12,7 @@ import random
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
@@ -29,6 +30,8 @@ from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
+
+from django.utils import simplejson as json
 
 template.register_template_library('v2ex.templatetags.filters')
 
@@ -446,17 +449,21 @@ class SearchHandler(webapp.RequestHandler):
     def get(self, q):
         q = urllib.unquote(q)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 搜索 ' + str(q)
+        template_values['page_title'] = u'V2EX › 搜索 ' + q
         template_values['q'] = q
         # Fetch result
         q_lowered = q.lower()
-        self.response.out.write(self.request.headers)
         if self.request.headers['Host'] == 'localhost:10000':
-            fts = 'http://localhost:20000/search?q=yeah'
+            fts = u'http://localhost:20000/search?q=' + str(urllib.quote(q_lowered))
         else:
-            fts = 'http://fts.v2ex.com/search?q=yeah'
+            fts = u'http://fts.v2ex.com/search?q=' + str(urllib.quote(q_lowered))
         response = urlfetch.fetch(fts)
-        self.response.out.write(response)
+        if response.status_code == 200:
+            results = json.loads(response.content)
+            topics = []
+            for num in results:
+                topics.append(GetKindByNum('Topic', num))
+            template_values['topics'] = topics
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'search.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -466,7 +473,7 @@ class DispatcherHandler(webapp.RequestHandler):
         referer = self.request.headers['Referer']
         q = self.request.get('q').strip()
         if len(q) > 0:
-            self.redirect('/q/' + str(q))
+            self.redirect('/q/' + q)
         else:
             self.redirect(referer)
 
