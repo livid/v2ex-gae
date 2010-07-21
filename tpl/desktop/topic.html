@@ -12,8 +12,8 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell">
-                    <div class="fr snow"><a href="/member/{{ topic.member.username }}">{% if topic.member.avatar_large_url %}<img src="{{ topic.member.avatar_large_url }}" border="0" alt="{{ topic.member.username }}" />{% else %}<img src="/static/img/avatar_large.png" border="0" />{% endif %}</a></div>
+                <div class="cell" style="min-height: 73px;">
+                    <div class="fr snow"><a href="/member/{{ topic.member.username }}">{% if topic.member.avatar_large_url %}<img src="{{ topic.member.avatar_large_url }}" border="0" alt="{{ topic.member.username }}"/>{% else %}<img src="/static/img/avatar_large.png" border="0" />{% endif %}</a></div>
                     <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a></span>
                     <h1>{{ topic.title }}</h1>
                     <strong><small class="fade">By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.num 1 %} - <a href="#;" onclick="if (confirm('确认删除标题为 {{ topic.title|escape }} 的第 {{ topic.num }} 号主题？')) { location = '/delete/topic/{{ topic.num }}'; }">DELETE</a>{% endifequal %}</small></strong>
@@ -33,9 +33,9 @@
                 <div class="cell">
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tr>
-                            <td width="48" valign="top"><a href="/member/{{ reply.member.username }}">{% if reply.member.avatar_normal_url %}<img src="{{ reply.member.avatar_normal_url }}" border="0" />{% else %}<img src="/static/img/avatar_normal.png" border="0" />{% endif %}</a></td>
+                            <td width="48" valign="top"><a href="/member/{{ reply.created_by }}">{% if reply.member.avatar_normal_url %}<img src="{{ reply.member.avatar_normal_url }}" border="0" />{% else %}<img src="/static/img/avatar_normal.png" border="0" />{% endif %}</a></td>
                             <td width="10"></td>
-                            <td width="auto" valign="top"><div class="fr"><small class="snow">{{ reply.created|timesince }} ago</small></div>
+                            <td width="auto" valign="top"><div class="fr" id="reply_{{ reply.num }}_buttons"><strong><small class="snow">{{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a>{% endifequal %}</small></strong></div>
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
                                 <div class="sep5"></div>

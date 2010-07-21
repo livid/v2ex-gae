@@ -11,6 +11,8 @@ import random
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
@@ -157,6 +159,7 @@ class NewTopicHandler(webapp.RequestHandler):
                 counter2.put()
                 memcache.delete('Node_' + str(topic.node_num))
                 memcache.delete('Node::' + str(node.name))
+                taskqueue.add(url='/index/topic/' + str(topic.num))
                 self.redirect('/t/' + str(topic.num) + '#reply0')
             else:    
                 if browser['ios']:
@@ -320,6 +323,7 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.set('topic_' + str(topic.num), topic, 86400)
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc')
+                taskqueue.add(url='/index/topic/' + str(topic.num))
                 self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
             else:
                 node = False
@@ -518,13 +522,25 @@ class TopicPlainTextHandler(webapp.RequestHandler):
         else:
             self.error(404)
 
+
+class TopicIndexHandler(webapp.RequestHandler):
+    def post(self, topic_num):
+        try:
+            if int(os.environ['SERVER_PORT']) == 10000:
+                urlfetch.fetch('http://127.0.0.1:20000/index/' + str(topic_num))
+            else:
+                urlfetch.fetch('http://fts.v2ex.com/index/' + str(topic_num))
+        except:
+            logging.info('Topic #' + str(topic_num) + ' indexed with minor problem')
+
 def main():
     application = webapp.WSGIApplication([
     ('/new/(.*)', NewTopicHandler),
     ('/t/([0-9]+)', TopicHandler),
     ('/t/([0-9]+).txt', TopicPlainTextHandler),
     ('/edit/topic/([0-9]+)', TopicEditHandler),
-    ('/delete/topic/([0-9]+)', TopicDeleteHandler)
+    ('/delete/topic/([0-9]+)', TopicDeleteHandler),
+    ('/index/topic/([0-9]+)', TopicIndexHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

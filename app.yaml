@@ -43,6 +43,9 @@ handlers:
   
 - url: /delete/.*
   script: topic.py
+
+- url: /index/.*
+  script: topic.py
   
 - url: /avatar/.*
   script: avatar.py

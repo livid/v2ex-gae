@@ -449,20 +449,29 @@ class SearchHandler(webapp.RequestHandler):
     def get(self, q):
         q = urllib.unquote(q)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 搜索 ' + q
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = 'V2EX › 搜索 ' + q
         template_values['q'] = q
         # Fetch result
         q_lowered = q.lower()
-        if self.request.headers['Host'] == 'localhost:10000':
-            fts = u'http://localhost:20000/search?q=' + str(urllib.quote(q_lowered))
+        q_md5 = hashlib.md5(q_lowered).hexdigest()
+        topics = memcache.get('q::' + q_md5)
+        if topics is None:
+            if self.request.headers['Host'] == 'localhost:10000':
+                fts = u'http://127.0.0.1:20000/search?q=' + str(urllib.quote(q_lowered))
+            else:
+                fts = u'http://fts.v2ex.com/search?q=' + str(urllib.quote(q_lowered))
+            response = urlfetch.fetch(fts)
+            if response.status_code == 200:
+                results = json.loads(response.content)
+                topics = []
+                for num in results:
+                    topics.append(GetKindByNum('Topic', num))
+                template_values['topics'] = topics
+                memcache.set('q::' + q_md5, topics, 86400)
         else:
-            fts = u'http://fts.v2ex.com/search?q=' + str(urllib.quote(q_lowered))
-        response = urlfetch.fetch(fts)
-        if response.status_code == 200:
-            results = json.loads(response.content)
-            topics = []
-            for num in results:
-                topics.append(GetKindByNum('Topic', num))
             template_values['topics'] = topics
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'search.html')
         output = template.render(path, template_values)
