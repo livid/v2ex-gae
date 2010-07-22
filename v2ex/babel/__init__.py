@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.2.8'
+SYSTEM_VERSION = '2.2.9'
 
 import datetime
 
@@ -15,6 +15,22 @@ class Member(db.Model):
     email = db.StringProperty(required=False, indexed=True)
     website = db.StringProperty(required=False, default='')
     twitter = db.StringProperty(required=False, default='')
+    twitter_oauth = db.IntegerProperty(required=False, default=0)
+    twitter_oauth_key = db.StringProperty(required=False)
+    twitter_oauth_secret = db.StringProperty(required=False)
+    twitter_oauth_string = db.StringProperty(required=False)
+    twitter_sync = db.IntegerProperty(required=False, default=0)
+    twitter_id = db.IntegerProperty(required=False)
+    twitter_name = db.StringProperty(required=False)
+    twitter_screen_name = db.StringProperty(required=False)
+    twitter_location = db.StringProperty(required=False)
+    twitter_description = db.StringProperty(required=False)
+    twitter_profile_image_url = db.StringProperty(required=False)
+    twitter_url = db.StringProperty(required=False)
+    twitter_statuses_count = db.IntegerProperty(required=False)
+    twitter_followers_count = db.IntegerProperty(required=False)
+    twitter_friends_count = db.IntegerProperty(required=False)
+    twitter_favourites_count = db.IntegerProperty(required=False)
     location = db.StringProperty(required=False, default='')
     tagline = db.TextProperty(required=False, default='')
     bio = db.TextProperty(required=False, default='')

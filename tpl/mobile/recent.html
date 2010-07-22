@@ -12,7 +12,7 @@
 	{% include 'common/top.html' %}
 	<div id="Main">
 		<div class="section"><a href="/" class="black">V2EX</a> › 最近的 50 个主题</div>
-		{% for topic in recent %}
+		{% for topic in latest %}
 		<div class="cell">
 		<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
 			<td valign="top" class="avatar"><a href="/member/{{ topic.created_by }}">{% if topic.member.avatar_normal_url %}<img src="{{ topic.member.avatar_normal_url }}" align="absmiddle" border="0" />{% else %}<img src="/static/img/avatar_normal.png" align="absmiddle" border="0" />{% endif %}</a></td>

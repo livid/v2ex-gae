@@ -4,3 +4,4 @@
 .bzr
 .bzrignore
 psd
+consumer.py

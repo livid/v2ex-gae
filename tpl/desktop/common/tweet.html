@@ -1,0 +1,21 @@
+<script type="text/javascript">
+    var updateCount = function() {
+        s = document.getElementById("s");
+        r = 140 - s.value.length;
+        tc = document.getElementById("tc");
+        tc.innerHTML = r;
+    }
+</script>
+<form method="post" action="/twitter/tweet">
+<textarea class="mll short" name="status" maxlength="140" id="s" onkeyup="updateCount();"></textarea>
+<div class="sep10"></div>
+<div align="right"><input type="submit" value="Tweet" class="super normal button" /></div>
+</form>
+<script type="text/javascript">
+    var focusStatus = function() {
+        s = document.getElementById("s");
+        s.focus();
+    }
+    
+    setTimeout("focusStatus()", 200);
+</script>

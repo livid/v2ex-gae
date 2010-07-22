@@ -6,6 +6,9 @@
             <ul>
                 <li><a href="/" class="white">首页</a></li>
                 <li><a href="/member/{{ member.username }}" class="white">{{ member.username }}</a></li>
+                {% ifequal member.twitter_oauth 1 %}
+                <li><a href="/twitter" class="white"><img src="/static/img/bird.png" style="padding: 0px 3px 0px 3px;" border="0" alt="Twitter" /></a></li>
+                {% endifequal %}
                 <!--<li><a href="/mentions" class="white">提到我的</a></li>-->
                 <li><a href="/notes" class="white">记事本</a></li>
                 <li><a href="/settings" class="white">设置</a></li>

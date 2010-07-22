@@ -98,6 +98,20 @@
         			            <textarea class="ml" name="bio">{{ member_bio|escape }}</textarea>
         			        </td>
         			    </tr>
+        			    {% ifequal member.twitter_oauth 1 %}
+        			    <tr>
+        			        <td width="80" align="right">
+        			            <span class="small">Twitter Sync</span>
+        			        </td>
+        			        <td width="200" align="left">
+        			            {% ifequal member_twitter_sync 1 %}
+        			            <input type="checkbox" name="twitter_sync" checked="checked" />
+        			            {% else %}
+        			            <input type="checkbox" name="twitter_sync" />
+                                {% endifequal %}
+        			        </td>
+        			    </tr>
+        			    {% endifequal %}
                         <tr>
         			        <td width="80" align="right">
         			        </td>
@@ -203,6 +217,56 @@
         			    </tr>
         			</table>
                     </form>
+                </div>
+            </div>
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><span class="fade">Twitter</span></div>
+                <div class="cell">
+                    <table cellpadding="5" cellspacing="0" border="0">
+                        {% ifequal member.twitter_oauth 1 %}
+                        <tr>
+        			        <td width="80" align="right">
+        			            <img src="{{ member.twitter_profile_image_url }}" />
+        			        </td>
+        			        <td width="200" align="left">
+        			            {{ member.twitter_name }} <span class="fade">@<a href="http://twitter.com/{{ member.twitter_screen_name }}" target="_blank">{{ member.twitter_screen_name }}</a></span>
+        			            <div class="sep5"></div>
+        			            <span class="fade">
+        			            {{ member.twitter_statuses_count }} tweets
+        			            <div class="sep3"></div>
+        			            {{ member.twitter_followers_count }} followers, following {{ member.twitter_friends_count }}
+        			            </span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="submit" value="Unlink My Twitter Account" class="super normal button" onclick="location.href = '/twitter/unlink'" />
+        			        </td>
+        			    </tr>
+                        {% else %}
+                        <tr>
+        			        <td width="80" align="right">
+        			            帐号绑定
+        			        </td>
+        			        <td width="200" align="left">
+        			            <span class="fade">当前尚未绑定 Twitter 帐号</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="submit" value="Link My Twitter Account" class="super normal button" onclick="location.href = '/twitter/link'" />
+        			        </td>
+        			    </tr>
+                        {% endifequal %}
+        			</table>
+                </div>
+                <div class="inner">
+                    通过 OAuth 绑定 Twitter 帐号将可以自动同步你的主题和回帖，同时使用更多 Twitter 高级功能。
                 </div>
             </div>
         </div>

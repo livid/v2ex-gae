@@ -80,5 +80,11 @@ handlers:
 - url: /api/.*
   script: api.py
 
+- url: /twitter/?
+  script: t.py
+
+- url: /twitter/.*
+  script: t.py
+
 - url: .*
   script: main.py

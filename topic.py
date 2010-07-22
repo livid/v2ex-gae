@@ -31,6 +31,11 @@ from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
 
+from twitter.oauthtwitter import OAuthApi
+from twitter.oauth import OAuthToken
+
+from consumer import CONSUMER_KEY, CONSUMER_SECRET
+
 template.register_template_library('v2ex.templatetags.filters')
 
 class NewTopicHandler(webapp.RequestHandler):
@@ -152,6 +157,8 @@ class NewTopicHandler(webapp.RequestHandler):
                     topic.source = 'iPad'
                 if (re.findall('Android', ua)):
                     topic.source = 'Android'
+                if (re.findall('Mozilla\/5.0 \(PLAYSTATION 3;', ua)):
+                    topic.source = 'PS3'            
                 node.topics = node.topics + 1
                 node.put()
                 topic.put()
@@ -160,6 +167,15 @@ class NewTopicHandler(webapp.RequestHandler):
                 memcache.delete('Node_' + str(topic.node_num))
                 memcache.delete('Node::' + str(node.name))
                 taskqueue.add(url='/index/topic/' + str(topic.num))
+                # Twitter Sync
+                if member.twitter_oauth == 1 and member.twitter_sync == 1:
+                    access_token = OAuthToken.from_string(member.twitter_oauth_string)
+                    twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                    status = topic.title + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
+                    try:
+                        twitter.PostUpdate(status.encode('utf-8'))
+                    except:
+                        logging.error("Failed to sync to Twitter for Topic #" + str(topic.num))
                 self.redirect('/t/' + str(topic.num) + '#reply0')
             else:    
                 if browser['ios']:
@@ -316,6 +332,8 @@ class TopicHandler(webapp.RequestHandler):
                     reply.source = 'iPad'
                 if (re.findall('Android', ua)):
                     reply.source = 'Android'
+                if (re.findall('Mozilla\/5.0 \(PLAYSTATION 3;', ua)):
+                    reply.source = 'PS3'
                 reply.put()
                 topic.put()
                 counter.put()
@@ -324,6 +342,16 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc')
                 taskqueue.add(url='/index/topic/' + str(topic.num))
+                # Twitter Sync
+                if member.twitter_oauth == 1 and member.twitter_sync == 1:
+                    access_token = OAuthToken.from_string(member.twitter_oauth_string)
+                    twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                    status = u'Re: ' + topic.title + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num) + '#reply' + str(topic.replies)
+                    if len(status) < 140:
+                        try:
+                            twitter.PostUpdate(status.encode('utf-8'))
+                        except:
+                            logging.error("Failed to sync to Twitter for Reply #" + str(reply.num))
                 self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
             else:
                 node = False

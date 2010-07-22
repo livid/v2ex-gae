@@ -79,6 +79,8 @@ class SettingsHandler(webapp.RequestHandler):
             if (member.bio == None):
                 member.bio = ''
             template_values['member_bio'] = member.bio
+            if member.twitter_sync == 1:
+                template_values['member_twitter_sync'] = 1
             if 'message' in self.session:
               message = self.session['message']
               del self.session['message']
@@ -257,14 +259,25 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_bio_error'] = member_bio_error
             template_values['member_bio_error_message'] = member_bio_error_messages[member_bio_error]
             template_values['errors'] = errors
+            # Verification: twitter_sync
+            if member.twitter_oauth == 1:
+                member_twitter_sync = self.request.get('twitter_sync')
+                if member_twitter_sync == 'on':
+                    member_twitter_sync = 1
+                else:
+                    member_twitter_sync = 0
+                template_values['member_twitter_sync'] = member_twitter_sync
             if (errors == 0):
                 member.email = member_email.lower()
                 member.website = member_website
                 member.twitter = member_twitter
                 member.location = member_location
                 member.tagline = member_tagline
+                if member.twitter_oauth == 1:
+                    member.twitter_sync = member_twitter_sync
                 member.bio = member_bio
                 member.put()
+                memcache.delete('member_' + str(member.num))
                 self.redirect('/settings')
             else:
                 if browser['ios']:

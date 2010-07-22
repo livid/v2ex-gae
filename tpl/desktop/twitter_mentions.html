@@ -1,0 +1,44 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/adsense.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell"><div class="fr"><strong><span class="snow bigger" id="tc">140</span></strong></div>
+                    <strong><span class="fade bigger"><img src="/static/img/bird.png" /> &nbsp; <a href="/twitter">Home</a> &nbsp; Mentions &nbsp; <a href="/twitter/inbox">Direct Messages</a> </span></strong>
+                    <div class="sep10"></div>
+                    {% include 'common/tweet.html' %}
+                </div>
+                {% for status in statuses %}
+                <div class="cell">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+                    	<td valign="top" class="avatar"><a href="/twitter/user/{{ status.user.screen_name }}"><img src="{{ status.user.profile_image_url }}" align="absmiddle" border="0" class="avatar_normal" /></a></td>
+                    	<td style="padding-left: 12px" valign="top">
+                    	    <div class="fr">
+                    	        <strong class="snow"><small>{{ status.datetime|timesince }} ago via {{ status.source }}</small></strong>
+                    	    </div>
+                    	    <div class="sep3"></div>
+                    	    <strong>{{ status.user.name }}</strong> @<a href="/twitter/user/{{ status.user.screen_name }}" class="dark">{{ status.user.screen_name }}</a>
+                    	    <div class="sep3"></div>
+                    	    <div class="status">{{ status.text|urlize }}</div>
+                    	</td>
+                    	</tr>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
