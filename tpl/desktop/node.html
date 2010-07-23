@@ -9,6 +9,7 @@
             {% include 'rightbar/user.html' %}
             <div class="sep20"></div>
             {% include 'rightbar/adsense.html' %}
+            {% include 'rightbar/recent_nodes.html' %}
         </div>
         <div id="Content">
             <div class="box">
@@ -16,7 +17,7 @@
                 <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
                 {% if node.header %}
                 <div class="sep10"></div>
-                <span class="header">{{ node.header|escape }}</span>
+                <span class="header">{{ node.header|linebreaksbr }}</span>
                 {% endif %}
                 {% if member %}
                 <div class="sep10"></div>
@@ -64,7 +65,7 @@
                         {% if pagination %}
                         <div class="sep10"></div>
                         {% endif %}
-                        <span class="footer">{{ node.footer|escape }}</span>
+                        <span class="footer">{{ node.footer|linebreaksbr }}</span>
                     {% endif %}
                 </div>
             </div>

@@ -37,3 +37,16 @@ def GetKindByName(kind, name):
             return one
         else:
             return False
+
+def GetMemberByUsername(name):
+    one = memcache.get('Member::' + str(name))
+    if one:
+        return one
+    else:
+        q = db.GqlQuery("SELECT * FROM Member WHERE username = :1", str(name))
+        if q.count() == 1:
+            one = q[0]
+            memcache.set('Member::' + str(name), one, 86400)
+            return one
+        else:
+            return False

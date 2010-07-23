@@ -97,8 +97,8 @@ a.dark:hover {
 
 #Top {
 	background: #303033; 
-	background-image: -moz-linear-gradient(center top , #444, #111) repeat scroll 0 0 transparent; 
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111)); 
+	background: -moz-linear-gradient(center top , #444, #111) repeat scroll 0 0 transparent; 
+	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111)); 
 	height: 40px;
 }
 
@@ -258,6 +258,13 @@ td.avatar_mini {
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", "Helvetica Neue", "Tahoma", "Verdana", "Hiragino Sans GB", STHeiti !important;
 	font-size: 14px;
 	line-height: 20px;
+}
+
+.page {
+	font-family: "Helvetica Neue", "Luxi Sans", "Tahoma", "Verdana", "Hiragino Sans GB", STHeiti !important;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 0px 20px 20px 20px;
 }
 
 .status {
@@ -554,4 +561,15 @@ a.count_orange:hover {
 	-webkit-border-radius: 12px;
 	margin: 18px 12px 0px 0px;
 	text-decoration: none;
+}
+
+.time td.city {
+	color: #667;
+	font-size: 16px;
+}
+
+.time td.now {
+	color: #000;
+	font-size: 16px;
+	font-weight: bold;
 }

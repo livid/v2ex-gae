@@ -30,6 +30,7 @@ from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
+from v2ex.babel.ext.sessions import Session
 
 from django.utils import simplejson as json
 
@@ -38,10 +39,14 @@ template.register_template_library('v2ex.templatetags.filters')
 class HomeHandler(webapp.RequestHandler):
     def get(self):
         browser = detect(self.request)
+        self.session = Session()
         template_values = {}
         template_values['page_title'] = 'V2EX'
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
+        if 'recent_nodes' in self.session:
+            recent_nodes = json.loads(self.session['recent_nodes'])
+            template_values['recent_nodes'] = recent_nodes
         new = ''
         nodes_new = []
         new = memcache.get('home_nodes_new_neue')
@@ -372,6 +377,7 @@ class SignoutHandler(webapp.RequestHandler):
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
         browser = detect(self.request)
+        self.session = Session()
         template_values = {}
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
@@ -387,6 +393,13 @@ class NodeHandler(webapp.RequestHandler):
         has_previous = False
         previous = 1
         if node:
+            if 'recent_nodes' in self.session:
+                recent_nodes = json.loads(self.session['recent_nodes'])
+            else:
+                recent_nodes = {}
+            recent_nodes[node.name] = node.title
+            template_values['recent_nodes'] = recent_nodes
+            self.session['recent_nodes'] = json.dumps(recent_nodes)
             template_values['page_title'] = u'V2EX › ' + node.title
             # Pagination
             if node.topics > page_size:
@@ -445,6 +458,18 @@ class NodeHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
+class NodeApiHandler(webapp.RequestHandler):
+    def get(self, node_name):
+        node = GetKindByName('Node', node_name)
+        if node:
+            template_values = {}
+            template_values['node'] = node
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'node.json')
+            self.response.headers['Content-type'] = 'application/json;charset=UTF-8'
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+        else:
+            self.error(404)
 class SearchHandler(webapp.RequestHandler):
     def get(self, q):
         q = urllib.unquote(q)
@@ -495,6 +520,7 @@ def main():
     ('/signup', SignupHandler),
     ('/signout', SignoutHandler),
     ('/go/(.*)', NodeHandler),
+    ('/n/([a-zA-Z0-9]+).json', NodeApiHandler),
     ('/q/(.*)', SearchHandler),
     ('/_dispatcher', DispatcherHandler)
     ],

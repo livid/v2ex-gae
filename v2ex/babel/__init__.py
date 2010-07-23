@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.2.9'
+SYSTEM_VERSION = '2.2.12'
 
 import datetime
 
@@ -24,7 +24,7 @@ class Member(db.Model):
     twitter_name = db.StringProperty(required=False)
     twitter_screen_name = db.StringProperty(required=False)
     twitter_location = db.StringProperty(required=False)
-    twitter_description = db.StringProperty(required=False)
+    twitter_description = db.TextProperty(required=False)
     twitter_profile_image_url = db.StringProperty(required=False)
     twitter_url = db.StringProperty(required=False)
     twitter_statuses_count = db.IntegerProperty(required=False)

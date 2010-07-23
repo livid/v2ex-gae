@@ -14,7 +14,13 @@
             <div class="box">
                 <div class="cell"><span class="fade"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> FAQ</span></div>
                 <div class="inner">
-                    <span class="bigger">Coming Soon</span>
+                    <div class="page">
+                        <h1>{{ note.title }}</h1>
+                        <div class="sep10"></div>
+                        {{ note.body|linebreaksbr }}
+                        <div class="sep10"></div>
+                        <small class="snow">Last Revised {{ note.last_modified|date:"n/j, Y" }}</small>
+                    </div>
                 </div>
             </div>
         </div>

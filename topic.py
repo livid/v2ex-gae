@@ -30,6 +30,9 @@ from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
+from v2ex.babel.ext.sessions import Session
+
+from django.utils import simplejson as json
 
 from twitter.oauthtwitter import OAuthApi
 from twitter.oauth import OAuthToken
@@ -190,13 +193,20 @@ class NewTopicHandler(webapp.RequestHandler):
 class TopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
         browser = detect(self.request)
+        self.session = Session()
         template_values = {}
         reply_reversed = self.request.get('r')
         if reply_reversed == '1':
             reply_reversed = True
         else:
             reply_reversed = False
+        filter_mode = self.request.get('f')
+        if filter_mode == '1':
+            filter_mode = True
+        else:
+            filter_mode = False
         template_values['reply_reversed'] = reply_reversed
+        template_values['filter_mode'] = filter_mode
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         template_values['errors'] = errors
@@ -221,22 +231,36 @@ class TopicHandler(webapp.RequestHandler):
             section = False
             node = GetKindByNum('Node', topic.node_num)
             if (node):
+                if 'recent_nodes' in self.session:
+                    recent_nodes = json.loads(self.session['recent_nodes'])
+                else:
+                    recent_nodes = {}
+                recent_nodes[node.name] = node.title
+                template_values['recent_nodes'] = recent_nodes
+                self.session['recent_nodes'] = json.dumps(recent_nodes)
                 section = GetKindByNum('Section', node.section_num)
             template_values['node'] = node
             template_values['section'] = section
             replies = False
-            if reply_reversed:
-                replies = memcache.get('topic_' + str(topic_num) + '_replies_desc')
+            if filter_mode:
+                replies = memcache.get('topic_' + str(topic_num) + '_replies_filtered')
                 if replies is None:
-                    q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
-                    replies = q4
-                    memcache.set('topic_' + str(topic_num) + '_replies_desc', q4, 86400)
-            else:
-                replies = memcache.get('topic_' + str(topic_num) + '_replies_asc')
-                if replies is None:
-                    q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
-                    replies = q4
-                    memcache.set('topic_' + str(topic_num) + '_replies_asc', q4, 86400)
+                    q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC", topic.num, topic.member.num)
+                    replies = q5
+                    memcache.set('topic_' + str(topic_num) + '_replies_filtered', replies, 7200)
+            else:    
+                if reply_reversed:
+                    replies = memcache.get('topic_' + str(topic_num) + '_replies_desc')
+                    if replies is None:
+                        q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
+                        replies = q4
+                        memcache.set('topic_' + str(topic_num) + '_replies_desc', q4, 86400)
+                else:
+                    replies = memcache.get('topic_' + str(topic_num) + '_replies_asc')
+                    if replies is None:
+                        q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
+                        replies = q4
+                        memcache.set('topic_' + str(topic_num) + '_replies_asc', q4, 86400)
             template_values['replies'] = replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic.html')
@@ -341,6 +365,7 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.set('topic_' + str(topic.num), topic, 86400)
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc')
+                memcache.delete('topic_' + str(topic_num) + '_replies_filtered')
                 taskqueue.add(url='/index/topic/' + str(topic.num))
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
@@ -561,6 +586,87 @@ class TopicIndexHandler(webapp.RequestHandler):
         except:
             logging.info('Topic #' + str(topic_num) + ' indexed with minor problem')
 
+
+class ReplyEditHandler(webapp.RequestHandler):
+    def get(self, reply_num):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                template_values = {}
+                template_values['page_title'] = u'V2EX › 编辑回复'
+                template_values['member'] = member
+                q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
+                if q[0]:
+                    reply = q[0]
+                    topic = reply.topic
+                    node = topic.node
+                    template_values['reply'] = reply
+                    template_values['topic'] = topic
+                    template_values['node'] = node
+                    template_values['reply_content'] = reply.content
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_reply.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+                else:
+                    self.redirect('/')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+    
+    def post(self, reply_num):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                template_values = {}
+                template_values['page_title'] = u'V2EX › 编辑回复'
+                template_values['member'] = member
+                q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
+                if q[0]:
+                    reply = q[0]
+                    topic = reply.topic
+                    node = topic.node
+                    template_values['reply'] = reply
+                    template_values['topic'] = topic
+                    template_values['node'] = node
+                    # Verification: content
+                    errors = 0
+                    reply_content_error = 0
+                    reply_content_error_messages = ['',
+                        u'请输入回复内容',
+                        u'回复内容长度不能超过 2000 个字符'
+                    ]
+                    reply_content = self.request.get('content').strip()
+                    if (len(reply_content) == 0):
+                        errors = errors + 1
+                        reply_content_error = 1
+                    else:
+                        if (len(reply_content) > 2000):
+                            errors = errors + 1
+                            reply_content_error = 2
+                    template_values['reply_content'] = reply_content
+                    template_values['reply_content_error'] = reply_content_error
+                    template_values['reply_content_error_message'] = reply_content_error_messages[reply_content_error]
+                    template_values['errors'] = errors
+                    if (errors == 0):
+                        reply.content = reply_content
+                        reply.put()
+                        memcache.delete('topic_' + str(topic.num) + '_replies_asc')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_desc')
+                        memcache.delete('topic_' + str(topic_num) + '_replies_filtered')
+                        self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_reply.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
+                else:
+                    self.redirect('/')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+        
+
 def main():
     application = webapp.WSGIApplication([
     ('/new/(.*)', NewTopicHandler),
@@ -568,7 +674,8 @@ def main():
     ('/t/([0-9]+).txt', TopicPlainTextHandler),
     ('/edit/topic/([0-9]+)', TopicEditHandler),
     ('/delete/topic/([0-9]+)', TopicDeleteHandler),
-    ('/index/topic/([0-9]+)', TopicIndexHandler)
+    ('/index/topic/([0-9]+)', TopicIndexHandler),
+    ('/edit/reply/([0-9]+)', ReplyEditHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

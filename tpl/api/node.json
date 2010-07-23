@@ -1,0 +1,9 @@
+{
+    "id" : {{ node.num }},
+    "name" : "{{ node.name }}",
+    "url" : "http://v2ex.appspot.com/go/{{ node.name }}",
+    "title" : "{{ node.title|escape }}",
+    "title_alternative" : "{{ node.title_alternative|escape }}",
+    "topics" : {{ node.topics }},
+    "created" : "{{ node.created }}"
+}

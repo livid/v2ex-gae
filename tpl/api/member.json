@@ -1,0 +1,11 @@
+{
+    "id" : {{ one.num }},
+    "username" : "{{ one.username }}",
+    "website" : "{{ one.website }}",
+    "twitter" : "{{ one.twitter }}",
+    "location" : "{{ one.location }}",
+    "tagline" : "{{ one.tagline }}",
+    "bio" : "{{ one.bio }}",
+    "avatar" : "http://v2ex.appspot.com{{ one.avatar_normal_url }}",
+    "created" : "{{ one.created }}"
+}

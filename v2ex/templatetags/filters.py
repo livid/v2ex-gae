@@ -6,6 +6,8 @@ from datetime import timedelta
 register = template.Library()
 
 def timezone(value, offset):
+    if offset > 12:
+        offset = 12 - offset
     return value + timedelta(hours=offset)
 register.filter(timezone)
 

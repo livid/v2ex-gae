@@ -51,8 +51,6 @@ except ImportError:
 
 CHARACTER_LIMIT = 140
 
-if os.environ['HTTP_HOST'].find('localhost') != -1:
-  TWITTER_API_ROOT = 'http://li2z.cn/t/'
 
 class TwitterError(Exception):
   '''Base class for Twitter errors'''

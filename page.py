@@ -42,6 +42,10 @@ class AboutHandler(webapp.RequestHandler):
 class FAQHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        note = GetKindByNum('Note', 195)
+        if note is False:
+            note = GetKindByNum('Note', 4)
+        template_values['note'] = note
         member = CheckAuth(self)
         if member:
             template_values['member'] = member

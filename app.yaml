@@ -37,6 +37,9 @@ handlers:
   
 - url: /t/.*
   script: topic.py
+
+- url: /r/.*
+  script: topic.py
   
 - url: /edit/.*
   script: topic.py
@@ -85,6 +88,9 @@ handlers:
 
 - url: /twitter/.*
   script: t.py
+
+- url: /time/?
+  script: misc.py
 
 - url: .*
   script: main.py

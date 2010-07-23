@@ -20,6 +20,7 @@ from v2ex.babel import Avatar
 from v2ex.babel import Counter
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
+from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
 
@@ -50,6 +51,19 @@ class MemberHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'member_home.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
+        
+class MemberApiHandler(webapp.RequestHandler):
+    def get(self, member_username):
+        one = GetMemberByUsername(member_username)
+        if one:
+            template_values = {}
+            template_values['one'] = one
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'member.json')
+            self.response.headers['Content-type'] = 'application/json;charset=UTF-8'
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+        else:
+            self.error(404)
         
 
 class SettingsHandler(webapp.RequestHandler):
@@ -459,7 +473,8 @@ class SettingsAvatarHandler(webapp.RequestHandler):
 
 def main():
     application = webapp.WSGIApplication([
-    ('/member/(.*)', MemberHandler),
+    ('/member/([a-z0-9A-Z\_]+)', MemberHandler),
+    ('/member/([a-z0-9A-Z\_]+).json', MemberApiHandler),
     ('/settings', SettingsHandler),
     ('/settings/password', SettingsPasswordHandler),
     ('/settings/avatar', SettingsAvatarHandler)

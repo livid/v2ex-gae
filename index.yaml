@@ -56,6 +56,19 @@ indexes:
 
 - kind: Reply
   properties:
+  - name: member_num
+  - name: topic_num
+  - name: created
+
+- kind: Reply
+  properties:
+  - name: member_num
+  - name: topic_num
+  - name: created
+    direction: desc
+
+- kind: Reply
+  properties:
   - name: topic_num
   - name: created
 
