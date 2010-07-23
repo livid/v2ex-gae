@@ -154,7 +154,7 @@ class TwitterHomeHandler(webapp.RequestHandler):
                 cache_tag = 'member::' + str(member.num) + '::twitter::home'
                 statuses = memcache.get(cache_tag)
                 if statuses is None:
-                    statuses = twitter.GetHomeTimeline(count = 100)
+                    statuses = twitter.GetHomeTimeline(count = 50)
                     i = 0;
                     for status in statuses:
                         statuses[i].source = statuses[i].source.replace('<a', '<a class="dark"')
@@ -247,7 +247,7 @@ class TwitterUserTimelineHandler(webapp.RequestHandler):
                 cache_tag = 'twitter::' + screen_name + '::home'
                 statuses = memcache.get(cache_tag)
                 if statuses is None:
-                    statuses = twitter.GetUserTimeline(user=screen_name, count = 100)
+                    statuses = twitter.GetUserTimeline(user=screen_name, count = 50)
                     i = 0;
                     for status in statuses:
                         statuses[i].source = statuses[i].source.replace('<a', '<a class="dark"')

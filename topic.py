@@ -371,12 +371,18 @@ class TopicHandler(webapp.RequestHandler):
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
                     access_token = OAuthToken.from_string(member.twitter_oauth_string)
                     twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
-                    status = u'Re: ' + topic.title + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num) + '#reply' + str(topic.replies)
-                    if len(status) < 140:
-                        try:
-                            twitter.PostUpdate(status.encode('utf-8'))
-                        except:
-                            logging.error("Failed to sync to Twitter for Reply #" + str(reply.num))
+                    link = 'http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
+                    link_length = len(link)
+                    reply_content_length = len(reply.content)
+                    available = 140 - link_length - 1
+                    if available > reply_content_length:
+                        status = reply.content + ' ' + link
+                    else:
+                        status = reply.content[0:(available - 4)] + '... ' + link
+                    try:
+                        twitter.PostUpdate(status.encode('utf-8'))
+                    except:
+                        logging.error("Failed to sync to Twitter for Reply #" + str(reply.num))
                 self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
             else:
                 node = False
