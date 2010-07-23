@@ -151,6 +151,14 @@ class TwitterHomeHandler(webapp.RequestHandler):
                 template_values['page_title'] = u'V2EX › Twitter › Home'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
+                if rate_limit is None:
+                    try:
+                        rate_limit = twitter.GetRateLimit()
+                        memcache.set(str(member.twitter_id) + '::rate_limit', rate_limit, 60)
+                    except:
+                        logging.info('Failed to get rate limit for @' + member.twitter_screen_name)
+                template_values['rate_limit'] = rate_limit
                 cache_tag = 'member::' + str(member.num) + '::twitter::home'
                 statuses = memcache.get(cache_tag)
                 if statuses is None:
@@ -182,6 +190,14 @@ class TwitterMentionsHandler(webapp.RequestHandler):
                 template_values['page_title'] = u'V2EX › Twitter › Mentions'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
+                if rate_limit is None:
+                    try:
+                        rate_limit = twitter.GetRateLimit()
+                        memcache.set(str(member.twitter_id) + '::rate_limit', rate_limit, 60)
+                    except:
+                        logging.info('Failed to get rate limit for @' + member.twitter_screen_name)
+                template_values['rate_limit'] = rate_limit
                 cache_tag = 'member::' + str(member.num) + '::twitter::mentions'
                 statuses = memcache.get(cache_tag)
                 if statuses is None:
@@ -213,6 +229,14 @@ class TwitterDMInboxHandler(webapp.RequestHandler):
                 template_values['page_title'] = u'V2EX › Twitter › Direct Messages › Inbox'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
+                if rate_limit is None:
+                    try:
+                        rate_limit = twitter.GetRateLimit()
+                        memcache.set(str(member.twitter_id) + '::rate_limit', rate_limit, 60)
+                    except:
+                        logging.info('Failed to get rate limit for @' + member.twitter_screen_name)
+                template_values['rate_limit'] = rate_limit
                 cache_tag = 'member::' + str(member.num) + '::twitter::dm::inbox'
                 messages = memcache.get(cache_tag)
                 if messages is None:
@@ -244,6 +268,14 @@ class TwitterUserTimelineHandler(webapp.RequestHandler):
                 template_values['screen_name'] = screen_name
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
+                if rate_limit is None:
+                    try:
+                        rate_limit = twitter.GetRateLimit()
+                        memcache.set(str(member.twitter_id) + '::rate_limit', rate_limit, 60)
+                    except:
+                        logging.info('Failed to get rate limit for @' + member.twitter_screen_name)
+                template_values['rate_limit'] = rate_limit
                 cache_tag = 'twitter::' + screen_name + '::home'
                 statuses = memcache.get(cache_tag)
                 if statuses is None:

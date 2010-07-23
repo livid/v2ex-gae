@@ -379,6 +379,8 @@ class TopicHandler(webapp.RequestHandler):
                         status = reply.content + ' ' + link
                     else:
                         status = reply.content[0:(available - 4)] + '... ' + link
+                    self.response.out.write('Status: ' + status)
+                    logging.error('Status: ' + status)
                     try:
                         twitter.PostUpdate(status.encode('utf-8'))
                     except:
