@@ -219,11 +219,8 @@ class TopicHandler(webapp.RequestHandler):
             if (q.count() == 1):
                 topic = q[0]
                 memcache.set('topic_' + str(topic_num), topic, 86400)
-                try:
-                    topic.hits = topic.hits + 1
-                    topic.put()
-                except:
-                    topic.hits = topic.hits - 1
+        if topic:
+            taskqueue.add(url='/hit/topic/' + str(topic.key()))
         template_values['page_title'] = u'V2EX › ' + topic.title
         template_values['topic'] = topic
         if (topic):
@@ -675,6 +672,13 @@ class ReplyEditHandler(webapp.RequestHandler):
             self.redirect('/signin')
         
 
+class TopicHitHandler(webapp.RequestHandler):
+    def post(self, topic_key):
+        topic = db.get(db.Key(topic_key))
+        if topic:
+            topic.hits = topic.hits + 1
+            topic.put()
+
 def main():
     application = webapp.WSGIApplication([
     ('/new/(.*)', NewTopicHandler),
@@ -683,7 +687,8 @@ def main():
     ('/edit/topic/([0-9]+)', TopicEditHandler),
     ('/delete/topic/([0-9]+)', TopicDeleteHandler),
     ('/index/topic/([0-9]+)', TopicIndexHandler),
-    ('/edit/reply/([0-9]+)', ReplyEditHandler)
+    ('/edit/reply/([0-9]+)', ReplyEditHandler),
+    ('/hit/topic/(.*)', TopicHitHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

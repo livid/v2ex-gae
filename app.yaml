@@ -47,6 +47,9 @@ handlers:
 - url: /delete/.*
   script: topic.py
 
+- url: /hit/topic/.*
+  script: topic.py
+
 - url: /index/.*
   script: topic.py
   
