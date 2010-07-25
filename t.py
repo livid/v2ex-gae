@@ -327,6 +327,12 @@ class TwitterTweetHandler(webapp.RequestHandler):
             self.redirect('/')
         
 class TwitterApiCheatSheetHandler(webapp.RequestHandler):
+    def head(self):
+        template_values = {}
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'twitter_api_cheat_sheet.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+        
     def get(self):
         template_values = {}
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'twitter_api_cheat_sheet.html')

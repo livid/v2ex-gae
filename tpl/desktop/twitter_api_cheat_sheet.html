@@ -38,8 +38,17 @@
             <td width="300" align="left">
                 <ul>
                     <li>callback</li>
-                    <li>q</li>
+                    <li>lang</li>
                     <li>locale</li>
+                    <li>max_id</li>
+                    <li>q</li>
+                    <li>rpp</li>
+                    <li>page</li>
+                    <li>since</li>
+                    <li>since_id</li>
+                    <li>geocode</li>
+                    <li>show_user</li>
+                    <li>until</li>
                 </ul>
             </td>
             <td width="50" align="left"></td>
@@ -48,6 +57,38 @@
             <td width="200" align="left">trends</td>
             <td width="120" align="left">GET</td>
             <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">trends/current</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>exclude</li>
+                </ul>
+            </td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">trends/daily</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>date</li>
+                    <li>exclude</li>
+                </ul>
+            </td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">trends/weekly</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>date</li>
+                    <li>exclude</li>
+                </ul>
+            </td>
             <td width="50" align="left"></td>
         </tr>
     </table>
@@ -335,6 +376,97 @@
                 </ul>
             </td>
             <td width="50" align="center" valign="middle"><img src="/static/img/dot_gray.png" align="absmiddle" /></td>
+        </tr>
+    </table>
+    <div class="sep20"></div>
+    <h2>List</h2>
+    <div class="sep20"></div>
+    <table cellpadding="5" cellspacing="0" border="0" class="api">
+        <tr>
+            <th width="200" align="left">URL</th>
+            <th width="120" align="left">METHOD</th>
+            <th width="300" align="left">PARAMETERS</th>
+            <th width="50" align="left">AUTH</th>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/lists</td>
+            <td width="120" align="left">POST</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>name</li>
+                    <li>mode</li>
+                    <li>description</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/lists/id</td>
+            <td width="120" align="left">POST</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>name</li>
+                    <li>mode</li>
+                    <li>description</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/lists</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>cursor</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/list/id</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/list/id</td>
+            <td width="120" align="left">DELETE</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/lists/id/statuses</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/lists/memberships</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>cursor</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">user/lists/subscriptions</td>
+            <td width="120" align="left">DELETE</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>cursor</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
         </tr>
     </table>
     <div class="sep20"></div>

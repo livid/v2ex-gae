@@ -37,6 +37,9 @@ from django.utils import simplejson as json
 template.register_template_library('v2ex.templatetags.filters')
 
 class HomeHandler(webapp.RequestHandler):
+    def head(self):
+        pass
+        
     def get(self):
         browser = detect(self.request)
         self.session = Session()
