@@ -3,6 +3,7 @@
 
 import os
 import datetime
+import random
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -27,6 +28,7 @@ template.register_template_library('v2ex.templatetags.filters')
 class AboutHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         note = GetKindByNum('Note', 127)
         if note is False:
             note = GetKindByNum('Note', 2)
@@ -42,6 +44,7 @@ class AboutHandler(webapp.RequestHandler):
 class FAQHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         note = GetKindByNum('Note', 195)
         if note is False:
             note = GetKindByNum('Note', 4)
@@ -57,6 +60,7 @@ class FAQHandler(webapp.RequestHandler):
 class MissionHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
@@ -68,6 +72,7 @@ class MissionHandler(webapp.RequestHandler):
 class AdvertiseHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         member = CheckAuth(self)
         if member:
             template_values['member'] = member

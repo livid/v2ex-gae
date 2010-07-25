@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8" />
+	<title>Twitter API Cheat Sheet</title>
+	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/desktop/cheat.css" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+</head>
+<body>
+    <div id="Wrapper">
+    <div class="ggad"><script type="text/javascript"><!--
+    google_ad_client = "pub-9823529788289591";
+    /* 160x600, Twitter API */
+    google_ad_slot = "9053331677";
+    google_ad_width = 160;
+    google_ad_height = 600;
+    //-->
+    </script>
+    <script type="text/javascript"
+    src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script></div>
+    <h1>Twitter API Cheat Sheet</h1>
+    <div class="sep20"></div>
+    This comprehensive page aims to help you better understanding the whole Twitter API.
+    <div class="sep20"></div>
+    <h2>Timeline</h2>
+    <div class="sep20"></div>
+    <table cellpadding="5" cellspacing="0" border="0" class="api">
+        <tr>
+            <th width="200" align="left">URL</th>
+            <th width="120" align="left">METHOD</th>
+            <th width="300" align="left">PARAMETERS</th>
+            <th width="50" align="left">AUTH</th>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/public_timeline</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/home_timeline</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/friends_timeline</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/user_timeline</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>user_id</li>
+                    <li>screen_name</li>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot_gray.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/mentions</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/retweeted_by_me</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/retweeted_to_me</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/retweets_of_me</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>since_id</li>
+                    <li>max_id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+    </table>
+    <div class="sep20"></div>
+    <h2>Status</h2>
+    <div class="sep20"></div>
+    <table cellpadding="5" cellspacing="0" border="0" class="api">
+        <tr>
+            <th width="200" align="left">URL</th>
+            <th width="120" align="left">METHOD</th>
+            <th width="300" align="left">PARAMETERS</th>
+            <th width="50" align="left">AUTH</th>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/show</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot_gray.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/update</td>
+            <td width="120" align="left">POST</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>status</li>
+                    <li>in_reply_to_status_id</li>
+                    <li>lat</li>
+                    <li>long</li>
+                    <li>place_id</li>
+                    <li>display_coordinates</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/destroy</td>
+            <td width="120" align="left">POST, DELETE</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/retweet</td>
+            <td width="120" align="left">POST, PUT</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/retweets</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>count</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/id/retweeted_by</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/id/retweeted_by/ids</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>count</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+    </table>
+    <div class="sep20"></div>
+    <h2>User</h2>
+    <div class="sep20"></div>
+    <table cellpadding="5" cellspacing="0" border="0" class="api">
+        <tr>
+            <th width="200" align="left">URL</th>
+            <th width="120" align="left">METHOD</th>
+            <th width="300" align="left">PARAMETERS</th>
+            <th width="50" align="left">AUTH</th>
+        </tr>
+        <tr>
+            <td width="200" align="left">users/show</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>user_id</li>
+                    <li>screen_name</li>
+                </ul>
+            </td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">users/lookup</td>
+            <td width="120" align="left">GET, POST</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>user_id</li>
+                    <li>screen_name</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">users/search</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>q</li>
+                    <li>per_page</li>
+                    <li>page</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">users/suggestions</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">users/suggestions/category</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/friends</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>user_id</li>
+                    <li>screen_name</li>
+                    <li>cursor</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot_gray.png" align="absmiddle" /></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">statuses/followers</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left">
+                <ul>
+                    <li>id</li>
+                    <li>user_id</li>
+                    <li>screen_name</li>
+                    <li>cursor</li>
+                </ul>
+            </td>
+            <td width="50" align="center" valign="middle"><img src="/static/img/dot_gray.png" align="absmiddle" /></td>
+        </tr>
+    </table>
+    <div class="sep20"></div>
+    <h2>OAuth</h2>
+    <div class="sep20"></div>
+    <table cellpadding="5" cellspacing="0" border="0" class="api">
+        <tr>
+            <th width="200" align="left">URL</th>
+            <th width="120" align="left">METHOD</th>
+            <th width="300" align="left">PARAMETERS</th>
+            <th width="50" align="left">AUTH</th>
+        </tr>
+        <tr>
+            <td width="200" align="left">oauth/request_token</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">oauth/authorize</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">oauth/authenticate</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+        <tr>
+            <td width="200" align="left">oauth/access_token</td>
+            <td width="120" align="left">GET</td>
+            <td width="300" align="left"></td>
+            <td width="50" align="left"></td>
+        </tr>
+    </table>
+    <div class="sep20"></div>
+    </div>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-11940834-2']);
+      _gaq.push(['_setDomainName', 'none']);
+      _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+</body>
+</html>

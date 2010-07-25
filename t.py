@@ -147,6 +147,7 @@ class TwitterHomeHandler(webapp.RequestHandler):
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
                 template_values['page_title'] = u'V2EX › Twitter › Home'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -186,6 +187,7 @@ class TwitterMentionsHandler(webapp.RequestHandler):
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
                 template_values['page_title'] = u'V2EX › Twitter › Mentions'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -225,6 +227,7 @@ class TwitterDMInboxHandler(webapp.RequestHandler):
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
                 template_values['page_title'] = u'V2EX › Twitter › Direct Messages › Inbox'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -263,6 +266,7 @@ class TwitterUserTimelineHandler(webapp.RequestHandler):
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
                 template_values['page_title'] = u'V2EX › Twitter › ' + screen_name
                 template_values['screen_name'] = screen_name
@@ -322,6 +326,13 @@ class TwitterTweetHandler(webapp.RequestHandler):
         else:
             self.redirect('/')
         
+class TwitterApiCheatSheetHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'twitter_api_cheat_sheet.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+        
 def main():
     application = webapp.WSGIApplication([
     ('/twitter/?', TwitterHomeHandler),
@@ -331,7 +342,8 @@ def main():
     ('/twitter/link', TwitterLinkHandler),
     ('/twitter/unlink', TwitterUnlinkHandler),
     ('/twitter/oauth', TwitterCallbackHandler),
-    ('/twitter/tweet', TwitterTweetHandler)
+    ('/twitter/tweet', TwitterTweetHandler),
+    ('/twitter/api/?', TwitterApiCheatSheetHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

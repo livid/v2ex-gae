@@ -1,0 +1,85 @@
+@charset "utf-8"
+
+/*
+	Twitter API Cheat Sheet CSS
+	
+	Author: Livid <v2ex.livid@me.com>
+	Web: http://picky.olivida.com/
+	
+	CSS file for my little Twitter API reference project.
+	
+	The best way to wipe IE6 from this planet is to forget it all since the beginning of your every new project.
+*/
+
+html {
+	padding: 0px;
+	margin: 0px;
+	height: 100%;
+}
+
+body {
+	padding: 10px;
+	margin: 0px;
+	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "STHeiti";
+	background-color: #fff;
+	min-width: 900px;
+}
+
+h1 {
+	font-size: 32px;
+	line-height: 32px;
+	margin: 0px;
+	padding: 0px;
+}
+
+h2 {
+	font-size: 24px;
+	line-height: 24px;
+	margin: 0px;
+	padding: 0px;
+}
+
+ul {
+	padding: 0px;
+	margin: 5px 0px 5px 1em;
+	color: #777;
+	font-size: 12px;
+}
+
+/* IDs */
+
+#Wrapper {
+	width: 900px;
+}
+
+/* CLASSes */
+
+.sep20 {
+	height: 20px;
+}
+
+table.api {
+	border-top: 2px solid #ccc;
+	border-left: 1px solid #e2e2e2;
+	border-right: 1px solid #e2e2e2;
+	border-collapse: collapse;
+}
+
+table.api th {
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #f0f0f0;
+}
+
+table.api td {
+	border-bottom: 1px solid #e2e2e2;
+	font-size: 14px;
+}
+
+.ggad {
+	float: right;
+	width: 160px;
+	height: 600px;
+	margin-left: 20px;
+	margin-top: 20px;
+}

@@ -41,6 +41,7 @@ class HomeHandler(webapp.RequestHandler):
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         template_values['page_title'] = 'V2EX'
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
@@ -155,6 +156,7 @@ class RecentHandler(webapp.RequestHandler):
     def get(self):
         browser = detect(self.request)
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = u'V2EX › 最近的 50 个主题'
         template_values['member'] = CheckAuth(self)
@@ -379,6 +381,7 @@ class NodeHandler(webapp.RequestHandler):
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
         node = GetKindByName('Node', node_name)

@@ -195,6 +195,7 @@ class TopicHandler(webapp.RequestHandler):
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         reply_reversed = self.request.get('r')
         if reply_reversed == '1':
             reply_reversed = True
