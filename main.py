@@ -185,7 +185,7 @@ class UAHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
         template_values['ua'] = os.environ['HTTP_USER_AGENT']
-        template_values['page_title'] = 'V2EX › 用户代理字符串'
+        template_values['page_title'] = u'V2EX › 用户代理字符串'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'ua.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -195,6 +195,7 @@ class SigninHandler(webapp.RequestHandler):
     def get(self):
         browser = detect(self.request)
         template_values = {}
+        template_values['page_title'] = u'V2EX › 登入'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         template_values['errors'] = errors
@@ -354,7 +355,7 @@ class SignupHandler(webapp.RequestHandler):
             member.put()
             counter.put()
             counter2.put()
-            cookies = Cookies(self, max_age = 86400, path = '/')
+            cookies = Cookies(self, max_age = 86400 * 365, path = '/')
             cookies['auth'] = member.auth
             self.redirect('/')
         else:
@@ -369,6 +370,7 @@ class SignoutHandler(webapp.RequestHandler):
     def get(self):
         browser = detect(self.request)
         template_values = {}
+        template_values['page_title'] = u'V2EX › 登出'
         template_values['system_version'] = SYSTEM_VERSION
         cookies = Cookies(self, max_age = 86400, path = '/')
         del cookies['auth']
