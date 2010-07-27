@@ -167,6 +167,7 @@ class NewTopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
+                memcache.delete('feed_index')
                 memcache.delete('Node_' + str(topic.node_num))
                 memcache.delete('Node::' + str(node.name))
                 taskqueue.add(url='/index/topic/' + str(topic.num))
@@ -229,13 +230,23 @@ class TopicHandler(webapp.RequestHandler):
             section = False
             node = GetKindByNum('Node', topic.node_num)
             if (node):
-                if 'recent_nodes' in self.session:
-                    recent_nodes = json.loads(self.session['recent_nodes'])
-                else:
-                    recent_nodes = {}
-                recent_nodes[node.name] = node.title
-                template_values['recent_nodes'] = recent_nodes
-                self.session['recent_nodes'] = json.dumps(recent_nodes)
+                if member:
+                    recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
+                    recent_nodes_ids = memcache.get('member::' + str(member.num) + '::recent_nodes_ids')
+                    if recent_nodes and recent_nodes_ids:
+                        if (node.num in recent_nodes_ids) is not True:
+                            recent_nodes.insert(0, node)
+                            recent_nodes_ids.insert(0, node.num)
+                            memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
+                            memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
+                    else:
+                        recent_nodes = []
+                        recent_nodes.append(node)
+                        recent_nodes_ids = []
+                        recent_nodes_ids.append(node.num)
+                        memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
+                        memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
+                    template_values['recent_nodes'] = recent_nodes
                 section = GetKindByNum('Section', node.section_num)
             template_values['node'] = node
             template_values['section'] = section
@@ -363,7 +374,8 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.set('topic_' + str(topic.num), topic, 86400)
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc')
-                memcache.delete('topic_' + str(topic_num) + '_replies_filtered')
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered')
+                memcache.delete('member::' + str(member.num) + '::participated')
                 taskqueue.add(url='/index/topic/' + str(topic.num))
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:

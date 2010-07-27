@@ -5,7 +5,7 @@
     </div>
     <div class="inner">
         {% for a_node in recent_nodes %}
-            <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ a_node }}">{{ a_node }}</a>
+            <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ a_node.name }}">{{ a_node.title|escape }}</a>
             <div class="sep3"></div>
         {% endfor %}
     </div>

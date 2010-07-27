@@ -1,0 +1,24 @@
+mapreduce:
+- name: Tidy Nodes
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: data.tidy_node
+    params:
+    - name: entity_kind
+      default: Node
+
+- name: Tidy Topic
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: data.tidy_topic
+    params:
+    - name: entity_kind
+      default: Topic
+      
+- name: Tidy Reply
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: data.tidy_reply
+    params:
+    - name: entity_kind
+      default: Reply

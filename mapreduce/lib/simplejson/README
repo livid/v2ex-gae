@@ -1,0 +1,13 @@
+Simplejson library
+
+The web site is http://undefined.org/python/#simple_json
+
+This copy was downloaded from
+http://pypi.python.org/packages/source/s/simplejson/simplejson-2.0.5.tar.gz
+
+simplejson is licensed under the MIT open source license.
+
+Local changes:
+
+- Changed imports to make mapreduce library hermetic.
+

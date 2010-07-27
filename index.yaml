@@ -17,6 +17,11 @@ indexes:
 
 - kind: Node
   properties:
+  - name: __key__
+    direction: desc
+
+- kind: Node
+  properties:
   - name: category
   - name: name
 
@@ -56,6 +61,17 @@ indexes:
 
 - kind: Reply
   properties:
+  - name: __key__
+    direction: desc
+
+- kind: Reply
+  properties:
+  - name: member_num
+  - name: created
+    direction: desc
+
+- kind: Reply
+  properties:
   - name: member_num
   - name: topic_num
   - name: created
@@ -76,6 +92,11 @@ indexes:
   properties:
   - name: topic_num
   - name: created
+    direction: desc
+
+- kind: Topic
+  properties:
+  - name: __key__
     direction: desc
 
 - kind: Topic

@@ -47,33 +47,24 @@ class HomeHandler(webapp.RequestHandler):
         template_values['rnd'] = random.randrange(1, 100)
         template_values['page_title'] = 'V2EX'
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['member'] = CheckAuth(self)
-        if 'recent_nodes' in self.session:
-            recent_nodes = json.loads(self.session['recent_nodes'])
-            template_values['recent_nodes'] = recent_nodes
-        new = ''
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        if member:
+            recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
+            if recent_nodes:
+                template_values['recent_nodes'] = recent_nodes
         nodes_new = []
-        new = memcache.get('home_nodes_new_neue')
         nodes_new = memcache.get('home_nodes_new')
-        try:
-            if (new == None) or (nodes_new == None):
-                nodes_new = []
-                new = u'<div class="section">最近新增节点</div>'
-                qnew = db.GqlQuery("SELECT * FROM Node ORDER BY created DESC LIMIT 10")
-                if (qnew.count() > 0):
-                    i = 0
-                    for node in qnew:
-                        nodes_new.append(node)
-                        i = i + 1
-                    n = ''
-                    for node in nodes_new:
-                        n = n + '<a href="/go/' + node.name + '">' + node.title + '</a>&nbsp; '
-                    new = new + '<div class="cell">' + n + '</div>'
-                memcache.set('home_nodes_new_neue', new, 300)
-                memcache.set('home_nodes_new', nodes_new, 300)
-        except:
-            new = ''
-        template_values['new'] = new
+        if nodes_new is None:
+            nodes_new = []
+            qnew = db.GqlQuery("SELECT * FROM Node ORDER BY created DESC LIMIT 10")
+            if (qnew.count() > 0):
+                i = 0
+                for node in qnew:
+                    nodes_new.append(node)
+                    i = i + 1
+            memcache.set('home_nodes_new', nodes_new, 3600)
         template_values['nodes_new'] = nodes_new
         if browser['ios']:
             s = ''
@@ -98,12 +89,12 @@ class HomeHandler(webapp.RequestHandler):
                         s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
                 memcache.set('home_sections_neue', s, 600)
             template_values['s'] = s
-        latest = memcache.get('q_latest_12')
+        latest = memcache.get('q_latest_16')
         if (latest):
             template_values['latest'] = latest
         else:
-            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 12")
-            memcache.set('q_latest_12', q2, 120)
+            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
+            memcache.set('q_latest_16', q2, 120)
             template_values['latest'] = q2
         member_total = memcache.get('member_total')
         if member_total is None:
@@ -167,7 +158,7 @@ class RecentHandler(webapp.RequestHandler):
         if (latest):
             template_values['latest'] = latest
         else:
-            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 12,50")
+            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16,50")
             memcache.set('q_recent_50', q2, 80)
             template_values['latest'] = q2
             template_values['latest_total'] = q2.count()
@@ -388,7 +379,9 @@ class NodeHandler(webapp.RequestHandler):
         template_values = {}
         template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['member'] = CheckAuth(self)
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
         node = GetKindByName('Node', node_name)
         template_values['node'] = node
         pagination = False
@@ -401,13 +394,23 @@ class NodeHandler(webapp.RequestHandler):
         has_previous = False
         previous = 1
         if node:
-            if 'recent_nodes' in self.session:
-                recent_nodes = json.loads(self.session['recent_nodes'])
-            else:
-                recent_nodes = {}
-            recent_nodes[node.name] = node.title
-            template_values['recent_nodes'] = recent_nodes
-            self.session['recent_nodes'] = json.dumps(recent_nodes)
+            if member:
+                recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
+                recent_nodes_ids = memcache.get('member::' + str(member.num) + '::recent_nodes_ids')
+                if recent_nodes and recent_nodes_ids:
+                    if (node.num in recent_nodes_ids) is not True:
+                        recent_nodes.insert(0, node)
+                        recent_nodes_ids.insert(0, node.num)
+                        memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
+                        memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
+                else:
+                    recent_nodes = []
+                    recent_nodes.append(node)
+                    recent_nodes_ids = []
+                    recent_nodes_ids.append(node.num)
+                    memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
+                    memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
+                template_values['recent_nodes'] = recent_nodes
             template_values['page_title'] = u'V2EX › ' + node.title
             # Pagination
             if node.topics > page_size:

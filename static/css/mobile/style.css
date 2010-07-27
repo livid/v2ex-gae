@@ -98,8 +98,8 @@ h1 {
 /* IDs */
 
 #Top {
-	background-image: url("/static/img/bg_top_1006.jpg");
-	height: 80px;
+	background-image: url("http://web.me.com/v2ex.livid/v2ex/static/img/bg_top_1006.jpg");
+	height: 60px;
 	padding: 10px;
 	background-repeat: repeat-x;
 	background-color: #000;
@@ -109,7 +109,7 @@ h1 {
 	background-image: url("http://web.me.com/v2ex.livid/v2ex/static/img/logo.png");
 	width: 211px;
 	height: 21px;
-	margin-top: 40px;
+	margin-top: 30px;
 	margin-left: 10px;
 	cursor: pointer;
 }
@@ -125,6 +125,29 @@ h1 {
 	padding: 0px;
 	font-size: 14px;
 	line-height: 18px;
+}
+
+#Sponsored {
+	background-image: url("/static/img/bg_mobile_sponsored.png");
+	height: 44px;
+	border-top: 1px solid #ccc;
+}
+
+#SponsoredLeft {
+	float: left;
+	width: 44px;
+	height: 44px;
+}
+
+#SponsoredRight {
+	float: right;
+	width: 44px;
+	height: 44px;
+}
+
+#SponsoredMain {
+	margin: 0px 44px 0px 44px;
+	height: 44px;
 }
 
 /* CLASSes */

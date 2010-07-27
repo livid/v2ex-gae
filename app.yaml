@@ -95,5 +95,9 @@ handlers:
 - url: /time/?
   script: misc.py
 
+- url: /mapreduce(/.*)?
+  script: mapreduce/main.py
+  login: admin
+
 - url: .*
   script: main.py

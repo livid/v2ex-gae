@@ -2,10 +2,12 @@
 # coding=utf-8
 
 import os
+import base64
 import re
 import time
 import datetime
 import hashlib
+import httplib
 import string
 
 from google.appengine.ext import webapp
@@ -26,6 +28,8 @@ from v2ex.babel.ext.sessions import Session
 
 from v2ex.babel import SYSTEM_VERSION
 
+import mobileme
+
 template.register_template_library('v2ex.templatetags.filters')
 
 class MemberHandler(webapp.RequestHandler):
@@ -45,6 +49,23 @@ class MemberHandler(webapp.RequestHandler):
         if (one):
             q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
             template_values['topics'] = q2
+            replies = memcache.get('member::' + str(one.num) + '::participated')
+            if replies is None:
+                q3 = db.GqlQuery("SELECT * FROM Reply WHERE member_num = :1 ORDER BY created DESC LIMIT 100", one.num)
+                ids = []
+                replies = []
+                i = 0
+                for reply in q3:
+                    if reply.topic.num not in ids:
+                        i = i + 1
+                        if i > 10:
+                            break
+                        replies.append(reply)
+                        ids.append(reply.topic.num)
+                if len(replies) > 0:
+                    memcache.set('member::' + str(one.num) + '::participated', replies, 7200)
+            if len(replies) > 0:
+                template_values['replies'] = replies
         if browser['ios']:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_home.html')
         else:
@@ -462,6 +483,33 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_mini.put()
                 member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
                 member.put()
+            # Upload to MobileMe
+            headers = {'Authorization' : 'Basic ' + base64.b64encode(mobileme.username + ':' + mobileme.password)}
+            host = 'idisk.me.com'
+            # Sharding
+            timestamp = str(int(time.time()))
+            shard = member.num % 31
+            root = '/v2ex.livid/Web/Sites/v2ex/avatars/' + str(shard)
+            root_mini = root + '/mini'
+            root_normal = root + '/normal'
+            root_large = root + '/large'
+            h = httplib.HTTPConnection(host)
+            # Mini
+            h.request('PUT', root_mini + '/' + str(member.num) + '.png', str(avatar_24), headers)
+            response = h.getresponse()
+            if response.status == 201 or response.status == 204:
+                member.avatar_mini_url = 'http://web.me.com/v2ex.livid/v2ex/avatars/' + str(shard) + '/mini/' + str(member.num) + '.png?r=' + timestamp
+            # Normal
+            h.request('PUT', root_normal + '/' + str(member.num) + '.png', str(avatar_48), headers)
+            response = h.getresponse()
+            if response.status == 201 or response.status == 204:
+                member.avatar_normal_url = 'http://web.me.com/v2ex.livid/v2ex/avatars/' + str(shard) + '/normal/' + str(member.num) + '.png?r=' + timestamp
+            # Large
+            h.request('PUT', root_large + '/' + str(member.num) + '.png', str(avatar_73), headers)
+            response = h.getresponse()
+            if response.status == 201 or response.status == 204:
+                member.avatar_large_url = 'http://web.me.com/v2ex.livid/v2ex/avatars/' + str(shard) + '/large/' + str(member.num) + '.png?r=' + timestamp
+            member.put()
             memcache.set('member_' + str(member.num), member, 86400 * 365)
             memcache.delete('Avatar::avatar_' + str(member.num) + '_large')
             memcache.delete('Avatar::avatar_' + str(member.num) + '_normal')

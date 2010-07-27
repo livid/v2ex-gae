@@ -1,0 +1,14 @@
+Graphy library
+
+The web site is http://code.google.com/p/graphy/
+
+This copy was downloaded from
+http://graphy.googlecode.com/files/graphy_1.0.tar.bz2
+
+Graphy is licensed under the Apache 2.0 open source license.
+
+Local changes:
+
+- Changed imports to make mapreduce library hermetic.
+
+
