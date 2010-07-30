@@ -223,7 +223,9 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.set('Topic_' + str(topic_num), topic, 86400)
         if topic:
             taskqueue.add(url='/hit/topic/' + str(topic.key()))
-        template_values['page_title'] = u'V2EX › ' + topic.title
+            template_values['page_title'] = u'V2EX › ' + topic.title
+        else:
+            template_values['page_title'] = u'V2EX › 主题未找到'
         template_values['topic'] = topic
         if member:
             if member.num == 1:

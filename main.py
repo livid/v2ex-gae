@@ -126,17 +126,28 @@ class HomeHandler(webapp.RequestHandler):
         if (browser['ios']):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'index.html')
         else:
+            hottest = memcache.get('index_hottest')
+            if hottest is None:
+                qhot = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 25")
+                hottest = u'<div class="cell"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="center" width="40" valign="middle"><span style="color: #ff9933; font-weight: bold; font-size: 24px; font-family: \'Arial Unicode MS\'; opacity: 0.8;">☀</span></td><td style="line-height: 200%; padding-left: 15px;">'
+                for node in qhot:
+                    hottest = hottest + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
+                hottest = hottest + '</td></tr></table></div>'
+                memcache.set('index_hottest', hottest, 5000)
+            template_values['hottest'] = hottest
             c = memcache.get('index_categories')
             if c is None:
                 c = ''
-                categories = [u'分享与探索', u'城市', u'V2EX', u'iOS', u'Apple', u'生活', u'Internet', u'Geek', u'电子游戏', u'品牌', u'最热节点']
+                i = 0
+                categories = [u'分享与探索', u'城市', u'V2EX', u'iOS', u'Apple', u'生活', u'Internet', u'Geek', u'电子游戏', u'品牌']
                 for category in categories:
-                    if category == u'最热节点':
-                        c = c + '<div class="inner"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td style="line-height: 200%; padding-left: 15px;">'
-                        qx = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 8")
+                    i = i + 1
+                    if i == len(categories):
+                        css_class = 'inner'
                     else:
-                        c = c + '<div class="cell"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td style="line-height: 200%; padding-left: 15px;">'
-                        qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
+                        css_class = 'cell'
+                    c = c + '<div class="' + css_class + '"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td style="line-height: 200%; padding-left: 15px;">'
+                    qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
                     for node in qx:
                         c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
                     c = c + '</td></tr></table></div>'
@@ -439,6 +450,8 @@ class NodeHandler(webapp.RequestHandler):
                     has_previous = True
                     previous = page - 1    
                 start = (page - 1) * page_size
+        else:
+            template_values['page_title'] = u'V2EX › 节点未找到'
         template_values['pagination'] = pagination
         template_values['pages'] = pages
         template_values['page'] = page

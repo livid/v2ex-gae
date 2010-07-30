@@ -66,10 +66,16 @@ class MemberHandler(webapp.RequestHandler):
                     memcache.set('member::' + str(one.num) + '::participated', replies, 7200)
             if len(replies) > 0:
                 template_values['replies'] = replies
-        if browser['ios']:
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_home.html')
+        if one: 
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_home.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'member_home.html')
         else:
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'member_home.html')
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_not_found.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'member_not_found.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
         

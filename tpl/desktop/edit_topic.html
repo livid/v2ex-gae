@@ -1,0 +1,48 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell">
+                    <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/t/{{ topic.num }}">{{ topic.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 编辑</span>
+                </div>
+                <div class="cell">
+                    <form action="/edit/topic/{{ topic.num }}" method="post">
+                    {% if errors %}
+        			<strong>请解决以下错误之后继续。</strong>
+        			<div class="sep10"></div>
+        			<ul>
+        				{% if topic_title_error %}
+        				<li>{{ topic_title_error_message }}</li>
+        				{% endif %}
+        				{% if topic_content_error %}
+        				<li>{{ topic_content_error_message }}</li>
+        				{% endif %}
+        			</ul>
+        			<div class="sep10"></div>
+                    {% endif %}
+                    <input type="text" name="title" value="{{ topic_title|escape }}" class="sll" />
+                    <div class="sep10"></div>
+                    <textarea name="content" class="mll tall">{{ topic_content|escape }}</textarea>
+                    <div class="sep10"></div>
+                    <input type="submit" value="提交修改" class="super normal button" />
+                    </form>
+                </div>
+                <div class="inner">
+                    <span class="fade"><span class="chevron">‹&nbsp;</span>返回 <a href="/go/{{ node.name }}">{{ node.title|escape }}</a></span>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
