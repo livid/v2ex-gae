@@ -126,21 +126,21 @@ class HomeHandler(webapp.RequestHandler):
         if (browser['ios']):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'index.html')
         else:
-            c = memcache.get('categories')
+            c = memcache.get('index_categories')
             if c is None:
                 c = ''
                 categories = [u'分享与探索', u'城市', u'V2EX', u'iOS', u'Apple', u'生活', u'Internet', u'Geek', u'电子游戏', u'品牌', u'最热节点']
                 for category in categories:
                     if category == u'最热节点':
-                        c = c + '<div class="inner"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td align="left">'
+                        c = c + '<div class="inner"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td style="line-height: 200%; padding-left: 15px;">'
                         qx = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 8")
                     else:
-                        c = c + '<div class="cell"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td align="left">'
+                        c = c + '<div class="cell"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td style="line-height: 200%; padding-left: 15px;">'
                         qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
                     for node in qx:
-                        c = c + '&nbsp; <a href="/go/' + node.name + '">' + node.title + '</a>'
+                        c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
                     c = c + '</td></tr></table></div>'
-                    memcache.set('categories', c, 120)
+                    memcache.set('index_categories', c, 3600)
             template_values['c'] = c
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'index.html')
         output = template.render(path, template_values)
@@ -387,7 +387,7 @@ class NodeHandler(webapp.RequestHandler):
         pagination = False
         pages = 1
         page = 1
-        page_size = 12
+        page_size = 15
         start = 0
         has_more = False
         more = 1

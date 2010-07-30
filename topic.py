@@ -215,16 +215,21 @@ class TopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         template_values['member'] = member
         topic = False
-        topic = memcache.get('topic_' + str(topic_num))
+        topic = memcache.get('Topic_' + str(topic_num))
         if topic is None:
             q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
             if (q.count() == 1):
                 topic = q[0]
-                memcache.set('topic_' + str(topic_num), topic, 86400)
+                memcache.set('Topic_' + str(topic_num), topic, 86400)
         if topic:
             taskqueue.add(url='/hit/topic/' + str(topic.key()))
         template_values['page_title'] = u'V2EX › ' + topic.title
         template_values['topic'] = topic
+        if member:
+            if member.num == 1:
+                template_values['can_edit'] = True
+            else:
+                template_values['can_edit'] = False
         if (topic):
             node = False
             section = False
@@ -252,24 +257,24 @@ class TopicHandler(webapp.RequestHandler):
             template_values['section'] = section
             replies = False
             if filter_mode:
-                replies = memcache.get('topic_' + str(topic_num) + '_replies_filtered')
+                replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered')
                 if replies is None:
                     q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC", topic.num, topic.member.num)
                     replies = q5
-                    memcache.set('topic_' + str(topic_num) + '_replies_filtered', replies, 7200)
+                    memcache.set('topic_' + str(topic.num) + '_replies_filtered', replies, 7200)
             else:    
                 if reply_reversed:
-                    replies = memcache.get('topic_' + str(topic_num) + '_replies_desc')
+                    replies = memcache.get('topic_' + str(topic.num) + '_replies_desc')
                     if replies is None:
                         q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
                         replies = q4
-                        memcache.set('topic_' + str(topic_num) + '_replies_desc', q4, 86400)
+                        memcache.set('topic_' + str(topic.num) + '_replies_desc', q4, 86400)
                 else:
-                    replies = memcache.get('topic_' + str(topic_num) + '_replies_asc')
+                    replies = memcache.get('topic_' + str(topic.num) + '_replies_asc')
                     if replies is None:
                         q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
                         replies = q4
-                        memcache.set('topic_' + str(topic_num) + '_replies_asc', q4, 86400)
+                        memcache.set('topic_' + str(topic.num) + '_replies_asc', q4, 86400)
             template_values['replies'] = replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic.html')
@@ -371,7 +376,7 @@ class TopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
-                memcache.set('topic_' + str(topic.num), topic, 86400)
+                memcache.set('Topic_' + str(topic.num), topic, 86400)
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc')
                 memcache.delete('topic_' + str(topic.num) + '_replies_filtered')
@@ -451,7 +456,10 @@ class TopicEditHandler(webapp.RequestHandler):
                     template_values['section'] = section
                     q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
                     template_values['replies'] = q4
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'edit_topic.html')
+                    if browser['ios']:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'edit_topic.html')
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_topic.html')
                 else:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic_not_found.html')
                 output = template.render(path, template_values)
@@ -527,9 +535,13 @@ class TopicEditHandler(webapp.RequestHandler):
                         topic.content = topic_content
                         topic.last_touched = datetime.datetime.now()
                         topic.put()
+                        memcache.delete('Topic_' + str(topic.num))
                         self.redirect('/t/' + str(topic.num))
-                    else:    
-                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'edit_topic.html')
+                    else:
+                        if browser['ios']:
+                            path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'edit_topic.html')
+                        else:
+                            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_topic.html')
                         output = template.render(path, template_values)
                         self.response.out.write(output)
                 else:

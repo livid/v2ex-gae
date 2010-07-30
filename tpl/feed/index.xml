@@ -8,7 +8,7 @@
 <updated>{{ site_updated|date:"Y-m-d\TH:i:s\Z" }}</updated>
 <rights>Copyright © 2010, V2EX</rights>
 {% for topic in topics %}<entry>
-	<title>{{ topic.title }}</title>
+	<title>{{ topic.title|escape }}</title>
 	<link rel="alternate" type="text/html" href="http://{{ site_domain }}/t/{{ topic.num }}" />
 	<id>tag:{{ site_domain }},{{ topic.created|date:"Y-m-d" }}:/t/{{ topic.num }}</id>
 	<published>{{ topic.created|date:"Y-m-d\TH:i:s\Z" }}</published>

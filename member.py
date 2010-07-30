@@ -77,6 +77,11 @@ class MemberApiHandler(webapp.RequestHandler):
     def get(self, member_username):
         one = GetMemberByUsername(member_username)
         if one:
+            if one.avatar_mini_url:
+                if (one.avatar_mini_url[0:1] == '/'):
+                    one.avatar_mini_url = 'http://v2ex.appspot.com' + one.avatar_mini_url
+                    one.avatar_normal_url = 'http://v2ex.appspot.com' + one.avatar_normal_url
+                    one.avatar_large_url = 'http://v2ex.appspot.com' + one.avatar_large_url
             template_values = {}
             template_values['one'] = one
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'member.json')

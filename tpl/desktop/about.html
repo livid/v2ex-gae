@@ -15,7 +15,7 @@
                 <div class="cell"><span class="fade"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> About</span></div>
                 <div class="inner">
                     <div class="page">
-                        <h1>{{ note.title }}</h1>
+                        <h1>{{ note.title|escape }}</h1>
                         <div class="sep10"></div>
                         {{ note.body|linebreaksbr }}
                         <div class="sep10"></div>

@@ -15,7 +15,7 @@ def imgly(value):
     imgs = re.findall('(http://img.ly/[a-zA-Z0-9]+)\s?', value)
     if (len(imgs) > 0):
         for img in imgs:
-            img_id = re.findall('http://img.ly/([a-zA-Z0-9]+)', value)
+            img_id = re.findall('http://img.ly/([a-zA-Z0-9]+)', img)
             if (img_id[0] != 'system'):
                 value = value.replace('http://img.ly/' + img_id[0], '<a href="http://img.ly/' + img_id[0] + '" target="_blank"><img src="http://zdxproxy.appspot.com/img.ly/show/large/' + img_id[0] + '" class="imgly" border="0" /></a>')
         return value

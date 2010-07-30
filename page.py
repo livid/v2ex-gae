@@ -61,6 +61,10 @@ class MissionHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
         template_values['rnd'] = random.randrange(1, 100)
+        note = GetKindByNum('Note', 240)
+        if note is False:
+            note = GetKindByNum('Note', 5)
+        template_values['note'] = note
         member = CheckAuth(self)
         if member:
             template_values['member'] = member

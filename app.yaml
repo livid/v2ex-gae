@@ -5,6 +5,9 @@ api_version: 1
 
 default_expiration: "10d"
 
+derived_file_type:
+- python_precompiled
+
 handlers:
 - url: /favicon.ico
   static_files: static/img/favicon.ico

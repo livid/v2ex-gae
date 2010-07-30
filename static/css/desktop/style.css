@@ -24,8 +24,16 @@ body {
 }
 
 h1 {
-	font-size: 20px;
-	line-height: 20px;
+	font-size: 22px;
+	line-height: 22px;
+	font-weight: bold;
+	padding: 10px 0px 10px 0px;
+	margin: 0px;
+}
+
+h2 {
+	font-size: 18px;
+	line-height: 18px;
 	font-weight: bold;
 	padding: 10px 0px 10px 0px;
 	margin: 0px;
@@ -38,7 +46,7 @@ form {
 }
 
 code {
-	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", Monaco;
+	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", Monaco, "Hiragino Sans GB", STHeiti !important;
 }
 
 ul {
@@ -257,13 +265,13 @@ td.avatar_mini {
 .note {
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", "Helvetica Neue", "Tahoma", "Verdana", "Hiragino Sans GB", STHeiti !important;
 	font-size: 14px;
-	line-height: 20px;
+	line-height: 180%;
 }
 
 .page {
-	font-family: "Helvetica Neue", "Luxi Sans", "Tahoma", "Verdana", "Hiragino Sans GB", STHeiti !important;
+	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 	font-size: 14px;
-	line-height: 20px;
+	line-height: 180%;
 	padding: 0px 20px 20px 20px;
 }
 
@@ -284,7 +292,7 @@ td.avatar_mini {
 
 .content {
 	font-size: 14px;
-	line-height: 20px;
+	line-height: 180%;
 	color: #000;
 }
 
@@ -380,7 +388,7 @@ td.avatar_mini {
 	font-size: 14px;
 	border: 1px solid #ccc;
 	width: 240px;
-	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
 .sl:focus {
