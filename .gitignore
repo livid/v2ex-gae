@@ -4,6 +4,5 @@
 .bzr
 .bzrignore
 psd
-consumer.py
-mobileme.py
 config.py
+app.yaml
