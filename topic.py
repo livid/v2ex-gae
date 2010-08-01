@@ -59,9 +59,15 @@ class NewTopicHandler(webapp.RequestHandler):
                     section = q2[0]
             template_values['section'] = section
             if browser['ios']:
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
+                if node:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'node_not_found.html')
             else:
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'new_topic.html')
+                if node:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'new_topic.html')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'node_not_found.html')
             output = template.render(path, template_values)
             self.response.out.write(output)
         else:
