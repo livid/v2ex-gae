@@ -10,9 +10,9 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><span class="fade">登入</span></div>
+                <div class="cell"><span class="fade"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> 重新设置密码</span></div>
                 <div class="inner">
-                    <form action="/signin" method="post">
+                    <form action="/forgot" method="post">
         			{% if errors %}
         			<strong>{{ error_message }}</strong>
         			<div class="sep10"></div>
@@ -23,36 +23,29 @@
         			            用户名
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="text" class="sl" name="u" value="{{ u|escape }}" />
+        			            <input type="text" class="sl" name="username" value="{{ username|escape }}" />
         			        </td>
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            密码
+        			            注册邮箱
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="password" class="sl" name="p" value="{{ p|escape }}" />
-        			        </td>
-        			    </tr>
-        			    <tr>
-        			        <td width="80" align="right">
-        			        </td>
-        			        <td width="200" align="left">
-        			            <input type="submit" value="登入" class="super normal button" />
+        			            <input type="text" class="sl" name="email" value="{{ email|escape }}" />
         			        </td>
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <span class="fade">成功登入后，Cookie 将被浏览器记住一年。</span>
+        			            <input type="submit" value="重新设置密码" class="super normal button" />
         			        </td>
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <span class="fade"><a href="/forgot">忘记密码了？</a></span>
+        			            <span class="fade">24 小时内，至多可以重新设置密码 2 次。</span>
         			        </td>
         			    </tr>
         			</table>

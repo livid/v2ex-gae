@@ -120,3 +120,10 @@ class Note(db.Model):
     edits = db.IntegerProperty(indexed=False, default=1)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
+
+class PasswordResetToken(db.Model):
+    token = db.StringProperty(required=False, indexed=True)
+    email = db.StringProperty(required=False, indexed=True)
+    member = db.ReferenceProperty(Member)
+    valid = db.IntegerProperty(required=False, indexed=True, default=1)
+    timestamp = db.IntegerProperty(required=False, indexed=True, default=0)

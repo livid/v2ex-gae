@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import base64
 import os
 import re
 import time
@@ -13,6 +14,7 @@ import random
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
+from google.appengine.api import mail
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
@@ -23,6 +25,7 @@ from v2ex.babel import Section
 from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
+from v2ex.babel import PasswordResetToken
 
 from v2ex.babel import SYSTEM_VERSION
 
@@ -31,6 +34,8 @@ from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
+
+from v2ex.babel.handler import GenericHandler
 
 from django.utils import simplejson as json
 
@@ -381,7 +386,133 @@ class SignoutHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'signout.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
-        
+
+class ForgotHandler(webapp.RequestHandler):
+    def get(self):
+        browser = detect(self.request)
+        template_values = {}
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › 重新设置密码'
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+    
+    def post(self):
+        browser = detect(self.request)
+        template_values = {}
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › 重新设置密码'
+        # Verification: username & email
+        username = self.request.get('username').strip().lower()
+        email = self.request.get('email').strip().lower()
+        q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1 AND email = :2", username, email)
+        if q.count() == 1:
+            one = q[0]
+            q2 = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE timestamp > :1", (int(time.time()) - 86400))
+            if q2.count() > 2:
+                error_message = '你不能在 24 小时内进行超过 2 次的密码重设操作。'
+                template_values['errors'] = 1
+                template_values['error_message'] = error_message
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+            else:
+                token = ''.join([str(random.randint(0, 9)) for i in range(32)])
+                prt = PasswordResetToken()
+                prt.token = token
+                prt.member = one
+                prt.email = one.email
+                prt.timestamp = int(time.time())
+                prt.put()
+                mail_template_values = {}
+                mail_template_values['one'] = one
+                mail_template_values['host'] = self.request.headers['Host']
+                mail_template_values['token'] = token
+                mail_template_values['ua'] = self.request.headers['User-Agent']
+                mail_template_values['ip'] = self.request.remote_addr
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mail', 'reset_password.txt')
+                output = template.render(path, mail_template_values)
+                result = mail.send_mail(sender="V2EX <v2ex.livid@gmail.com>",
+                              to= one.email,
+                              subject="=?UTF-8?B?" + base64.b64encode((u"[V2EX] 重新设置密码").encode('utf-8')) + "?=",
+                              body=output)
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot_sent.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+        else:
+            error_message = '无法找到匹配的用户名和邮箱记录'
+            template_values['errors'] = 1
+            template_values['error_message'] = error_message
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+
+class PasswordResetHandler(GenericHandler):
+    def get(self, token):
+        template_values = {}
+        token = str(token.strip().lower())
+        q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
+        if q.count() == 1:
+            prt = q[0]
+            template_values['page_title'] = u'V2EX › 重新设置密码'
+            template_values['token'] = prt
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'reset_password.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+        else:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'token_not_found.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+    
+    def post(self, token):
+        template_values = {}
+        token = str(token.strip().lower())
+        q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
+        if q.count() == 1:
+            prt = q[0]
+            template_values['page_title'] = u'V2EX › 重新设置密码'
+            template_values['token'] = prt
+            # Verification
+            errors = 0
+            new_password = str(self.request.get('new_password').strip())
+            new_password_again = str(self.request.get('new_password_again').strip())
+            if new_password is '' or new_password_again is '':
+                errors = errors + 1
+                error_message = '请输入两次新密码'
+            if errors == 0:
+                if new_password != new_password_again:
+                    errors = errors + 1
+                    error_message = '两次输入的新密码不一致'
+            if errors == 0:
+                if len(new_password) > 32:
+                    errors = errors + 1
+                    error_message = '新密码长度不能超过 32 个字符'
+            if errors == 0:
+                q2 = db.GqlQuery("SELECT * FROM Member WHERE num = :1", prt.member.num)
+                one = q2[0]
+                one.password = hashlib.sha1(new_password).hexdigest()
+                one.auth = hashlib.sha1(str(one.num) + ':' + one.password).hexdigest()
+                one.put()
+                prt.valid = 0
+                prt.put()
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'reset_password_ok.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+            else:
+                template_values['errors'] = errors
+                template_values['error_message'] = error_message
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'reset_password.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+        else:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'token_not_found.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
         browser = detect(self.request)
@@ -502,6 +633,9 @@ class SearchHandler(webapp.RequestHandler):
             template_values['member'] = member
         template_values['page_title'] = 'V2EX › 搜索 ' + q
         template_values['q'] = q
+        node = GetKindByName('Node', q.lower())
+        if node is not None:
+            template_values['node'] = node
         # Fetch result
         q_lowered = q.lower()
         q_md5 = hashlib.md5(q_lowered).hexdigest()
@@ -542,6 +676,8 @@ def main():
     ('/signin', SigninHandler),
     ('/signup', SignupHandler),
     ('/signout', SignoutHandler),
+    ('/forgot', ForgotHandler),
+    ('/reset/([0-9]+)', PasswordResetHandler),
     ('/go/(.*)', NodeHandler),
     ('/n/([a-zA-Z0-9]+).json', NodeApiHandler),
     ('/q/(.*)', SearchHandler),
