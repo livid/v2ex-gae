@@ -220,6 +220,15 @@ class TopicHandler(webapp.RequestHandler):
         template_values['errors'] = errors
         member = CheckAuth(self)
         template_values['member'] = member
+        topic_num_str = str(topic_num)
+        if len(topic_num_str) > 8:
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic_not_found.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'topic_not_found.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+            return
         topic = False
         topic = memcache.get('Topic_' + str(topic_num))
         if topic is None:
@@ -302,6 +311,15 @@ class TopicHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
+        topic_num_str = str(topic_num)
+        if len(topic_num_str) > 8:
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic_not_found.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'topic_not_found.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+            return
         if (member):
             topic = False
             q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
