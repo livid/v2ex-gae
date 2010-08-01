@@ -28,7 +28,7 @@ from v2ex.babel.ext.sessions import Session
 
 from v2ex.babel import SYSTEM_VERSION
 
-import mobileme
+import config
 
 template.register_template_library('v2ex.templatetags.filters')
 
@@ -493,32 +493,33 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
                 member.put()
             # Upload to MobileMe
-            headers = {'Authorization' : 'Basic ' + base64.b64encode(mobileme.username + ':' + mobileme.password)}
-            host = 'idisk.me.com'
-            # Sharding
-            timestamp = str(int(time.time()))
-            shard = member.num % 31
-            root = '/v2ex.livid/Web/Sites/v2ex/avatars/' + str(shard)
-            root_mini = root + '/mini'
-            root_normal = root + '/normal'
-            root_large = root + '/large'
-            h = httplib.HTTPConnection(host)
-            # Mini
-            h.request('PUT', root_mini + '/' + str(member.num) + '.png', str(avatar_24), headers)
-            response = h.getresponse()
-            if response.status == 201 or response.status == 204:
-                member.avatar_mini_url = 'http://web.me.com/v2ex.livid/v2ex/avatars/' + str(shard) + '/mini/' + str(member.num) + '.png?r=' + timestamp
-            # Normal
-            h.request('PUT', root_normal + '/' + str(member.num) + '.png', str(avatar_48), headers)
-            response = h.getresponse()
-            if response.status == 201 or response.status == 204:
-                member.avatar_normal_url = 'http://web.me.com/v2ex.livid/v2ex/avatars/' + str(shard) + '/normal/' + str(member.num) + '.png?r=' + timestamp
-            # Large
-            h.request('PUT', root_large + '/' + str(member.num) + '.png', str(avatar_73), headers)
-            response = h.getresponse()
-            if response.status == 201 or response.status == 204:
-                member.avatar_large_url = 'http://web.me.com/v2ex.livid/v2ex/avatars/' + str(shard) + '/large/' + str(member.num) + '.png?r=' + timestamp
-            member.put()
+            if config.mobileme_enabled:
+                headers = {'Authorization' : 'Basic ' + base64.b64encode(config.mobileme_username + ':' + config.mobileme_password)}
+                host = 'idisk.me.com'
+                # Sharding
+                timestamp = str(int(time.time()))
+                shard = member.num % 31
+                root = '/' + config.mobileme_username + '/Web/Sites/v2ex/avatars/' + str(shard)
+                root_mini = root + '/mini'
+                root_normal = root + '/normal'
+                root_large = root + '/large'
+                h = httplib.HTTPConnection(host)
+                # Mini
+                h.request('PUT', root_mini + '/' + str(member.num) + '.png', str(avatar_24), headers)
+                response = h.getresponse()
+                if response.status == 201 or response.status == 204:
+                    member.avatar_mini_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/avatars/' + str(shard) + '/mini/' + str(member.num) + '.png?r=' + timestamp
+                # Normal
+                h.request('PUT', root_normal + '/' + str(member.num) + '.png', str(avatar_48), headers)
+                response = h.getresponse()
+                if response.status == 201 or response.status == 204:
+                    member.avatar_normal_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/avatars/' + str(shard) + '/normal/' + str(member.num) + '.png?r=' + timestamp
+                # Large
+                h.request('PUT', root_large + '/' + str(member.num) + '.png', str(avatar_73), headers)
+                response = h.getresponse()
+                if response.status == 201 or response.status == 204:
+                    member.avatar_large_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/avatars/' + str(shard) + '/large/' + str(member.num) + '.png?r=' + timestamp
+                member.put()
             memcache.set('member_' + str(member.num), member, 86400 * 365)
             memcache.delete('Avatar::avatar_' + str(member.num) + '_large')
             memcache.delete('Avatar::avatar_' + str(member.num) + '_normal')

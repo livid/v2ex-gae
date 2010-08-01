@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import base64
 import os
 import re
 import time
@@ -37,9 +38,12 @@ from django.utils import simplejson as json
 from twitter.oauthtwitter import OAuthApi
 from twitter.oauth import OAuthToken
 
-from consumer import CONSUMER_KEY, CONSUMER_SECRET
+from config import twitter_consumer_key as CONSUMER_KEY
+from config import twitter_consumer_secret as CONSUMER_SECRET
 
 template.register_template_library('v2ex.templatetags.filters')
+
+import config
 
 class NewTopicHandler(webapp.RequestHandler):
     def get(self, node_name):
@@ -634,11 +638,13 @@ class TopicPlainTextHandler(webapp.RequestHandler):
 
 class TopicIndexHandler(webapp.RequestHandler):
     def post(self, topic_num):
-        try:
-            if int(os.environ['SERVER_PORT']) == 10000:
-                urlfetch.fetch('http://127.0.0.1:20000/index/' + str(topic_num))
+        if config.fts_enabled:
+            if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
+                urlfetch.fetch('http://127.0.0.1:20000/index/' + str(topic_num), headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
             else:
-                urlfetch.fetch('http://fts.v2ex.com/index/' + str(topic_num))
+                urlfetch.fetch('http://' + config.fts_server + '/index/' + str(topic_num), headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
+        try:
+            logging.info('foo')
         except:
             logging.info('Topic #' + str(topic_num) + ' indexed with minor problem')
 

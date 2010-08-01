@@ -35,7 +35,8 @@ from v2ex.babel.ext.sessions import Session
 from twitter.oauthtwitter import OAuthApi
 from twitter.oauth import OAuthToken
 
-from consumer import CONSUMER_KEY, CONSUMER_SECRET
+from config import twitter_consumer_key as CONSUMER_KEY
+from config import twitter_consumer_secret as CONSUMER_SECRET
 
 template.register_template_library('v2ex.templatetags.filters')
 

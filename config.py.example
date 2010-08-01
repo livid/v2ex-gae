@@ -1,0 +1,17 @@
+import os
+
+mobileme_enabled = False
+mobileme_username = ''
+mobileme_password = ''
+
+if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
+    twitter_consumer_key = ''
+    twitter_consumer_secret = ''
+else:
+    twitter_consumer_key = ''
+    twitter_consumer_secret = ''
+    
+fts_enabled = False
+fts_server = ''
+fts_username = ''
+fts_password = ''
