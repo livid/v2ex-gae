@@ -49,6 +49,7 @@ class HomeHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if member:
+            self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
             template_values['member'] = member
         if member:
             recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
@@ -126,15 +127,15 @@ class HomeHandler(webapp.RequestHandler):
         if (browser['ios']):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'index.html')
         else:
-            hottest = memcache.get('index_hottest')
+            hottest = memcache.get('index_hottest_sidebar')
             if hottest is None:
                 qhot = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 25")
-                hottest = u'<div class="cell"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="center" width="40" valign="middle"><span style="color: #ff9933; font-weight: bold; font-size: 24px; font-family: \'Arial Unicode MS\'; opacity: 0.8;">☀</span></td><td style="line-height: 200%; padding-left: 15px;">'
+                hottest = u'<div class="box"><div class="cell"><span class="fade">最热节点</span></div><div class="inner" style="line-height: 200%;">'
                 for node in qhot:
-                    hottest = hottest + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
-                hottest = hottest + '</td></tr></table></div>'
-                memcache.set('index_hottest', hottest, 5000)
-            template_values['hottest'] = hottest
+                    hottest = hottest + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
+                hottest = hottest + '</div></div>'
+                memcache.set('index_hottest_sidebar', hottest, 5000)
+            template_values['index_hottest_sidebar'] = hottest
             c = memcache.get('index_categories')
             if c is None:
                 c = ''
@@ -221,8 +222,7 @@ class SigninHandler(webapp.RequestHandler):
             q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1 AND password = :2", u.lower(), p_sha1)
             if (q.count() == 1):
                 member = q[0]
-                cookies = Cookies(self, max_age = 86400 * 365, path = '/')
-                cookies['auth'] = member.auth
+                self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
                 self.redirect('/')
             else:
                 errors = 2
@@ -357,8 +357,7 @@ class SignupHandler(webapp.RequestHandler):
             member.put()
             counter.put()
             counter2.put()
-            cookies = Cookies(self, max_age = 86400 * 365, path = '/')
-            cookies['auth'] = member.auth
+            self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
             self.redirect('/')
         else:
             if browser['ios']:

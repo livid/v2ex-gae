@@ -9,6 +9,8 @@
         <div id="Rightbar">
             {% include 'rightbar/user.html' %}
             <div class="sep20"></div>
+            {{ index_hottest_sidebar }}
+            <div class="sep20"></div>
             {% include 'rightbar/latest_nodes.html' %}
             <div class="sep20"></div>
             {% include 'rightbar/stats.html' %}
@@ -18,7 +20,6 @@
         </div>
         <div id="Content">
             <div class="box">
-                {{ hottest }}
                 {% include 'common/topics_index.html' %}
         		<div class="inner">
         		    » <a href="/recent">更多最近的 50 个帖子</a>

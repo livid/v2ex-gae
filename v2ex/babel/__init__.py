@@ -13,6 +13,7 @@ class Member(db.Model):
     username_lower = db.StringProperty(required=False, indexed=True)
     password = db.StringProperty(required=False, indexed=True)
     email = db.StringProperty(required=False, indexed=True)
+    email_verified = db.IntegerProperty(required=False, indexed=True, default=0)
     website = db.StringProperty(required=False, default='')
     twitter = db.StringProperty(required=False, default='')
     twitter_oauth = db.IntegerProperty(required=False, default=0)

@@ -182,8 +182,7 @@ class SettingsHandler(webapp.RequestHandler):
                 member.password = hashlib.sha1(password_new).hexdigest()
                 member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
                 member.put()
-                cookies = Cookies(self, max_age = 86400, path = '/')
-                cookies['auth'] = member.auth
+                self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
                 self.redirect('/settings')
             # Verification: email
             member_email_error = 0
@@ -376,11 +375,10 @@ class SettingsPasswordHandler(webapp.RequestHandler):
                 member.password = hashlib.sha1(password_new).hexdigest()
                 member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
                 member.put()
-                cookies = Cookies(self, max_age = 86400 * 365, path = '/')
-                cookies['auth'] = member.auth
                 memcache.set(member.auth, member.num, 86400 * 365)
                 memcache.set('member_' + str(member.num), member, 86400 * 365)
                 self.session['message'] = '密码已成功更新，下次请用新密码登录'
+                self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
                 self.redirect('/settings')
             else:
                 if browser['ios']:
