@@ -1,0 +1,16 @@
+Project Babel
+
+Project Babel is a software package for running a community on Google App Engine. It's written in Python and released under very liberal BSD license. You can use it, modify it or even sell it whatever way you want.
+
+Features:
+
+- Topics are organized under Nodes (Discussion Areas), you can have many Nodes in one community
+- Nodes can have header, foot and category property, or organized under Sections
+- Two clean themes: one for desktop browser, another for iOS device and Android
+- Optimized for modern browsers
+- Built-in WebDAV avatar facility, you can host all avatars with MobileMe or other WebDAV servers
+- Atom feed output
+- HTML5
+- Built-in MapReduce tasks for optimizing community data
+- Built-in OAuth Twitter client for tweeting and syncing topics/replies
+- Built-in Notes feature
