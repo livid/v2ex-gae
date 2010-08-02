@@ -85,16 +85,15 @@
 		</div>
 		<div class="section">头像设置</div>
 		<div class="cell">	
-			{% if member.avatar_mini_url %}
 			<table cellpadding="5" cellspacing="0" border="0">
 			    <tr>
 			        <td width="80" align="right">
 			            当前的头像
 			        </td>
 			        <td width="200" align="left">
-			            <img src="{{ member.avatar_large_url }}" align="absmiddle" />&nbsp; 
-						<img src="{{ member.avatar_normal_url }}" align="absmiddle" />&nbsp; 
-						<img src="{{ member.avatar_mini_url }}" align="absmiddle" />&nbsp; 
+			            {{ member|avatar:"large" }}&nbsp; 
+									{{ member|avatar:"normal" }}&nbsp;
+									{{ member|avatar:"mini" }}&nbsp;
 			        </td>
 			    </tr>
 				<tr>
@@ -102,15 +101,10 @@
 			            
 			        </td>
 			        <td width="200" align="left">
-			            <a href="/settings/avatar">上传新头像</a>
+			            <a href="/settings/avatar">上传新头像</a>  或者使用 <a href="http://www.gravatar.com/" target="_blank">Gravatar</a> 通用头像.
 			        </td>
 			    </tr>
 			</table>
-            {% else %}
-            目前尚未上传头像。
-            <div class="sep10"></div>
-            <a href="/settings/avatar">现在就上传</a>
-            {% endif %}
 		</div>
 		<div class="section">密码设置</div>
 		<div class="cell">
