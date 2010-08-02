@@ -600,3 +600,20 @@ a.count_orange:hover {
 	font-size: 16px;
 	font-weight: bold;
 }
+
+table.grid {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+table.grid td {
+	border: 1px solid #e2e2e2;
+	border-left: 1px solid #e2e2e2;
+	border-right: none;
+	height: 120px;
+}
+
+table.grid td.left {
+	border-left: none;
+}
