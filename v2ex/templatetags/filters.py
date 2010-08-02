@@ -3,7 +3,6 @@ import re
 from django import template
 from datetime import timedelta
 import urllib, hashlib
-from v2ex.babel import Member
 register = template.Library()
 
 def timezone(value, offset):
