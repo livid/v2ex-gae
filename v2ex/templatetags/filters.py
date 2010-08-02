@@ -60,10 +60,5 @@ register.filter(avatar)
 
 # github gist script support
 def gist(value):
-    ms = re.findall('(\&lt\;script\s?src=\&quot\;(http\:\/\/gist\.github\.com\/[\d]+\.js)\&quot\;\s?\&gt\;\s?\&lt\;\/script\&gt\;)',value)
-    if (len(ms) > 0):
-        value = value.replace(ms[0][0],'<script src="'+ms[0][1]+'"></script>')
-    else:
-        value += "bbb"
-    return value
+    return re.sub(r'(http://gist.github.com/[\d]+)',r'<script src="\1.js"></script>',value)
 register.filter(gist)

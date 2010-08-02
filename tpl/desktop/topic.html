@@ -20,7 +20,7 @@
                     <strong><small class="fade">By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.num 1 %} - <a href="#;" onclick="if (confirm('确认删除标题为 {{ topic.title|escape }} 的第 {{ topic.num }} 号主题？')) { location = '/delete/topic/{{ topic.num }}'; }">DELETE</a>{% endifequal %}{% if can_edit %} - <a href="/edit/topic/{{ topic.num }}">EDIT</a>{% endif %}</small></strong>
                 </div>
                 <div class="inner">
-                    <div class="content">{{ topic.content|escape|imgly|mentions|urlize|linebreaksbr|gist }}</div>
+                    <div class="content">{{ topic.content|escape|imgly|mentions|gist|urlize|linebreaksbr }}</div>
                 </div>
             </div>
             {% ifequal topic.replies 0 %}
@@ -40,7 +40,7 @@
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
                                 <div class="sep5"></div>
-                                <div class="content">{{ reply.content|escape|imgly|mentions|urlize|linebreaksbr|gist }}</div>
+                                <div class="content">{{ reply.content|escape|imgly|mentions|gist|urlize|linebreaksbr }}</div>
                             </td>
                     </table>
                 </div>
