@@ -14,3 +14,4 @@ Features:
 - Built-in MapReduce tasks for optimizing community data
 - Built-in OAuth Twitter client for tweeting and syncing topics/replies
 - Built-in Notes feature
+- Gravatar support

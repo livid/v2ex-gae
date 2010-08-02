@@ -618,5 +618,17 @@ table.grid td.left {
 	border-left: none;
 }
 
-.gist { font-size:11px; width:636px; font-family: Monaco,Arial, "MS Trebuchet", sans-serif;}
-.cell .gist { width:576px; }
+.gist { font-size: 11px; font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", Monaco, "Hiragino Sans GB", STHeiti !important; }
+
+.gist-file {
+	-moz-border-radius: 4px; -webkit-border-radius: 4px;
+	border: 2px solid #999;
+	-moz-box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.gist-file .gist-data {
+	-moz-border-radius: 4px 4px 0px 0px; -webkit-border-radius: 4px;
+}
+
+.cell .gist { max-width: 576px; }

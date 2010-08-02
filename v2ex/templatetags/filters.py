@@ -11,6 +11,7 @@ def timezone(value, offset):
     return value + timedelta(hours=offset)
 register.filter(timezone)
 
+# auto convert img.ly/abcd links to image tags
 def imgly(value):
     imgs = re.findall('(http://img.ly/[a-zA-Z0-9]+)\s?', value)
     if (len(imgs) > 0):
@@ -23,6 +24,7 @@ def imgly(value):
         return value
 register.filter(imgly)
 
+# auto convert @username to clickable links
 def mentions(value):
     ms = re.findall('(@[a-zA-Z0-9\_]+\.?)\s?', value)
     if (len(ms) > 0):
@@ -40,7 +42,7 @@ register.filter(mentions)
 def avatar(value,arg):
     default = "http://v2ex.com/static/img/avatar_" + str(arg) + ".png"
     if type(value).__name__ != 'Member':
-        return '<img src="' + default + '" />'
+        return '<img src="' + default + '" border="0" />'
     if arg == 'large':
         number_size = 73
         member_avatar_url = value.avatar_large_url
@@ -61,5 +63,5 @@ register.filter(avatar)
 
 # github gist script support
 def gist(value):
-    return re.sub(r'(http://gist.github.com/[\d]+)',r'<script src="\1.js"></script>',value)
+    return re.sub(r'(http://gist.github.com/[\d]+)', r'<script src="\1.js"></script>', value)
 register.filter(gist)
