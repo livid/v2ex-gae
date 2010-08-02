@@ -3,6 +3,7 @@ import re
 from django import template
 from datetime import timedelta
 import urllib, hashlib
+from v2ex.babel import Member
 register = template.Library()
 
 def timezone(value, offset):
@@ -38,6 +39,9 @@ register.filter(mentions)
 
 # avatar filter
 def avatar(value,arg):
+    default = "http://v2ex.com/static/img/avatar_" + str(arg) + ".png"
+    if type(value).__name__ != 'Member':
+        return '<img src="' + default + '" />'
     if arg == 'large':
         number_size = 73
         member_avatar_url = value.avatar_large_url
@@ -51,7 +55,6 @@ def avatar(value,arg):
     if member_avatar_url:
         return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
     else:
-        default = "http://v2ex.com/static/img/avatar_" + str(arg) + ".png"
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(value.email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'s' : str(number_size), 'd' : default})
         return '<img src="' + gravatar_url + '" border="0" alt="' + value.username + '" />'
