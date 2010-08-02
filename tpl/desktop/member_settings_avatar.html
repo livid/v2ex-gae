@@ -13,7 +13,7 @@
                 <div class="cell">
                     <span class="fade"><a href="/settings">设置</a> <span class="chevron">&nbsp;›&nbsp;</span> 上传新头像</span>
                 </div>
-                {% if member.avatar_mini_url %}
+
     			<div class="cell">
     			<table cellpadding="5" cellspacing="0" border="0">
     			    <tr>
@@ -21,14 +21,13 @@
     			            当前的头像
     			        </td>
     			        <td width="200" align="left">
-    			            <img src="{{ member.avatar_large_url }}" align="absmiddle" />&nbsp; 
-    						<img src="{{ member.avatar_normal_url }}" align="absmiddle" />&nbsp; 
-    						<img src="{{ member.avatar_mini_url }}" align="absmiddle" />&nbsp; 
+											{{ member|avatar:"large" }}&nbsp; 
+											{{ member|avatar:"normal" }}&nbsp;
+											{{ member|avatar:"mini" }}&nbsp;
     			        </td>
     			    </tr>
     			</table>
     			</div>
-                {% endif %}
                 <div class="inner">
                     <form enctype="multipart/form-data" action="/settings/avatar" method="post">
                     <span class="fade">支持 1MB 以内的 PNG / GIF / JPG 图片文件作为头像，推荐使用正方形的透明 PNG 图片以获得最佳效果。</span>

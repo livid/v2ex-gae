@@ -2,7 +2,7 @@ import re
 
 from django import template
 from datetime import timedelta
-
+import urllib, hashlib
 register = template.Library()
 
 def timezone(value, offset):
@@ -35,3 +35,24 @@ def mentions(value):
     else:
         return value
 register.filter(mentions)
+
+def avatar(value,arg):
+    if arg == 'large':
+        number_size = 73
+        member_avatar_url = value.avatar_large_url
+    elif arg == 'normal':
+        number_size = 48
+        member_avatar_url = value.avatar_normal_url
+    elif arg == 'mini':
+        number_size = 24
+        member_avatar_url = value.avatar_mini_url
+        
+    if member_avatar_url:
+        return '<img src="'+value.avatar_large_url+'" />'
+    else:
+        # default = "http://127.0.0.1:8081/static/img/avatar_"+str(arg)+".png"
+        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(value.email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'s':str(number_size)})
+        
+        return '<img src="'+gravatar_url+'" />'
+register.filter(avatar)
