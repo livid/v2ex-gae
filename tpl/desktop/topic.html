@@ -20,7 +20,7 @@
                     <strong><small class="fade">By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.num 1 %} - <a href="#;" onclick="if (confirm('确认删除标题为 {{ topic.title|escape }} 的第 {{ topic.num }} 号主题？')) { location = '/delete/topic/{{ topic.num }}'; }">DELETE</a>{% endifequal %}{% if can_edit %} - <a href="/edit/topic/{{ topic.num }}">EDIT</a>{% endif %}</small></strong>
                 </div>
                 <div class="inner">
-                    <div class="content">{{ topic.content|escape|imgly|mentions|urlize|linebreaksbr }}</div>
+                    <div class="content">{{ topic.content|escape|imgly|mentions|urlize|linebreaksbr|gist }}</div>
                 </div>
             </div>
             {% ifequal topic.replies 0 %}
@@ -31,7 +31,7 @@
             <div class="box">
                 <div class="cell"><div class="fr">{% if reply_reversed %}<a href="/t/{{ topic.num }}?r=0">按顺序显示回复</a>{% else %}<a href="/t/{{ topic.num }}?r=1">按倒序显示回复</a>{% endif %} &nbsp; {% if filter_mode %}<a href="/t/{{ topic.num }}?f=0">显示全部</a>{% else %}<a href="/t/{{ topic.num }}?f=1">只看楼主</a>{% endif %}</div><span class="fade">截至 {{ topic.last_touched|timezone:8|date:"Y-n-j G:i:s A" }} 共收到 {{ topic.replies }} 条回复</span></div>
                 {% for reply in replies %}
-                <div class="cell">
+                <div class="cell reply">
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tr>
                             <td width="48" valign="top"><a href="/member/{{ reply.created_by }}">{{ reply.member|avatar:"normal" }}</a></td>
@@ -40,7 +40,7 @@
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
                                 <div class="sep5"></div>
-                                <div class="content">{{ reply.content|escape|imgly|mentions|urlize|linebreaksbr }}</div>
+                                <div class="content">{{ reply.content|escape|imgly|mentions|urlize|linebreaksbr|gist }}</div>
                             </td>
                     </table>
                 </div>

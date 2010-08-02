@@ -600,3 +600,6 @@ a.count_orange:hover {
 	font-size: 16px;
 	font-weight: bold;
 }
+
+.gist { font-size:11px; width:636px; font-family: Monaco,Arial, "MS Trebuchet", sans-serif;}
+.cell .gist { width:570px; }

@@ -36,6 +36,7 @@ def mentions(value):
         return value
 register.filter(mentions)
 
+# avatar filter
 def avatar(value,arg):
     if arg == 'large':
         number_size = 73
@@ -56,3 +57,13 @@ def avatar(value,arg):
         
         return '<img src="'+gravatar_url+'" />'
 register.filter(avatar)
+
+# github gist script support
+def gist(value):
+    ms = re.findall('(\&lt\;script\s?src=\&quot\;(http\:\/\/gist\.github\.com\/[\d]+\.js)\&quot\;\s?\&gt\;\s?\&lt\;\/script\&gt\;)',value)
+    if (len(ms) > 0):
+        value = value.replace(ms[0][0],'<script src="'+ms[0][1]+'"></script>')
+    else:
+        value += "bbb"
+    return value
+register.filter(gist)
