@@ -1,6 +1,7 @@
-SYSTEM_VERSION = '2.3.0'
+SYSTEM_VERSION = '2.3.1'
 
 import datetime
+import hashlib
 
 from google.appengine.ext import db
 from google.appengine.api import memcache

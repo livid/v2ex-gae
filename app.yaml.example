@@ -109,8 +109,13 @@ handlers:
   script: mail.py 
   login: admin
 
+- url: /_ah/xmpp/.+
+  script: xmpp.py 
+  login: admin
+
 - url: .*
   script: main.py
 
 inbound_services:
 - mail
+- xmpp_message

@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import hashlib
+
 from google.appengine.ext import db
 from google.appengine.api import memcache
 
@@ -47,6 +49,20 @@ def GetMemberByUsername(name):
         if q.count() == 1:
             one = q[0]
             memcache.set('Member::' + str(name).lower(), one, 86400)
+            return one
+        else:
+            return False
+
+def GetMemberByEmail(email):
+    cache = 'Member::email::' + hashlib.md5(email.lower()).hexdigest()
+    one = memcache.get(cache)
+    if one:
+        return one
+    else:
+        q = db.GqlQuery("SELECT * FROM Member WHERE email = :1", str(email).lower())
+        if q.count() == 1:
+            one = q[0]
+            memcache.set(cache, one, 86400)
             return one
         else:
             return False
