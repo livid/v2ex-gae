@@ -48,11 +48,11 @@ def avatar(value,arg):
         member_avatar_url = value.avatar_mini_url
         
     if member_avatar_url:
-        return '<img src="'+value.avatar_large_url+'" />'
+        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
     else:
-        # default = "http://127.0.0.1:8081/static/img/avatar_"+str(arg)+".png"
+        default = "http://v2ex.com/static/img/avatar_" + str(arg) + ".png"
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(value.email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'s':str(number_size)})
+        gravatar_url += urllib.urlencode({'s' : str(number_size), 'd' : default})
         
-        return '<img src="'+gravatar_url+'" />'
+        return '<img src="' + gravatar_url + '" border="0" alt="' + value.username + '" />'
 register.filter(avatar)
