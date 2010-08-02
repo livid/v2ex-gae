@@ -715,7 +715,7 @@ class ReplyEditHandler(webapp.RequestHandler):
                         reply.put()
                         memcache.delete('topic_' + str(topic.num) + '_replies_asc')
                         memcache.delete('topic_' + str(topic.num) + '_replies_desc')
-                        memcache.delete('topic_' + str(topic_num) + '_replies_filtered')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered')
                         self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
                     else:
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_reply.html')

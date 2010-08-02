@@ -102,5 +102,8 @@ handlers:
   script: mapreduce/main.py
   login: admin
 
+- url: /images(/.*)?
+  script: images.py
+
 - url: .*
   script: main.py

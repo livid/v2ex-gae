@@ -601,5 +601,22 @@ a.count_orange:hover {
 	font-weight: bold;
 }
 
+table.grid {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+table.grid td {
+	border: 1px solid #e2e2e2;
+	border-left: 1px solid #e2e2e2;
+	border-right: none;
+	height: 120px;
+}
+
+table.grid td.left {
+	border-left: none;
+}
+
 .gist { font-size:11px; width:636px; font-family: Monaco,Arial, "MS Trebuchet", sans-serif;}
 .cell .gist { width:576px; }
