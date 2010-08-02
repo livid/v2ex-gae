@@ -104,6 +104,13 @@ handlers:
 
 - url: /images(/.*)?
   script: images.py
+ 
+- url: /_ah/mail/.+
+  script: mail.py 
+  login: admin
 
 - url: .*
   script: main.py
+
+inbound_services:
+- mail
