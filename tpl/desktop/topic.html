@@ -36,7 +36,7 @@
                         <tr>
                             <td width="48" valign="top"><a href="/member/{{ reply.created_by }}">{{ reply.member|avatar:"normal" }}</a></td>
                             <td width="10"></td>
-                            <td width="auto" valign="top"><div class="fr" id="reply_{{ reply.num }}_buttons"><strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a>{% endifequal %}</small></strong></div>
+                            <td width="auto" valign="top"><div class="fr" id="reply_{{ reply.num }}_buttons"><strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">DEL</a>{% endifequal %}</small></strong></div>
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
                                 <div class="sep5"></div>

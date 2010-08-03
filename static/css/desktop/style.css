@@ -632,3 +632,40 @@ table.grid td.left {
 }
 
 .cell .gist { max-width: 576px; }
+
+.place_title {
+	font-family: "DINPro";
+	font-size: 32px;
+	line-height: 32px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.place_visitors {
+	font-family: "DINPro";
+	font-size: 14px;
+	line-height: 14px;
+	color: #999;
+}
+
+.place_say {
+	font-family: "DINPro";
+	font-size: 14px;
+	line-height: 14px;
+	color: #999;
+}
+
+a.tiny_label:link, a.tiny_label:visited, a.tiny_label:active {
+	font-size: 10px;
+	line-height: 10px;
+	color: #fff;
+	background-color: #dde;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	padding: 2px 5px 2px 5px;
+}
+
+a.tiny_label:hover {
+	text-decoration: none;
+	background-color: #99a;
+}

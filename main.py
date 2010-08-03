@@ -48,6 +48,10 @@ class HomeHandler(webapp.RequestHandler):
         pass
         
     def get(self):
+        host = self.request.headers['Host']
+        if host == 'beta.v2ex.com':
+            self.redirect('http://v2ex.appspot.com/')
+            return
         browser = detect(self.request)
         self.session = Session()
         template_values = {}

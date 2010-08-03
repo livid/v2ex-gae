@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.3.1'
+SYSTEM_VERSION = '2.3.3'
 
 import datetime
 import hashlib
@@ -128,3 +128,28 @@ class PasswordResetToken(db.Model):
     member = db.ReferenceProperty(Member)
     valid = db.IntegerProperty(required=False, indexed=True, default=1)
     timestamp = db.IntegerProperty(required=False, indexed=True, default=0)
+
+class Place(db.Model):
+    num = db.IntegerProperty(required=False, indexed=True)
+    ip = db.StringProperty(required=False, indexed=True)
+    name = db.StringProperty(required=False, indexed=False)
+    visitors = db.IntegerProperty(required=False, default=0, indexed=True)
+    longitude = db.FloatProperty(required=False, default=0.0, indexed=True)
+    latitude = db.FloatProperty(required=False, default=0.0, indexed=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+    last_modified = db.DateTimeProperty(auto_now=True)
+
+class PlaceMessage(db.Model):
+    num = db.IntegerProperty(indexed=True)
+    place = db.ReferenceProperty(Place)
+    place_num = db.IntegerProperty(indexed=True)
+    member = db.ReferenceProperty(Member)
+    content = db.TextProperty(required=False)
+    in_reply_to = db.SelfReferenceProperty()
+    source = db.StringProperty(required=False, indexed=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+class Checkin(db.Model):
+    place = db.ReferenceProperty(Place)
+    member = db.ReferenceProperty(Member)
+    last_checked_in = db.DateTimeProperty(auto_now=True)

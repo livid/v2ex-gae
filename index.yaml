@@ -59,6 +59,12 @@ indexes:
   - name: last_modified
     direction: desc
 
+- kind: PlaceMessage
+  properties:
+  - name: place
+  - name: created
+    direction: desc
+
 - kind: Reply
   properties:
   - name: __key__

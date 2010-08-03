@@ -1,0 +1,24 @@
+<script type="text/javascript">
+    var updateCount = function() {
+        s = document.getElementById("say");
+        r = 280 - s.value.length;
+        tc = document.getElementById("tc");
+        tc.innerHTML = r;
+    }
+</script>
+<form method="post" action="/place/{{ ip }}">
+<textarea class="mll short" name="say" maxlength="280" id="say" onkeyup="updateCount();"></textarea>
+<div class="sep10"></div>
+<div class="fr"><input type="submit" value="Say" class="super normal button" /></div>
+<div class="sep10"></div>
+<div class="sep10"></div>
+<div class="sep5"></div>
+</form>
+<script type="text/javascript">
+    var focusStatus = function() {
+        s = document.getElementById("say");
+        s.focus();
+    }
+    
+    setTimeout("focusStatus()", 200);
+</script>

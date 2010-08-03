@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import hashlib
+import logging
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
@@ -11,6 +12,7 @@ from v2ex.babel import Section
 from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
+from v2ex.babel import Place
 
 def GetKindByNum(kind, num):
     K = str(kind.capitalize())
@@ -66,3 +68,47 @@ def GetMemberByEmail(email):
             return one
         else:
             return False
+
+def ip2long(ip):
+    ip_array = ip.split('.')
+    ip_long = int(ip_array[0]) * 16777216 + int(ip_array[1]) * 65536 + int(ip_array[2]) * 256 + int(ip_array[3])
+    return ip_long
+
+def GetPlaceByIP(ip):
+    cache = 'Place_' + ip
+    place = memcache.get(cache)
+    if place:
+        return place
+    else:
+        q = db.GqlQuery("SELECT * FROM Place WHERE ip = :1", ip)
+        if q.count() == 1:
+            place = q[0]
+            memcache.set(cache, place, 86400)
+            return place
+        else:
+            return False
+
+def CreatePlaceByIP(ip):
+    place = Place()
+    q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'place.max')
+    if (q.count() == 1):
+        counter = q[0]
+        counter.value = counter.value + 1
+    else:
+        counter = Counter()
+        counter.name = 'place.max'
+        counter.value = 1
+    q2 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'place.total')
+    if (q2.count() == 1):
+        counter2 = q2[0]
+        counter2.value = counter2.value + 1
+    else:
+        counter2 = Counter()
+        counter2.name = 'place.total'
+        counter2.value = 1
+    place.num = ip2long(ip)
+    place.ip = ip
+    place.put()
+    counter.put()
+    counter2.put()
+    return place

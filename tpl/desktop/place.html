@@ -1,0 +1,66 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell"><div class="fr"><!-- TODO: Check-in --></div>
+                <span class="bigger fade"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ ip }}</span>
+                </div>
+                {% if substance %}
+                <div class="cell">
+                <h1 class="place_title">{{ substance.ip }}</h1>
+                <!--<div class="sep10"></div>
+                <span class="place_visitors">{{ substance.visitors }} visitors so far</span>-->
+                </div>
+                {% if can_post %}
+                <div class="cell"><div class="fr"><strong><span class="snow bigger" id="tc">280</span></strong></div>
+                    <span class="place_say"><img src="/static/img/say.png" align="absmiddle" /> &nbsp; Say something about this place?</span>
+                    <div class="sep10"></div>
+                    {% include 'common/say.html' %}
+                </div>
+                {% endif %}
+                {% if can_see %}
+                {% for message in messages %}
+                <div class="cell">
+                <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+                	<td valign="top" class="avatar"><a href="/member/{{ message.member.username }}">{{ message.member|avatar:"normal" }}</a></td>
+                	<td style="padding-left: 12px" valign="top"><div class="fr"><span class="created">{{ message.created|timesince }} ago{% ifequal message.member.num member.num %} &nbsp; <a href="#;" onclick="if (confirm('确认删除？')) { location.href = '/remove/place_message/{{ message.key }}'; }" class="tiny_label">DELETE</a>{% endifequal %}</span></div><span class="fade" style="font-size: 10px;"><strong><a href="/member/{{ message.member.username|escape }}" class="dark">{{ message.member.username|escape }}</a></strong></span>
+                	    <div class="sep5"></div>
+                	    <span class="bigger" style="font-size: 16px">{{ message.content|escape|urlize }}</span>
+                	</td>
+                	</tr>
+                </table>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="cell">
+                    <div align="center"><div class="sep20"></div>
+                        <img src="/static/img/info_128.png" />
+                        <div class="sep5"></div>
+                        <span class="bigger snow">只有确实位于此位置才能看到这里的消息</span>
+                        <div class="sep5"></div>
+                        <small class="fade">Your Current IP › <strong>{{ ip_guest }}</strong></small>
+                        <div class="sep20"></div>
+                    </div>
+                </div>
+                {% endif %}
+                {% else %}
+                {% endif %}
+                
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
