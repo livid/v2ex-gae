@@ -39,6 +39,8 @@ from v2ex.babel.handler import GenericHandler
 
 from django.utils import simplejson as json
 
+from v2ex.babel.ext import captcha
+
 template.register_template_library('v2ex.templatetags.filters')
 
 import config
@@ -223,6 +225,7 @@ class SigninHandler(webapp.RequestHandler):
     def post(self):
         browser = detect(self.request)
         template_values = {}
+        template_values['page_title'] = u'V2EX › 登入'
         template_values['system_version'] = SYSTEM_VERSION
         u = self.request.get('u').strip()
         p = self.request.get('p').strip()
@@ -252,10 +255,16 @@ class SigninHandler(webapp.RequestHandler):
         
 class SignupHandler(webapp.RequestHandler):
     def get(self):
+        chtml = captcha.displayhtml(
+            public_key = config.recaptcha_public_key,
+            use_ssl = False,
+            error = None)
         browser = detect(self.request)
         template_values = {}
+        template_values['page_title'] = u'V2EX › 注册'
         template_values['system_version'] = SYSTEM_VERSION
         template_values['errors'] = 0
+        template_values['captchahtml'] = chtml
         if browser['ios']:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'signup.html')
         else:
@@ -266,6 +275,7 @@ class SignupHandler(webapp.RequestHandler):
     def post(self):
         browser = detect(self.request)
         template_values = {}
+        template_values['page_title'] = u'V2EX › 注册'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         # Verification: username
@@ -340,6 +350,30 @@ class SignupHandler(webapp.RequestHandler):
         template_values['member_email'] = member_email
         template_values['member_email_error'] = member_email_error
         template_values['member_email_error_message'] = member_email_error_messages[member_email_error]
+        # Verification: reCAPTCHA
+        challenge = self.request.get('recaptcha_challenge_field')
+        response  = self.request.get('recaptcha_response_field')
+        remoteip  = os.environ['REMOTE_ADDR']
+        
+        cResponse = captcha.submit(
+                         challenge,
+                         response,
+                         config.recaptcha_private_key,
+                         remoteip)
+
+        if cResponse.is_valid:
+            logging.info('reCAPTCHA verification passed')
+            template_values['recaptcha_error'] = 0
+        else:
+            errors = errors + 1
+            error = cResponse.error_code
+            chtml = captcha.displayhtml(
+                public_key = config.recaptcha_public_key,
+                use_ssl = False,
+                error = cResponse.error_code)
+            template_values['captchahtml'] = chtml
+            template_values['recaptcha_error'] = 1
+            template_values['recaptcha_error_message'] = '请重新输入 reCAPTCHA 验证码'
         template_values['errors'] = errors
         if (errors == 0):
             member = Member()
