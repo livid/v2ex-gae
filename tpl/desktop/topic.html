@@ -1,4 +1,19 @@
 {% include 'common/head.html' %}
+<script type="text/javascript">
+	// reply a reply
+	function replyOne(username){
+		replyContent = $("#reply_content");
+		oldContent = replyContent.val();
+		contentForAppend = "@" + username + "\n";
+		if(oldContent.length > 0){
+			contentForAppend = "\n" + contentForAppend;
+		}
+		oldContent += contentForAppend;
+		replyContent.focus();
+		replyContent.text(oldContent);
+		return false; 
+	}
+</script>
 <body>
     {% include 'common/top.html' %}
     <div id="Wrapper">
@@ -36,7 +51,10 @@
                         <tr>
                             <td width="48" valign="top"><a href="/member/{{ reply.created_by }}">{{ reply.member|avatar:"normal" }}</a></td>
                             <td width="10"></td>
-                            <td width="auto" valign="top"><div class="fr" id="reply_{{ reply.num }}_buttons"><strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">DEL</a>{% endifequal %}</small></strong></div>
+                            <td width="auto" valign="top">
+																<div class="fr" id="reply_{{ reply.num }}_buttons">
+																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="#" onclick="return replyOne('{{ reply.created_by }}');" title="Reply">@</a>&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">Tidy</a>&nbsp;<a href="/edit/reply/{{ reply.num }}">Edit</a>&nbsp;<a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">Del</a>{% endifequal %}</small></strong>
+																</div>
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
                                 <div class="sep5"></div>
@@ -57,7 +75,7 @@
                 {% endif %}
                 </div>
                 <div class="inner">
-                    <textarea class="mll" name="content"></textarea>
+                    <textarea class="mll" id="reply_content" name="content"></textarea>
                     <div class="sep10"></div>
                     <input type="submit" class="super normal button" value="发送" />
                 </div></form>

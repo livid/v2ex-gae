@@ -669,3 +669,9 @@ a.tiny_label:hover {
 	text-decoration: none;
 	background-color: #99a;
 }
+
+.box .cell .fr a { 
+    font-size:9px; 
+    color:#999; 
+    text-decoration:underline; 
+}
