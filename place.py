@@ -60,10 +60,10 @@ class PlaceHandler(webapp.RequestHandler):
             else:
                 can_see = False
         else:
-            if 'X-Real-IP' in handler.request.headers:
-                ip_guest = handler.request.headers['X-Real-IP']
+            if 'X-Real-IP' in self.request.headers:
+                ip_guest = self.request.headers['X-Real-IP']
             else:
-                ip_guest = handler.request.remote_addr
+                ip_guest = self.request.remote_addr
             if ip_guest == ip:
                 can_see = True
             else:
