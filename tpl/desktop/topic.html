@@ -53,7 +53,7 @@
                             <td width="10"></td>
                             <td width="auto" valign="top">
 																<div class="fr" id="reply_{{ reply.num }}_buttons">
-																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="#" onclick="return replyOne('{{ reply.created_by }}');" title="Reply">@</a>&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">Tidy</a>&nbsp;<a href="/edit/reply/{{ reply.num }}">Edit</a>&nbsp;<a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">Del</a>{% endifequal %}</small></strong>
+																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago &nbsp;<a href="#" onclick="return replyOne('{{ reply.created_by }}');" title="Reply">@</a>{% ifequal member.num 1 %}&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">Tidy</a>&nbsp;<a href="/edit/reply/{{ reply.num }}">Edit</a>&nbsp;<a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">Del</a>{% endifequal %}</small></strong>
 																</div>
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
