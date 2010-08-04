@@ -17,4 +17,5 @@ fts_username = ''
 fts_password = ''
 
 # change this for deploy is you can registration from http://www.google.com/recaptcha
-recaptcha_public_key = 'your recaptcha public key'
+recaptcha_public_key = 'your recaptcha_public_key'
+recaptcha_private_key = 'your recaptcha_private_key'
