@@ -26,9 +26,17 @@
         				{% if member_email_error %}
         				<li>{{ member_email_error_message }}</li>
         				{% endif %}
+        				{% if recaptcha_error %}
+        				<li>{{ recaptcha_error_message }}</li>
+                        {% endif %}
         			</ul>
         			<div class="sep10"></div>
         			{% endif %}
+        			<script type="text/javascript">
+                    var RecaptchaOptions = {
+                        theme : 'blackglass'
+                    };
+                    </script>
         			<table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="80" align="right">
@@ -52,6 +60,13 @@
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="email" value="{{ member_email|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            {{ captchahtml }}
         			        </td>
         			    </tr>
         			    <tr>
