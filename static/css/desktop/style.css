@@ -671,3 +671,7 @@ a.tiny_label:hover {
 	text-decoration: none;
 	background-color: #99a;
 }
+
+.clickable {
+	cursor: pointer;
+}

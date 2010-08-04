@@ -1,4 +1,22 @@
 {% include 'common/head.html' %}
+<script type="text/javascript">
+	// reply a reply
+	function replyOne(username){
+	    replyContent = $("#reply_content");
+		oldContent = replyContent.val();
+		prefix = "@" + username + " ";
+		newContent = ''
+		if(oldContent.length > 0){
+		    if (oldContent != prefix) {
+		        newContent = prefix + oldContent;
+		    }
+		} else {
+		    newContent = prefix
+		}
+		replyContent.focus();
+		replyContent.val(newContent);
+	}
+</script>
 <body>
     {% include 'common/top.html' %}
     <div id="Wrapper">
@@ -36,7 +54,10 @@
                         <tr>
                             <td width="48" valign="top"><a href="/member/{{ reply.created_by }}">{{ reply.member|avatar:"normal" }}</a></td>
                             <td width="10"></td>
-                            <td width="auto" valign="top"><div class="fr" id="reply_{{ reply.num }}_buttons"><strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago {% ifequal member.num 1 %}&nbsp;<a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">DEL</a>{% endifequal %}</small></strong></div>
+                            <td width="auto" valign="top">
+																<div class="fr" id="reply_{{ reply.num }}_buttons">
+																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago{% if member %} &nbsp; <img src="/static/img/reply.png" align="absmiddle" border="0" alt="回复 {{ reply.member.username }}" onclick="replyOne('{{ reply.member.username }}')" class="clickable" />{% endif %}{% ifequal member.num 1 %} &nbsp; <a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">DEL</a>{% endifequal %}</small></strong>
+																</div>
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
                                 <div class="sep5"></div>
@@ -51,7 +72,7 @@
             <div class="sep20"></div>
             <script type="text/javascript">
             function v() {
-                r = document.getElementById('r');
+                r = document.getElementById('reply_content');
                 if (r.value.length == 0) {
                     e = document.getElementById('e');
                     e.innerHTML = '你尚未输入回复内容';
@@ -74,7 +95,7 @@
                 {% endif %}
                 </div>
                 <div class="inner">
-                    <textarea class="mll" name="content" id="r" onkeyup="c();"></textarea>
+                    <textarea class="mll" name="content" id="reply_content"  onkeyup="c();"></textarea>
                     <div class="sep10"></div>
                     <div class="fr fade" id="e"></div>
                     <input type="submit" class="super normal button" value="发送" />
