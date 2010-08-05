@@ -18,7 +18,20 @@
                 {% endif %}
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
-                        <td width="73" valign="top">{{ one|avatar:"large" }}</td>
+                        <td width="73" valign="top" align="center">{{ one|avatar:"large" }}
+                            {% if show_block %}
+                            <div class="sep10"></div>
+                            {% if one_is_blocked %}
+                            <span class="fade">BLOCKED</span>
+                            {% else %}
+                            <input type="button" value="屏蔽此人" class="super normal button" onclick="location.href = '/block/{{ one.key }}';" />
+                            {% endif %}
+                            {% endif %}
+                            {% if show_extra_options %}
+                            <div class="sep10"></div>
+                            <div align="center"><small><strong><a href="/backstage/deactivate/user/{{ one.key }}" class="dark">DEACTIVATE</a></strong></small></div>
+                            {% endif %}
+                        </td>
                         <td width="10" valign="top"></td>
                         <td width="auto" align="left" valign="top"><div class="sep5"></div><span class="bigger">{{ one.username }}</a></span>
                             {% if one.tagline %}

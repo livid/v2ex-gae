@@ -1,5 +1,5 @@
 {% for topic in latest %}
-<div class="cell">
+<div class="cell from_{{ topic.member.num }}">
 <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
 	<td valign="top" class="avatar"><a href="/member/{{ topic.created_by }}">{{ topic.member|avatar:"normal" }}</a></td>
 	<td style="padding-left: 12px" valign="top">
@@ -22,3 +22,15 @@
 </table>
 </div>
 {% endfor %}
+{% if member %}
+<script type="text/javascript">
+blocked = [{{ blocked }}];
+$("#topics_index").children('.cell').each( function(index) {
+    for (i in blocked) {
+        if ($(this).hasClass('from_' + blocked[i])) {
+            $(this).css('display', 'none');
+        }
+    }
+});
+</script>
+{% endif %}

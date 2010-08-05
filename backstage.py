@@ -551,7 +551,27 @@ class BackstageTidyTopicHandler(webapp.RequestHandler):
         else:
             self.redirect('/signin')
 
-            
+class BackstageDeactivateUserHandler(webapp.RequestHandler):
+    def get(self, key):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                one = db.get(db.Key(key))
+                if one:
+                    if one.num != 1:
+                        memcache.delete(one.auth)
+                        one.deactivated = int(time.time())
+                        one.password = hashlib.sha1(str(time.time())).hexdigest()
+                        one.auth = hashlib.sha1(str(one.num) + ':' + one.password).hexdigest()
+                        one.put()
+                        memcache.delete('Member_' + str(one.num))
+                        return self.redirect('/member/' + one.username)
+        return self.redirect('/')               
+
+class BackstageMoveTopicHandler(webapp.RequestHandler):
+    def get(self, key):
+        member = CheckAuth(self)
+
 def main():
     application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
@@ -561,7 +581,9 @@ def main():
     ('/backstage/node/(.*)', BackstageNodeHandler),
     ('/backstage/remove/reply/([0-9]+)', BackstageRemoveReplyHandler),
     ('/backstage/tidy/reply/([0-9]+)', BackstageTidyReplyHandler),
-    ('/backstage/tidy/topic/([0-9]+)', BackstageTidyTopicHandler)
+    ('/backstage/tidy/topic/([0-9]+)', BackstageTidyTopicHandler),
+    ('/backstage/deactivate/user/(.*)', BackstageDeactivateUserHandler),
+    ('/backstage/move/topic/(.*)', BackstageMoveTopicHandler),
     ],
                                          debug=True)
     util.run_wsgi_app(application)

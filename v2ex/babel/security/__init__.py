@@ -16,12 +16,12 @@ def CheckAuth(handler):
         auth = cookies['auth']
         member_num = memcache.get(auth)
         if (member_num > 0):
-            member = memcache.get('member_' + str(member_num))
+            member = memcache.get('Member_' + str(member_num))
             if member is None:
                 q = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member_num)
                 if q.count() == 1:
                     member = q[0]
-                    memcache.set('member_' + str(member_num), member, 86400 * 365)
+                    memcache.set('Member_' + str(member_num), member, 86400 * 365)
                 else:
                     member = False
             if member:
@@ -33,7 +33,7 @@ def CheckAuth(handler):
                 member_num = q[0].num
                 member = q[0]
                 memcache.set(auth, member_num, 86400 * 365)
-                memcache.set('member_' + str(member_num), member, 86400 * 365)
+                memcache.set('Member_' + str(member_num), member, 86400 * 365)
                 member.ip = ip
                 return member
             else:

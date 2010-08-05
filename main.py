@@ -10,6 +10,7 @@ import hashlib
 import urllib
 import string
 import random
+import pickle
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -64,6 +65,12 @@ class HomeHandler(webapp.RequestHandler):
         if member:
             self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
             template_values['member'] = member
+            try:
+                blocked = pickle.loads(member.blocked.encode('utf-8'))
+            except:
+                blocked = []
+            if (len(blocked) > 0):
+                template_values['blocked'] = ','.join(map(str, blocked))
         if member:
             recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
             if recent_nodes:
@@ -178,7 +185,15 @@ class RecentHandler(webapp.RequestHandler):
         template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = u'V2EX › 最近的 50 个主题'
-        template_values['member'] = CheckAuth(self)
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+            try:
+                blocked = pickle.loads(member.blocked.encode('utf-8'))
+            except:
+                blocked = []
+            if (len(blocked) > 0):
+                template_values['blocked'] = ','.join(map(str, blocked))
         latest = memcache.get('q_recent_50')
         if (latest):
             template_values['latest'] = latest

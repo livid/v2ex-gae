@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.3.4'
+SYSTEM_VERSION = '2.3.5'
 
 import datetime
 import hashlib
@@ -10,6 +10,7 @@ from google.appengine.api import users
 class Member(db.Model):
     num = db.IntegerProperty(indexed=True)
     auth = db.StringProperty(required=False, indexed=True)
+    deactivated = db.IntegerProperty(required=True, default=0)
     username = db.StringProperty(required=False, indexed=True)
     username_lower = db.StringProperty(required=False, indexed=True)
     password = db.StringProperty(required=False, indexed=True)
@@ -42,6 +43,7 @@ class Member(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
     last_signin = db.DateTimeProperty()
+    blocked = db.TextProperty(required=False, default='')
     
 class Counter(db.Model):
     name = db.StringProperty(required=False, indexed=True)

@@ -9,6 +9,7 @@ import datetime
 import hashlib
 import httplib
 import string
+import pickle
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -40,13 +41,16 @@ class MemberHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
+        template_values['show_extra_options'] = False
+        if member:
+            if member.num == 1:
+                template_values['show_extra_options'] = True
         one = False
-        q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1", member_username.lower())
-        if (q.count() == 1):
-            one = q[0]
+        one = GetMemberByUsername(member_username)
+        if one is not False:
             template_values['one'] = one
             template_values['page_title'] = u'V2EX › ' + one.username
-        if (one):
+        if one is not False:
             q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
             template_values['topics'] = q2
             replies = memcache.get('member::' + str(one.num) + '::participated')
@@ -66,7 +70,19 @@ class MemberHandler(webapp.RequestHandler):
                     memcache.set('member::' + str(one.num) + '::participated', replies, 7200)
             if len(replies) > 0:
                 template_values['replies'] = replies
-        if one: 
+        template_values['show_block'] = False
+        if one and member:
+            if one.num != member.num:
+                template_values['show_block'] = True
+                try:
+                    blocked = pickle.loads(member.blocked.encode('utf-8'))
+                except:
+                    blocked = []
+                if one.num in blocked:
+                    template_values['one_is_blocked'] = True
+                else:
+                    template_values['one_is_blocked'] = False
+        if one is not False: 
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_home.html')
             else:
@@ -529,13 +545,37 @@ class SettingsAvatarHandler(webapp.RequestHandler):
         else:
             self.redirect('/signin')
 
+class MemberBlockHandler(webapp.RequestHandler):
+    def get(self, key):
+        go = '/'
+        member = CheckAuth(self)
+        if member:
+            member = db.get(member.key())
+            one = db.get(db.Key(key))
+            if one:
+                if one.num != member.num:
+                    try:
+                        blocked = pickle.loads(member.blocked.encode('utf-8'))
+                    except:
+                        blocked = []
+                    if len(blocked) == 0:
+                        blocked = []
+                    if one.num not in blocked:
+                        blocked.append(one.num)
+                    member.blocked = pickle.dumps(blocked)
+                    member.put()
+                    self.response.out.write('fuck' + str(member.blocked))
+                    memcache.set('Member_' + str(member.num), member, 86400)
+        self.redirect(go)
+
 def main():
     application = webapp.WSGIApplication([
     ('/member/([a-z0-9A-Z\_]+)', MemberHandler),
     ('/member/([a-z0-9A-Z\_]+).json', MemberApiHandler),
     ('/settings', SettingsHandler),
     ('/settings/password', SettingsPasswordHandler),
-    ('/settings/avatar', SettingsAvatarHandler)
+    ('/settings/avatar', SettingsAvatarHandler),
+    ('/block/(.*)', MemberBlockHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

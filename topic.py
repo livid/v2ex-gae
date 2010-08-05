@@ -9,6 +9,7 @@ import datetime
 import hashlib
 import string
 import random
+import pickle
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -224,6 +225,13 @@ class TopicHandler(webapp.RequestHandler):
         template_values['errors'] = errors
         member = CheckAuth(self)
         template_values['member'] = member
+        if member is not False:
+            try:
+                blocked = pickle.loads(member.blocked.encode('utf-8'))
+            except:
+                blocked = []
+            if (len(blocked) > 0):
+                template_values['blocked'] = ','.join(map(str, blocked))
         topic_num_str = str(topic_num)
         if len(topic_num_str) > 8:
             if browser['ios']:
