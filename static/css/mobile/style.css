@@ -98,18 +98,18 @@ h1 {
 /* IDs */
 
 #Top {
-	background-image: url("http://web.me.com/v2ex.livid/v2ex/static/img/bg_top_1006.jpg");
-	height: 60px;
 	padding: 10px;
-	background-repeat: repeat-x;
-	background-color: #000;
+	background: #303033; 
+	background: -moz-linear-gradient(center top , #444, #111) repeat scroll 0 0 transparent; 
+	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111)); 
+	height: 40px;
 }
 
 #Logo {
-	background-image: url("http://web.me.com/v2ex.livid/v2ex/static/img/logo.png");
-	width: 211px;
-	height: 21px;
-	margin-top: 30px;
+	background-image: url("/static/img/logo.png");
+	width: 70px;
+	height: 20px;
+	margin-top: 13px;
 	margin-left: 10px;
 	cursor: pointer;
 }

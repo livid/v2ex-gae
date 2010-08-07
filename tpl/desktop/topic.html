@@ -57,7 +57,7 @@
                             <td width="10"></td>
                             <td width="auto" valign="top">
 																<div class="fr" id="reply_{{ reply.num }}_buttons">
-																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago{% if member %} &nbsp; <img src="/static/img/reply.png" align="absmiddle" border="0" alt="回复 {{ reply.member.username }}" onclick="replyOne('{{ reply.member.username }}')" class="clickable" />{% endif %}{% ifequal member.num 1 %} &nbsp; <a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.num }}'; }">DEL</a>{% endifequal %}</small></strong>
+																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago{% if member %} &nbsp; <img src="/static/img/reply.png" align="absmiddle" border="0" alt="回复 {{ reply.member.username }}" onclick="replyOne('{{ reply.member.username }}')" class="clickable" />{% endif %}{% ifequal member.num 1 %} &nbsp; <a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.key }}'; }">DEL</a>{% endifequal %}</small></strong>
 																</div>
                                 <div class="sep3"></div>
                                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}

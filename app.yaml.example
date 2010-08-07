@@ -126,6 +126,9 @@ handlers:
 - url: /block/(.*)
   script: member.py
 
+- url: /unblock/(.*)
+  script: member.py
+
 - url: .*
   script: main.py
 

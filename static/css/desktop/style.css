@@ -118,15 +118,13 @@ a.dark:hover {
 }
 
 #Logo {
-	font-family: "Arial Black", "Helvetica Neue";
-	font-size: 24px;
-	line-height: 24px;
-	padding-top: 8px;
-	color: #fff;
-	text-align: left;
-	margin-left: 20px;
-	font-weight: bold;
+	background-image: url("/static/img/logo.png");
+	width: 70px;
+	height: 20px;
+	cursor: pointer;
 	float: left;
+	margin-top: 11px;
+	margin-left: 15px;
 }
 
 #Search {

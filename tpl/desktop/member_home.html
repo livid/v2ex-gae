@@ -22,7 +22,7 @@
                             {% if show_block %}
                             <div class="sep10"></div>
                             {% if one_is_blocked %}
-                            <span class="fade">BLOCKED</span>
+                            <input type="button" value="撤销屏蔽" class="super normal button" onclick="location.href = '/unblock/{{ one.key }}';" />
                             {% else %}
                             <input type="button" value="屏蔽此人" class="super normal button" onclick="location.href = '/block/{{ one.key }}';" />
                             {% endif %}

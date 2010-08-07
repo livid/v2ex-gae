@@ -478,23 +478,21 @@ class BackstageNodeHandler(webapp.RequestHandler):
 
 
 class BackstageRemoveReplyHandler(webapp.RequestHandler):
-    def get(self, reply_num):
+    def get(self, reply_key):
         member = CheckAuth(self)
         if (member):
             if (member.num == 1):
-                q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
-                if (q.count() == 1):
-                    reply = q[0]
-                    topic_num = reply.topic_num
+                reply = db.get(db.Key(reply_key))
+                if reply:
+                    topic = reply.topic
                     reply.delete()
-                    q2 = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", topic_num)
-                    if (q2.count() == 1):
-                        topic = q2[0]
-                        topic.replies = topic.replies - 1
-                        if (topic.replies == 0):
-                            topic.last_reply_by = None
-                        topic.put()
-                    self.redirect('/t/' + str(topic_num))
+                    q = db.GqlQuery("SELECT __key__ FROM Reply WHERE topic = :1", topic)
+                    topic.replies = q.count()
+                    if (topic.replies == 0):
+                        topic.last_reply_by = None
+                    topic.put()
+                    memcache.delete('Topic_' + str(topic.num))
+                    self.redirect('/t/' + str(topic.num))
                 else:
                     self.redirect('/')
             else:
@@ -579,7 +577,7 @@ def main():
     ('/backstage/section/(.*)', BackstageSectionHandler),
     ('/backstage/new/node/(.*)', BackstageNewNodeHandler),
     ('/backstage/node/(.*)', BackstageNodeHandler),
-    ('/backstage/remove/reply/([0-9]+)', BackstageRemoveReplyHandler),
+    ('/backstage/remove/reply/(.*)', BackstageRemoveReplyHandler),
     ('/backstage/tidy/reply/([0-9]+)', BackstageTidyReplyHandler),
     ('/backstage/tidy/topic/([0-9]+)', BackstageTidyTopicHandler),
     ('/backstage/deactivate/user/(.*)', BackstageDeactivateUserHandler),

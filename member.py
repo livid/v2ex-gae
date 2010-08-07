@@ -564,7 +564,28 @@ class MemberBlockHandler(webapp.RequestHandler):
                         blocked.append(one.num)
                     member.blocked = pickle.dumps(blocked)
                     member.put()
-                    self.response.out.write('fuck' + str(member.blocked))
+                    memcache.set('Member_' + str(member.num), member, 86400)
+        self.redirect(go)
+
+class MemberUnblockHandler(webapp.RequestHandler):
+    def get(self, key):
+        go = '/'
+        member = CheckAuth(self)
+        if member:
+            member = db.get(member.key())
+            one = db.get(db.Key(key))
+            if one:
+                if one.num != member.num:
+                    try:
+                        blocked = pickle.loads(member.blocked.encode('utf-8'))
+                    except:
+                        blocked = []
+                    if len(blocked) == 0:
+                        blocked = []
+                    if one.num  in blocked:
+                        blocked.remove(one.num)
+                    member.blocked = pickle.dumps(blocked)
+                    member.put()
                     memcache.set('Member_' + str(member.num), member, 86400)
         self.redirect(go)
 
@@ -575,7 +596,8 @@ def main():
     ('/settings', SettingsHandler),
     ('/settings/password', SettingsPasswordHandler),
     ('/settings/avatar', SettingsAvatarHandler),
-    ('/block/(.*)', MemberBlockHandler)
+    ('/block/(.*)', MemberBlockHandler),
+    ('/unblock/(.*)', MemberUnblockHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
