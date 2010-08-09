@@ -4,7 +4,9 @@
 	<div id="Main">
 		<div class="section"><div class="fr">DEVELOPER FEATURE</div><a href="/" class="black">V2EX</a> › User Agent</div>
 		<div class="cell">
-		{{ ua|escape }}
+		<textarea class="mll">{{ ua|escape }}</textarea>
+		<div class="sep10"></div>
+		<input type="button" value="返回首页" onclick="location.href = '/';" />
 		</div>
 	</div>
 	{% include 'common/bottom.html' %}
