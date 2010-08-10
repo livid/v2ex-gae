@@ -33,6 +33,7 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class NotesHomeHandler(webapp.RequestHandler):
     def get(self):
+        browser = detect(self.request)
         template_values = {}
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = 'V2EX › 记事本'
@@ -47,7 +48,10 @@ class NotesHomeHandler(webapp.RequestHandler):
                 notes_count = q.count()
             if (notes_count > 0):
                 template_values['notes'] = q
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_home.html')
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_home.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_home.html')
             output = template.render(path, template_values)
             self.response.out.write(output)
         else:
@@ -116,6 +120,7 @@ class NotesNewHandler(webapp.RequestHandler):
 
 class NotesItemHandler(webapp.RequestHandler):
     def get(self, num):
+        browser = detect(self.request)
         template_values = {}
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
@@ -127,7 +132,10 @@ class NotesItemHandler(webapp.RequestHandler):
                     template_values['member'] = member
                     template_values['note'] = note
                     template_values['page_title'] = u'V2EX › 记事本 › ' + note.title
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_item.html')
+                    if browser['ios']:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_item.html')
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_item.html')
                     output = template.render(path, template_values)
                     self.response.out.write(output)
                 else:

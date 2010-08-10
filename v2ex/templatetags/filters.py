@@ -42,7 +42,7 @@ register.filter(mentions)
 def avatar(value,arg):
     default = "http://v2ex.com/static/img/avatar_" + str(arg) + ".png"
     if type(value).__name__ != 'Member':
-        return '<img src="' + default + '" border="0" />'
+        return '<img src="' + default + '" border="0" align="absmiddle" />'
     if arg == 'large':
         number_size = 73
         member_avatar_url = value.avatar_large_url
@@ -54,11 +54,11 @@ def avatar(value,arg):
         member_avatar_url = value.avatar_mini_url
         
     if member_avatar_url:
-        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
+        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" align="absmiddle" />'
     else:
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(value.email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'s' : str(number_size), 'd' : default})
-        return '<img src="' + gravatar_url + '" border="0" alt="' + value.username + '" />'
+        return '<img src="' + gravatar_url + '" border="0" alt="' + value.username + '" align="absmiddle" />'
 register.filter(avatar)
 
 # github gist script support

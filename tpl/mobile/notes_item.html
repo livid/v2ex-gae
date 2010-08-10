@@ -1,0 +1,14 @@
+{% include 'common/head.html' %}
+<body>
+	{% include 'common/top.html' %}
+	<div id="Main">
+		<div class="section"><a href="/" class="black">V2EX</a> › <a href="/notes" class="black">记事本</a></div>
+		<div class="cell" style="padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px;">
+		    <strong>{{ note.title|escape }}</strong>
+		    <div class="sep10"></div>
+		    {{ note.body|escape|urlize|linebreaksbr }}
+		</div>
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>
