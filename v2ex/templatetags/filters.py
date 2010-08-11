@@ -54,7 +54,7 @@ def avatar(value,arg):
         member_avatar_url = value.avatar_mini_url
         
     if member_avatar_url:
-        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" align="absmiddle" />'
+        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
     else:
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(value.email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'s' : str(number_size), 'd' : default})

@@ -121,6 +121,34 @@ h1 {
 	color: rgba(255, 255, 255, 0.25);
 }
 
+#NoteIcon {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-image: url("/static/img/note24.png");
+}
+
+#GearIcon {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-image: url("/static/img/gear24.png");
+}
+
+#BurnIcon {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-image: url("/static/img/burn24.png");
+}
+
+#EjectIcon {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-image: url("/static/img/eject24.png");
+}
+
 #Main {
 	padding: 0px;
 	font-size: 14px;
@@ -407,4 +435,36 @@ input.btn {
 	font-size: 13px;
 	font-weight: bold;
 	color: #333;
+}
+
+/* High Resolution (iPhone 4) */
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+	#Logo {
+		background-image: url("/static/img/logo_2x.png");
+		background-size: 70px 20px;
+		margin-top: 2px;
+		margin-left: 0px;
+		cursor: pointer;
+	}
+	
+	#NoteIcon {
+		background-image: url("/static/img/note48.png");
+		background-size: 24px 24px;
+	}
+
+	#GearIcon {
+		background-image: url("/static/img/gear48.png");
+		background-size: 24px 24px;
+	}
+
+	#BurnIcon {
+		background-image: url("/static/img/burn48.png");
+		background-size: 24px 24px;
+	}
+
+	#EjectIcon {
+		background-image: url("/static/img/eject48.png");
+		background-size: 24px 24px;
+	}
 }

@@ -1,6 +1,6 @@
 <div id="Top">
     {% if member %}
-        <div id="Member"><a href="/member/{{ member.username_lower|escape }}" class="white">{{ member|avatar:"mini" }}</a> &nbsp; <a href="/notes" class="white"><img src="/static/img/note24.png" align="absmiddle" border="0" /></a> &nbsp; <a href="/settings" class="white"><img src="/static/img/gear24.png" align="absmiddle" border="0" /></a>{% ifequal member.num 1 %} &nbsp; <a href="/backstage" class="white"><img src="/static/img/burn24.png" align="absmiddle" border="0" /></a>{% endifequal %} &nbsp; <a href="/signout" class="white"><img src="/static/img/eject24.png" align="absmiddle" border="0" /></a></div>
+        <div id="Member"><a href="/member/{{ member.username_lower|escape }}" class="white">{{ member|avatar:"mini" }}</a> &nbsp; <a href="/notes" class="white"><div id="NoteIcon"></div></a> &nbsp; <a href="/settings" class="white"><div id="GearIcon"></div></a>{% ifequal member.num 1 %} &nbsp; <a href="/backstage" class="white"><div id="BurnIcon"></div></a>{% endifequal %} &nbsp; <a href="/signout" class="white"><div id="EjectIcon"></div></a></div>
     {% else %}
         <div id="Member"><a href="/signin" class="white">登入</a> | <a href="/signup" class="white">注册</a></div>
     {% endif %}

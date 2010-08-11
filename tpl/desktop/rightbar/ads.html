@@ -3,6 +3,13 @@
         <div style="width: 240px; text-align: left" >
             <span style="font-weight: bold; font-size: 10px; color: #e2e2e2;">Sponsored by</span>
             <div class="sep10"></div>
+            {% if rnd|divisibleby:4 %}
+            <a href="http://www.animetaste.net/?utm_source=v2ex&utm_medium=banner&utm_campaign=V2EX" target="_blank"><img src="http://web.me.com/v2ex.livid/iweekly/animetaste.gif" border="0" width="120" height="90" alt="AnimeTaste" /></a>
+            <div class="sep5"></div>
+            <span style="font-size: 11px; color: #666;">
+                <strong style="color: #000;"><a href="http://www.animetaste.net/?utm_source=v2ex&utm_medium=banner&utm_campaign=V2EX" class="black">AnimeTaste</a></strong><div class="sep3"></div><span style="font-size: 12px;">分享动画的快乐</span>
+            </span>
+            {% else %}
             {% if rnd|divisibleby:3 %}
             <a href="http://m.metroer.com/?utm_source=v2ex&utm_medium=banner&utm_campaign=V2EX" target="_blank"><img src="http://pic.yupoo.com/iweekly/096159c22d9d/s6j9vpzt.jpg" border="0" width="120" height="90" alt="良品杂志" /></a>
             <div class="sep5"></div>
@@ -22,6 +29,7 @@
             <span style="font-size: 11px; color: #666;">
                 <strong style="color: #000;"><a href="http://iphoto.ly/?utm_source=v2ex&utm_medium=banner&utm_campaign=V2EX" class="black">中文摄影杂志</a></strong><div class="sep3"></div><span style="font-size: 12px;">摄影改变生活，Photography Change Life</span>
             </span>
+            {% endif %}
             {% endif %}
             {% endif %}
             <div class="sep3"></div>
