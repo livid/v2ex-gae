@@ -673,3 +673,12 @@ a.tiny_label:hover {
 .clickable {
 	cursor: pointer;
 }
+
+.reply_content .imgly {
+	max-width: 570px;
+}
+
+.topic_content .imgly {
+	max-width: 635px;
+}
+}
