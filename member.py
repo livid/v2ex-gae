@@ -149,6 +149,23 @@ class SettingsHandler(webapp.RequestHandler):
             else:
               message = None
             template_values['message'] = message
+            try:
+                blocked = pickle.loads(member.blocked.encode('utf-8'))
+            except:
+                blocked = []
+            template_values['member_stats_blocks'] = len(blocked)
+            member_topics = memcache.get('Member_' + str(member.num) + '_topics')
+            if member_topics is None:
+                q = db.GqlQuery("SELECT __key__ FROM Topic WHERE member = :1", member)
+                member_topics = q.count()
+                memcache.set('Member_' + str(member.num) + '_topics', member_topics, 3600 * 4)
+            template_values['member_stats_topics'] = member_topics
+            member_replies = memcache.get('Member_' + str(member.num) + '_replies')
+            if member_replies is None:
+                q = db.GqlQuery("SELECT __key__ FROM Reply WHERE member = :1", member)
+                member_replies = q.count()
+                memcache.set('Member_' + str(member.num) + '_replies', member_replies, 3600 * 4)
+            template_values['member_stats_replies'] = member_replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_settings.html')
             else:

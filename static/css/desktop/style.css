@@ -154,6 +154,10 @@ a.dark:hover {
 	margin-left: 10px;
 }
 
+#Navigation ul li a {
+	color: #fff;
+}
+
 #Wrapper {
 	background-color: #e2e2e2;
 	border-top: 1px solid #777;
