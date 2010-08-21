@@ -154,6 +154,9 @@ class NewTopicHandler(webapp.RequestHandler):
                 topic.num = counter.value
                 topic.title = topic_title
                 topic.content = topic_content
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
+                output = template.render(path, {'topic' : topic})
+                topic.content_rendered = output.decode('utf-8')
                 topic.node = node
                 topic.node_num = node.num
                 topic.node_name = node.name
@@ -253,6 +256,12 @@ class TopicHandler(webapp.RequestHandler):
             template_values['page_title'] = u'V2EX › ' + topic.title
         else:
             template_values['page_title'] = u'V2EX › 主题未找到'
+        if topic.content_rendered is None:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
+            output = template.render(path, {'topic' : topic})
+            topic = db.get(topic.key())
+            topic.content_rendered = output.decode('utf-8')
+            topic.put()
         template_values['topic'] = topic
         if member:
             if member.num == 1:
@@ -571,6 +580,9 @@ class TopicEditHandler(webapp.RequestHandler):
                     if (errors == 0):
                         topic.title = topic_title
                         topic.content = topic_content
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
+                        output = template.render(path, {'topic' : topic})
+                        topic.content_rendered = output.decode('utf-8')
                         topic.last_touched = datetime.datetime.now()
                         topic.put()
                         memcache.delete('Topic_' + str(topic.num))

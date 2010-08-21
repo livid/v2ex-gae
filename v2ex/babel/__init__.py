@@ -85,6 +85,7 @@ class Topic(db.Model):
     member_num = db.IntegerProperty(indexed=True)
     title = db.StringProperty(required=False, indexed=True)
     content = db.TextProperty(required=False)
+    content_rendered = db.TextProperty(required=False)
     content_length = db.IntegerProperty(default=0)
     hits = db.IntegerProperty(default=0)
     replies = db.IntegerProperty(default=0)

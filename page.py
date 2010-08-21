@@ -85,12 +85,25 @@ class AdvertiseHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
+class AdvertisersHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        template_values['page_title'] = u'V2EX › Advertisers'
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'advertisers.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
 def main():
     application = webapp.WSGIApplication([
     ('/about', AboutHandler),
     ('/faq', FAQHandler),
     ('/mission', MissionHandler),
-    ('/advertise', AdvertiseHandler)
+    ('/advertise', AdvertiseHandler),
+    ('/advertisers', AdvertisersHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

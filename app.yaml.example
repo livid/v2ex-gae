@@ -80,6 +80,9 @@ handlers:
 - url: /advertise
   script: page.py
   
+- url: /advertisers
+  script: page.py
+  
 - url: /notes/?
   script: notes.py
 
