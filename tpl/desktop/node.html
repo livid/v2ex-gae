@@ -14,7 +14,7 @@
         <div id="Content">
             <div class="box">
                 <div class="cell"><div class="fr snow">共有 {{ node.topics }} 个讨论主题</div>
-                <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
+                <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
                 {% if node.header %}
                 <div class="sep10"></div>
                 <span class="header">{{ node.header|linebreaksbr }}</span>

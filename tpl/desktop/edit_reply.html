@@ -11,7 +11,7 @@
         <div id="Content">
             <div class="box">
                 <div class="cell">
-                    <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 编辑回复</span>
+                    <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 编辑回复</span>
                 </div>
                 <div class="cell">
                     <form action="/edit/reply/{{ reply.num }}" method="post">

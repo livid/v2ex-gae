@@ -154,17 +154,18 @@ class SettingsHandler(webapp.RequestHandler):
             except:
                 blocked = []
             template_values['member_stats_blocks'] = len(blocked)
-            member_topics = memcache.get('Member_' + str(member.num) + '_topics')
+            member_topics = memcache.get('Member_' + str(member.num) + '_topics_count')
             if member_topics is None:
                 q = db.GqlQuery("SELECT __key__ FROM Topic WHERE member = :1", member)
                 member_topics = q.count()
-                memcache.set('Member_' + str(member.num) + '_topics', member_topics, 3600 * 4)
+                memcache.set('Member_' + str(member.num) + '_topics_count', member_topics, 3600 * 4)
             template_values['member_stats_topics'] = member_topics
-            member_replies = memcache.get('Member_' + str(member.num) + '_replies')
+            member_replies = memcache.get('Member_' + str(member.num) + '_replies_count')
             if member_replies is None:
-                q = db.GqlQuery("SELECT __key__ FROM Reply WHERE member = :1", member)
-                member_replies = q.count()
-                memcache.set('Member_' + str(member.num) + '_replies', member_replies, 3600 * 4)
+                replies = Reply.all()
+                replies.filter("member = ", member)
+                member_replies = replies.count()
+                memcache.set('Member_' + str(member.num) + '_replies_count', member_replies, 3600 * 4)
             template_values['member_stats_replies'] = member_replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_settings.html')

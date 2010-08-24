@@ -39,7 +39,7 @@
                             <span class="fade">{{ one.tagline|escape }}</span>
                             {% endif %}
                             <div class="sep5"></div>
-                            <span class="snow">V2EX 第 {{ one.num }} 号会员，加入于 {{ one.created|timezone:8|date:"Y-n-j G:i:s A" }}</span>
+                            <span class="snow">{{ site.title }} 第 {{ one.num }} 号会员，加入于 {{ one.created|timezone:8|date:"Y-n-j G:i:s A" }}</span>
                             {% if one.twitter %}
                             <div class="sep5"></div>
                             <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/twitter.png" align="absmiddle" /> &nbsp;<a href="http://twitter.com/{{ one.twitter }}">@{{ one.twitter }}</a></span>

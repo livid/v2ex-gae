@@ -48,9 +48,11 @@ import config
 
 class NewTopicHandler(webapp.RequestHandler):
     def get(self, node_name):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = 'V2EX › 创建新主题'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 创建新主题'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -79,9 +81,11 @@ class NewTopicHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
     def post(self, node_name):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = 'V2EX › 创建新主题'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 创建新主题'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -207,9 +211,11 @@ class NewTopicHandler(webapp.RequestHandler):
 
 class TopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
+        site = GetSite()
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         reply_reversed = self.request.get('r')
         if reply_reversed == '1':
@@ -253,9 +259,9 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.set('Topic_' + str(topic_num), topic, 86400)
         if topic:
             taskqueue.add(url='/hit/topic/' + str(topic.key()))
-            template_values['page_title'] = u'V2EX › ' + topic.title
+            template_values['page_title'] = site.title + u' › ' + topic.title
         else:
-            template_values['page_title'] = u'V2EX › 主题未找到'
+            template_values['page_title'] = site.title + u' › 主题未找到'
         if topic.content_rendered is None:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
             output = template.render(path, {'topic' : topic})
@@ -327,8 +333,10 @@ class TopicHandler(webapp.RequestHandler):
         self.response.out.write(output)
         
     def post(self, topic_num):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
@@ -470,8 +478,10 @@ class TopicHandler(webapp.RequestHandler):
 
 class TopicEditHandler(webapp.RequestHandler):
     def get(self, topic_num):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         template_values['errors'] = errors
@@ -517,7 +527,9 @@ class TopicEditHandler(webapp.RequestHandler):
             self.redirect('/signin')
     
     def post(self, topic_num):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         browser = detect(self.request)
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
@@ -605,6 +617,7 @@ class TopicEditHandler(webapp.RequestHandler):
 
 class TopicDeleteHandler(webapp.RequestHandler):
     def get(self, topic_num):
+        site = GetSite()
         member = CheckAuth(self)
         if member:
             if member.num == 1:
@@ -637,6 +650,7 @@ class TopicDeleteHandler(webapp.RequestHandler):
 
 class TopicPlainTextHandler(webapp.RequestHandler):
     def get(self, topic_num):
+        site = GetSite()
         topic = GetKindByNum('topic', topic_num)
         if topic:
             template_values = {}
@@ -658,6 +672,7 @@ class TopicPlainTextHandler(webapp.RequestHandler):
 
 class TopicIndexHandler(webapp.RequestHandler):
     def post(self, topic_num):
+        site = GetSite()
         if config.fts_enabled:
             if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
                 urlfetch.fetch('http://127.0.0.1:20000/index/' + str(topic_num), headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
@@ -671,6 +686,7 @@ class TopicIndexHandler(webapp.RequestHandler):
 
 class ReplyEditHandler(webapp.RequestHandler):
     def get(self, reply_num):
+        site = GetSite()
         member = CheckAuth(self)
         if member:
             if member.num == 1:
@@ -697,11 +713,12 @@ class ReplyEditHandler(webapp.RequestHandler):
             self.redirect('/signin')
     
     def post(self, reply_num):
+        site = GetSite()
         member = CheckAuth(self)
         if member:
             if member.num == 1:
                 template_values = {}
-                template_values['page_title'] = u'V2EX › 编辑回复'
+                template_values['page_title'] = site.title + u' › 编辑回复'
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
                 if q[0]:

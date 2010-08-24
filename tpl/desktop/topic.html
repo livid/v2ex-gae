@@ -33,7 +33,7 @@
             <div class="box">
                 <div class="cell" style="min-height: 73px;">
                     <div class="fr snow"><a href="/member/{{ topic.member.username }}">{{ topic.member|avatar:"large" }}</a></div>
-                    <span class="bigger"><a href="/">V2EX</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a></span>
+                    <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/go/{{ node.name}}">{{ node.title|escape }}</a></span>
                     <h1>{{ topic.title|escape }}</h1>
                     <strong><small class="fade">By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.num 1 %} - <a href="#;" onclick="if (confirm('确认删除标题为 {{ topic.title|escape }} 的第 {{ topic.num }} 号主题？')) { location = '/delete/topic/{{ topic.num }}'; }">DELETE</a>{% endifequal %}{% if can_edit %} - <a href="/edit/topic/{{ topic.num }}">EDIT</a>{% endif %}</small></strong>
                 </div>
@@ -117,7 +117,7 @@
             </div>
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade" style="line-height: 200%;">V2EX 是一个关于分享和探索的地方，欢迎在这里表明你的态度和立场，但是争吵是毫无必要的。如果你实在觉得不想再看到某人的回复和新主题，你可以点击他的个人主页，然后按下“屏蔽”按钮。在这里，你可以选择只与自己兴味相投的人进行平等对话。</span></div>
+                <div class="cell"><span class="fade" style="line-height: 200%;">{{ site.title }} 是一个关于分享和探索的地方，欢迎在这里表明你的态度和立场，但是争吵是毫无必要的。如果你实在觉得不想再看到某人的回复和新主题，你可以点击他的个人主页，然后按下“屏蔽”按钮。在这里，你可以选择只与自己兴味相投的人进行平等对话。</span></div>
             </div>
             {% endif %}
         </div>

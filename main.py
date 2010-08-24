@@ -55,11 +55,13 @@ class HomeHandler(webapp.RequestHandler):
         if host == 'beta.v2ex.com':
             self.redirect('http://v2ex.appspot.com/')
             return
+        site = GetSite()
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['site'] = GetSite()
         template_values['rnd'] = random.randrange(1, 100)
-        template_values['page_title'] = 'V2EX'
+        template_values['page_title'] = site.title
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if member:
@@ -180,11 +182,13 @@ class HomeHandler(webapp.RequestHandler):
         
 class RecentHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = u'V2EX › 最近的 50 个主题'
+        template_values['page_title'] = site.title + u' › 最近的 50 个主题'
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
@@ -211,12 +215,14 @@ class RecentHandler(webapp.RequestHandler):
 
 class UAHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = CheckAuth(self)
         template_values['ua'] = os.environ['HTTP_USER_AGENT']
-        template_values['page_title'] = u'V2EX › 用户代理字符串'
+        template_values['page_title'] = site.title + u' › 用户代理字符串'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'ua.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -224,9 +230,11 @@ class UAHandler(webapp.RequestHandler):
         
 class SigninHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 登入'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 登入'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         template_values['errors'] = errors

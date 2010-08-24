@@ -1,4 +1,5 @@
 # coding=utf-8
+# "da" means Data Access, this file contains various quick methods for accessing data.
 
 import hashlib
 import logging
@@ -13,6 +14,7 @@ from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
 from v2ex.babel import Place
+from v2ex.babel import Site
 
 def GetKindByNum(kind, num):
     K = str(kind.capitalize())
@@ -112,3 +114,23 @@ def CreatePlaceByIP(ip):
     counter.put()
     counter2.put()
     return place
+
+def GetSite():
+    site = memcache.get('site')
+    if site is not None:
+        return site
+    else:
+        q = db.GqlQuery("SELECT * FROM Site WHERE num = 1")
+        if q.count() == 1:
+            site = q[0]
+            memcache.set('site', site, 86400)
+            return site
+        else:
+            site = Site()
+            site.num = 1
+            site.title = 'V2EX'
+            site.url = 'v2ex.appspot.com'
+            site.description = ''
+            site.put()
+            memcache.set('site', site, 86400)
+            return site

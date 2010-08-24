@@ -156,3 +156,9 @@ class Checkin(db.Model):
     place = db.ReferenceProperty(Place)
     member = db.ReferenceProperty(Member)
     last_checked_in = db.DateTimeProperty(auto_now=True)
+    
+class Site(db.Model):
+    num = db.IntegerProperty(required=False, indexed=True)
+    title = db.StringProperty(required=False, indexed=False)
+    description = db.TextProperty(required=False)
+    url = db.StringProperty(required=False, indexed=False)
