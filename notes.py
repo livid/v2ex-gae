@@ -28,6 +28,7 @@ from v2ex.babel import SYSTEM_VERSION
 
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
+from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
