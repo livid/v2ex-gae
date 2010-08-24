@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<meta content='True' name='HandheldFriendly' />
 	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
-	<title>{% if one %}V2EX › {{ one.username|escape }}{% else %}V2EX › Member Not Found{% endif %}</title>
+	<title>{% if one %}{{ site.title }} › {{ one.username|escape }}{% else %}{{ site.title }} › Member Not Found{% endif %}</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 </head>
@@ -12,7 +12,7 @@
 	{% include 'common/top.html' %}
     <div id="Main">
 		{% if one %}
-		<div class="section"><div class="fr">第 {{ one.num }} 号会员，于 {{ one.created|timezone:8|date:"Y-n-j" }} 加入</div><a href="/" class="black">V2EX</a> › {{ one.username|escape }}</a></div>
+		<div class="section"><div class="fr">第 {{ one.num }} 号会员，于 {{ one.created|timezone:8|date:"Y-n-j" }} 加入</div><a href="/" class="black">{{ site.title }}</a> › {{ one.username|escape }}</a></div>
 		<div class="cell">
 			<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
 				<td valign="top" class="avatar">{{ one|avatar:"normal" }}</td>
@@ -41,7 +41,7 @@
 			</div>
 		{% endfor %}
 		{% else %}
-        <div class="section"><a href="/" class="black">V2EX</a> › Member Not Found</div>
+        <div class="section"><a href="/" class="black">{{ site.title }}</a> › Member Not Found</div>
         {% endif %}
 	</div>
 	{% include 'common/bottom.html' %}

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<meta content='True' name='HandheldFriendly' />
 	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
-	<title>V2EX › 后台</title>
+	<title>{{ site.title }} › 后台</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 </head>
@@ -12,7 +12,7 @@
 	{% include 'common/top.html' %}
     <div id="Main">
 			{% if section %}
-			<div class="section"><a href="/" class="black">V2EX</a> › <a href="/backstage" class="black">后台</a> › {{ section.title|escape }}</div>
+			<div class="section"><a href="/" class="black">{{ site.title }}</a> › <a href="/backstage" class="black">后台</a> › {{ section.title|escape }}</div>
 			<div class="cell">
 			<a href="/backstage/new/node/{{ section.name }}">添加新节点</a>
 			<div class="sep10"></div>

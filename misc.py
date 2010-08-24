@@ -33,11 +33,12 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class WorldClockHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         member = CheckAuth(self)
         template_values = {}
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › World Clock 世界时钟'
+        template_values['page_title'] = site.title + u' › World Clock 世界时钟'
         template_values['now'] = datetime.datetime.now()
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'time.html')
         output = template.render(path, template_values)

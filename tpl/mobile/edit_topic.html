@@ -4,14 +4,14 @@
 	<meta charset="UTF-8" />
 	<meta content='True' name='HandheldFriendly' />
 	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
-	<title>V2EX › 编辑主题</title>
+	<title>{{ site.title }} › 编辑主题</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
 	{% include 'common/top.html' %}
     <div id="Main">
-		<div class="section"><a href="/" class="black">V2EX</a> › <a href="/go/{{ node.name }}" class="black">{{ node.title|escape }}</a> › <a href="/t/{{ topic.num}}" class="black">{{ topic.title|escape }}</a> › 编辑</div>
+		<div class="section"><a href="/" class="black">{{ site.title }}</a> › <a href="/go/{{ node.name }}" class="black">{{ node.title|escape }}</a> › <a href="/t/{{ topic.num}}" class="black">{{ topic.title|escape }}</a> › 编辑</div>
 	    <div class="cell">
 			<form action="/edit/topic/{{ topic.num }}" method="post">
 			{% if errors %}

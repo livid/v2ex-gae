@@ -691,7 +691,7 @@ class ReplyEditHandler(webapp.RequestHandler):
         if member:
             if member.num == 1:
                 template_values = {}
-                template_values['page_title'] = u'V2EX › 编辑回复'
+                template_values['page_title'] = site.title + u' › 编辑回复'
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
                 if q[0]:

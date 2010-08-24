@@ -30,9 +30,11 @@
     {% endif %}
     {% else %}
     <div class="cell">
-        <strong>V2EX = way to explore</strong>
+        <strong>{{ site.title }} = {{ site.slogan }}</strong>
+        {% ifequal site.title 'V2EX' %}
         <div class="sep5"></div>
         <span class="fade">V2EX 是一个关于分享和探索的地方</span>
+        {% endifequal %}
     </div>
     <div class="inner">
         <div class="sep5"></div>

@@ -76,7 +76,7 @@ class PlaceHandler(webapp.RequestHandler):
             template_values['ip_guest'] = member.ip
         else:
             template_values['ip_guest'] = ip_guest
-        template_values['page_title'] = u'V2EX › ' + ip
+        template_values['page_title'] = site.title + u' › ' + ip
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'place.html')
         output = template.render(path, template_values)
         self.response.out.write(output)

@@ -504,6 +504,7 @@ class ForgotHandler(webapp.RequestHandler):
                 prt.timestamp = int(time.time())
                 prt.put()
                 mail_template_values = {}
+                mail_template_values['site'] = site
                 mail_template_values['one'] = one
                 mail_template_values['host'] = self.request.headers['Host']
                 mail_template_values['token'] = token
@@ -513,7 +514,7 @@ class ForgotHandler(webapp.RequestHandler):
                 output = template.render(path, mail_template_values)
                 result = mail.send_mail(sender="V2EX <v2ex.livid@gmail.com>",
                               to= one.email,
-                              subject="=?UTF-8?B?" + base64.b64encode((u"[V2EX] 重新设置密码").encode('utf-8')) + "?=",
+                              subject="=?UTF-8?B?" + base64.b64encode((u"[" + site.title + u"] 重新设置密码").encode('utf-8')) + "?=",
                               body=output)
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot_sent.html')
                 output = template.render(path, template_values)
@@ -535,7 +536,7 @@ class PasswordResetHandler(GenericHandler):
         q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
         if q.count() == 1:
             prt = q[0]
-            template_values['page_title'] = u'V2EX › 重新设置密码'
+            template_values['page_title'] = site.title + u' › 重新设置密码'
             template_values['token'] = prt
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'reset_password.html')
             output = template.render(path, template_values)
@@ -553,7 +554,7 @@ class PasswordResetHandler(GenericHandler):
         q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
         if q.count() == 1:
             prt = q[0]
-            template_values['page_title'] = u'V2EX › 重新设置密码'
+            template_values['page_title'] = site.title + u' › 重新设置密码'
             template_values['token'] = prt
             # Verification
             errors = 0
@@ -633,7 +634,7 @@ class NodeHandler(webapp.RequestHandler):
                     memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
                     memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
                 template_values['recent_nodes'] = recent_nodes
-            template_values['page_title'] = u'V2EX › ' + node.title
+            template_values['page_title'] = site.title + u' › ' + node.title
             # Pagination
             if node.topics > page_size:
                 pagination = True
@@ -662,7 +663,7 @@ class NodeHandler(webapp.RequestHandler):
                     previous = page - 1    
                 start = (page - 1) * page_size
         else:
-            template_values['page_title'] = u'V2EX › 节点未找到'
+            template_values['page_title'] = site.title + u' › 节点未找到'
         template_values['pagination'] = pagination
         template_values['pages'] = pages
         template_values['page'] = page

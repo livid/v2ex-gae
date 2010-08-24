@@ -4,14 +4,14 @@
 	<meta charset="UTF-8" />
 	<meta content='True' name='HandheldFriendly' />
 	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
-	<title>V2EX › {{ node.title }}</title>
+	<title>{{ site.title }} › {{ node.title }}</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
 	{% include 'common/top.html' %}
 	<div id="Main">
-	    <div class="section"><div class="fr">{{ node.topics }} 个主题</div><a href="/" class="black">V2EX</a> › {{ node.title }}</div>
+	    <div class="section"><div class="fr">{{ node.topics }} 个主题</div><a href="/" class="black">{{ site.title }}</a> › {{ node.title }}</div>
 	    {% if member %}
 		<div class="cell">
 		<input type="button" value="创建新主题" onclick="location.href='/new/{{ node.name }}'" class="btn" />

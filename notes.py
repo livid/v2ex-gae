@@ -140,7 +140,7 @@ class NotesItemHandler(webapp.RequestHandler):
                 if note.member.num == member.num:
                     template_values['member'] = member
                     template_values['note'] = note
-                    template_values['page_title'] = u'V2EX › 记事本 › ' + note.title
+                    template_values['page_title'] = site.title + u' › 记事本 › ' + note.title
                     if browser['ios']:
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_item.html')
                     else:
@@ -160,7 +160,7 @@ class NotesItemEraseHandler(webapp.RequestHandler):
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = 'V2EX › 记事本'
+        template_values['page_title'] = site.title + u' › 记事本'
         member = CheckAuth(self)
         if member:
             q = db.GqlQuery("SELECT * FROM Note WHERE num = :1", int(num))
@@ -182,7 +182,7 @@ class NotesItemEditHandler(webapp.RequestHandler):
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = 'V2EX › 记事本 › 编辑'
+        template_values['page_title'] = site.title + u' › 记事本 › 编辑'
         member = CheckAuth(self)
         if member:
             q = db.GqlQuery("SELECT * FROM Note WHERE num = :1", int(num))
@@ -206,7 +206,7 @@ class NotesItemEditHandler(webapp.RequestHandler):
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = 'V2EX › 记事本'
+        template_values['page_title'] = site.title + u' › 记事本'
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
@@ -217,7 +217,7 @@ class NotesItemEditHandler(webapp.RequestHandler):
                 q = db.GqlQuery("SELECT * FROM Note WHERE num = :1", int(num))
                 if q.count() > 0:
                     note = q[0]
-                    template_values['page_title'] = 'V2EX › 记事本 › 编辑' 
+                    template_values['page_title'] = site.title + u' › 记事本 › 编辑' 
                     if note.member.num == member.num:
                         note.title = note_content.split("\n")[0][0:60].strip()
                         note.content = note_content

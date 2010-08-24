@@ -2,7 +2,7 @@
 <body>
 	{% include 'common/top.html' %}
 	<div id="Main">
-		<div class="section"><a href="/" class="black">V2EX</a> › 记事本</div>
+		<div class="section"><a href="/" class="black">{{ site.title }}</a> › 记事本</div>
 		<div class="cell"><input type="button" value="新建记事" onclick="location.href = '/notes/new';" /></div>
 		{% for note in notes %}
 		<div class="cell" style="padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 8px;" onclick="location.href = '/notes/{{ note.num }}';"><div class="fr"><img src="/static/img/next.png" /></div>

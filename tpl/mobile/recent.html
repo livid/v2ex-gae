@@ -2,7 +2,7 @@
 <body>
 	{% include 'common/top.html' %}
 	<div id="Main">
-		<div class="section"><a href="/" class="black">V2EX</a> › 最近的 50 个主题</div>
+		<div class="section"><a href="/" class="black">{{ site.title }}</a> › 最近的 50 个主题</div>
 		<div id="topics_index">
 		{% for topic in latest %}
 		<div class="cell from_{{ topic.member.num }}">

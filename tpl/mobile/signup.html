@@ -4,14 +4,14 @@
 	<meta charset="UTF-8" />
 	<meta content='True' name='HandheldFriendly' />
 	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
-	<title>V2EX › 新用户注册</title>
+	<title>{{ site.title }} › 新用户注册</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
 	{% include 'common/top.html' %}
     <div id="Main">
-		<div class="section"><a href="/" class="black">V2EX</a> › 新用户注册</div>
+		<div class="section"><a href="/" class="black">{{ site.title }}</a> › 新用户注册</div>
 		<div class="cell">
 			<form action="/signup" method="post">
 			{% if errors %}
