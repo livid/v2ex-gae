@@ -588,6 +588,122 @@ class BackstageDeactivateUserHandler(webapp.RequestHandler):
 class BackstageMoveTopicHandler(webapp.RequestHandler):
     def get(self, key):
         member = CheckAuth(self)
+        
+class BackstageSiteHandler(webapp.RequestHandler):
+    def get(self):
+        site = GetSite()
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                template_values = {}
+                template_values['page_title'] = site.title + u' › 站点设置'
+                template_values['site'] = site
+                template_values['site_title'] = site.title
+                template_values['site_slogan'] = site.slogan
+                template_values['site_domain'] = site.domain
+                template_values['site_description'] = site.description
+                template_values['member'] = member
+                template_values['system_version'] = SYSTEM_VERSION
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_site.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+        else:
+            self.redirect('/')
+    
+    def post(self):
+        site = GetSite()
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                template_values = {}
+                template_values['page_title'] = site.title + u' › 站点设置'
+                template_values['site'] = site
+                template_values['member'] = member
+                template_values['system_version'] = SYSTEM_VERSION
+                
+                errors = 0
+                # Verification: title (required)
+                site_title_error = 0
+                site_title_error_messages = ['',
+                    u'请输入站点名',
+                    u'站点名长度不能超过 40 个字符'
+                ]
+                site_title = self.request.get('title').strip()
+                if (len(site_title) == 0):
+                    errors = errors + 1
+                    site_title_error = 1    
+                else:
+                    if (len(site_title) > 40):
+                        errors = errors + 1
+                        site_title_error = 1
+                template_values['site_title'] = site_title
+                template_values['site_title_error'] = site_title_error
+                template_values['site_title_error_message'] = site_title_error_messages[site_title_error]
+                # Verification: slogan (required)
+                site_slogan_error = 0
+                site_slogan_error_messages = ['',
+                    u'请输入站点标语',
+                    u'站点标语长度不能超过 140 个字符'
+                ]
+                site_slogan = self.request.get('slogan').strip()
+                if (len(site_slogan) == 0):
+                    errors = errors + 1
+                    site_slogan_error = 1    
+                else:
+                    if (len(site_slogan) > 140):
+                        errors = errors + 1
+                        site_slogan_error = 1
+                template_values['site_slogan'] = site_slogan
+                template_values['site_slogan_error'] = site_slogan_error
+                template_values['site_slogan_error_message'] = site_slogan_error_messages[site_slogan_error]
+                # Verification: domain (required)
+                site_domain_error = 0
+                site_domain_error_messages = ['',
+                    u'请输入主要域名',
+                    u'主要域名长度不能超过 40 个字符'
+                ]
+                site_domain = self.request.get('domain').strip()
+                if (len(site_domain) == 0):
+                    errors = errors + 1
+                    site_domain_error = 1    
+                else:
+                    if (len(site_domain) > 40):
+                        errors = errors + 1
+                        site_domain_error = 1
+                template_values['site_domain'] = site_domain
+                template_values['site_domain_error'] = site_domain_error
+                template_values['site_domain_error_message'] = site_domain_error_messages[site_domain_error]
+                # Verification: description (required)
+                site_description_error = 0
+                site_description_error_messages = ['',
+                    u'请输入站点简介',
+                    u'站点简介长度不能超过 200 个字符'
+                ]
+                site_description = self.request.get('description').strip()
+                if (len(site_description) == 0):
+                    errors = errors + 1
+                    site_description_error = 1    
+                else:
+                    if (len(site_description) > 200):
+                        errors = errors + 1
+                        site_description_error = 1
+                template_values['site_description'] = site_description
+                template_values['site_description_error'] = site_description_error
+                template_values['site_description_error_message'] = site_description_error_messages[site_description_error]
+                if errors == 0:
+                    site.title = site_title
+                    site.slogan = site_slogan
+                    site.domain = site_domain
+                    site.description = site_description
+                    site.put()
+                    template_values['message'] = '站点信息更新成功';
+                    template_values['site'] = site
+                    memcache.delete('site')
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_site.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+        else:
+            self.redirect('/')
 
 def main():
     application = webapp.WSGIApplication([
@@ -601,6 +717,7 @@ def main():
     ('/backstage/tidy/topic/([0-9]+)', BackstageTidyTopicHandler),
     ('/backstage/deactivate/user/(.*)', BackstageDeactivateUserHandler),
     ('/backstage/move/topic/(.*)', BackstageMoveTopicHandler),
+    ('/backstage/site', BackstageSiteHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

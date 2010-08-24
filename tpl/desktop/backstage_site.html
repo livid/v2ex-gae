@@ -1,0 +1,91 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+        </div>
+        <div id="Content">
+            {% if message %}
+            <div class="box">
+                <div class="inner">{{ message }}</div>
+            </div>
+            <div class="sep20"></div>
+            {% endif %}
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> › <a href="/backstage">后台</a> › 站点设置</span></div>
+                <div class="inner">
+                    <form action="/backstage/site" method="post">
+                    {% if errors %}
+        			<strong>请解决以下错误之后继续。</strong>
+        			<div class="sep10"></div>
+        			<ul>
+        				{% if site_title_error %}
+        				<li>{{ site_title_error_message }}</li>
+        				{% endif %}
+        				{% if site_slogan_error %}
+        				<li>{{ site_slogan_error_message }}</li>
+        				{% endif %}
+        				{% if site_domain_error %}
+        				<li>{{ site_domain_error_message }}</li>
+        				{% endif %}
+        				{% if site_description_error %}
+        				<li>{{ site_description_error_message }}</li>
+        				{% endif %}
+        			</ul>
+        			<div class="sep10"></div>
+        			{% endif %}
+                    <table cellpadding="5" cellspacing="0" border="0">
+        			    <tr>
+        			        <td width="80" align="right">
+        			            站点名
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="title" value="{{ site_title|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            站点标语
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="slogan" value="{{ site_slogan|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            主要域名
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="domain" value="{{ site_domain|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            站点简介
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="description">{{ site_description|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="submit" value="保存" class="super normal button" />
+        			        </td>
+        			    </tr>
+        			</table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
