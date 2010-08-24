@@ -144,13 +144,15 @@ class TwitterCallbackHandler(webapp.RequestHandler):
 
 class TwitterHomeHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         member = CheckAuth(self)
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
-                template_values['page_title'] = u'V2EX › Twitter › Home'
+                template_values['page_title'] = site.title + u' › Twitter › Home'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
@@ -184,13 +186,15 @@ class TwitterHomeHandler(webapp.RequestHandler):
 
 class TwitterMentionsHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         member = CheckAuth(self)
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
-                template_values['page_title'] = u'V2EX › Twitter › Mentions'
+                template_values['page_title'] = site.title + u' › Twitter › Mentions'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
@@ -225,12 +229,14 @@ class TwitterMentionsHandler(webapp.RequestHandler):
 class TwitterDMInboxHandler(webapp.RequestHandler):
     def get(self):
         member = CheckAuth(self)
+        site = GetSite()
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
-                template_values['page_title'] = u'V2EX › Twitter › Direct Messages › Inbox'
+                template_values['page_title'] = site.title + u' › Twitter › Direct Messages › Inbox'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 rate_limit = memcache.get(str(member.twitter_id) + '::rate_limit')
@@ -263,13 +269,15 @@ class TwitterDMInboxHandler(webapp.RequestHandler):
 
 class TwitterUserTimelineHandler(webapp.RequestHandler):
     def get(self, screen_name):
+        site = GetSite()
         member = CheckAuth(self)
         if member:
             if member.twitter_oauth == 1:
                 template_values = {}
+                template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
-                template_values['page_title'] = u'V2EX › Twitter › ' + screen_name
+                template_values['page_title'] = site.title + u' › Twitter › ' + screen_name
                 template_values['screen_name'] = screen_name
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)

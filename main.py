@@ -246,9 +246,11 @@ class SigninHandler(webapp.RequestHandler):
         self.response.out.write(output)
  
     def post(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 登入'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 登入'
         template_values['system_version'] = SYSTEM_VERSION
         u = self.request.get('u').strip()
         p = self.request.get('p').strip()
@@ -278,13 +280,15 @@ class SigninHandler(webapp.RequestHandler):
         
 class SignupHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         chtml = captcha.displayhtml(
             public_key = config.recaptcha_public_key,
             use_ssl = False,
             error = None)
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 注册'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 注册'
         template_values['system_version'] = SYSTEM_VERSION
         template_values['errors'] = 0
         template_values['captchahtml'] = chtml
@@ -296,9 +300,11 @@ class SignupHandler(webapp.RequestHandler):
         self.response.out.write(output)
         
     def post(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 注册'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 注册'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         # Verification: username
@@ -437,9 +443,11 @@ class SignupHandler(webapp.RequestHandler):
 
 class SignoutHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 登出'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 登出'
         template_values['system_version'] = SYSTEM_VERSION
         cookies = Cookies(self, max_age = 86400, path = '/')
         del cookies['auth']
@@ -452,23 +460,27 @@ class SignoutHandler(webapp.RequestHandler):
 
 class ForgotHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › 重新设置密码'
+        template_values['page_title'] = site.title + u' › 重新设置密码'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
     
     def post(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › 重新设置密码'
+        template_values['page_title'] = site.title + u' › 重新设置密码'
         # Verification: username & email
         username = self.request.get('username').strip().lower()
         email = self.request.get('email').strip().lower()
@@ -516,7 +528,9 @@ class ForgotHandler(webapp.RequestHandler):
 
 class PasswordResetHandler(GenericHandler):
     def get(self, token):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         token = str(token.strip().lower())
         q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
         if q.count() == 1:
@@ -532,7 +546,9 @@ class PasswordResetHandler(GenericHandler):
             self.response.out.write(output)
     
     def post(self, token):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         token = str(token.strip().lower())
         q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
         if q.count() == 1:
@@ -578,9 +594,11 @@ class PasswordResetHandler(GenericHandler):
 
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
+        site = GetSite()
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
@@ -677,9 +695,11 @@ class NodeHandler(webapp.RequestHandler):
 
 class NodeApiHandler(webapp.RequestHandler):
     def get(self, node_name):
+        site = GetSite()
         node = GetKindByName('Node', node_name)
         if node:
             template_values = {}
+            template_values['site'] = site
             template_values['node'] = node
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'node.json')
             self.response.headers['Content-type'] = 'application/json;charset=UTF-8'
@@ -690,12 +710,14 @@ class NodeApiHandler(webapp.RequestHandler):
 
 class SearchHandler(webapp.RequestHandler):
     def get(self, q):
+        site = GetSite()
         q = urllib.unquote(q)
         template_values = {}
+        template_values['site'] = site
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = 'V2EX › 搜索 ' + q
+        template_values['page_title'] = site.title + ' › 搜索 ' + q
         template_values['q'] = q
         if config.fts_enabled is not True:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'search_unavailable.html')

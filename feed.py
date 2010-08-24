@@ -24,12 +24,14 @@ class FeedHomeHandler(webapp.RequestHandler):
         self.response.out.write('')
         
     def get(self):
+        site = GetSite()
         output = memcache.get('feed_index')
         if output is None:
             template_values = {}
-            template_values['site_domain'] = 'www.v2ex.com'
-            template_values['site_name'] = 'V2EX'
-            template_values['site_slogan'] = 'way to explore'
+            template_values['site'] = site
+            template_values['site_domain'] = site.domain
+            template_values['site_name'] = site.title
+            template_values['site_slogan'] = site.slogan
             template_values['feed_url'] = 'http://' + template_values['site_domain'] + '/index.xml'
             template_values['site_updated'] = datetime.datetime.now()
             q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")

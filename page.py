@@ -17,6 +17,7 @@ from v2ex.babel import Section
 from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
+from v2ex.babel import Site
 
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
@@ -27,7 +28,9 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class AboutHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         note = GetKindByNum('Note', 127)
         if note is False:
@@ -36,14 +39,16 @@ class AboutHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › About'
+        template_values['page_title'] = site.title + u' › About'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'about.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
         
 class FAQHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         note = GetKindByNum('Note', 195)
         if note is False:
@@ -52,14 +57,16 @@ class FAQHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › FAQ'
+        template_values['page_title'] = site.title + u' › FAQ'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'faq.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
 
 class MissionHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         note = GetKindByNum('Note', 240)
         if note is False:
@@ -68,31 +75,35 @@ class MissionHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › Mission'
+        template_values['page_title'] = site.title + u' › Mission'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'mission.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
 
 class AdvertiseHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › Advertise'
+        template_values['page_title'] = site.title + u' › Advertise'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'advertise.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
 
 class AdvertisersHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = u'V2EX › Advertisers'
+        template_values['page_title'] = site.title + u' › Advertisers'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'advertisers.html')
         output = template.render(path, template_values)
         self.response.out.write(output)

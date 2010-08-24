@@ -129,7 +129,8 @@ def GetSite():
             site = Site()
             site.num = 1
             site.title = 'V2EX'
-            site.url = 'v2ex.appspot.com'
+            site.domain = 'v2ex.appspot.com'
+            site.slogan = 'way to explore'
             site.description = ''
             site.put()
             memcache.set('site', site, 86400)

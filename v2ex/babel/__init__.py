@@ -160,5 +160,6 @@ class Checkin(db.Model):
 class Site(db.Model):
     num = db.IntegerProperty(required=False, indexed=True)
     title = db.StringProperty(required=False, indexed=False)
+    slogan = db.StringProperty(required=False, indexed=False)
     description = db.TextProperty(required=False)
-    url = db.StringProperty(required=False, indexed=False)
+    domain = db.StringProperty(required=False, indexed=False)

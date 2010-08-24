@@ -25,7 +25,7 @@ def extract_address(raw):
 
 class MailHandler(InboundMailHandler):
     def receive(self, message):
-        bodies = message.bodies(content_type='text/plain')
+        bodies = message.bodies(content_type = 'text/plain')
         for body in bodies:
             to = extract_address(message.to)
             sender = extract_address(message.sender.lower())

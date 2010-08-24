@@ -36,7 +36,9 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class PlaceHandler(webapp.RequestHandler):
     def get(self, ip):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         member = CheckAuth(self)
         if member:
@@ -80,6 +82,7 @@ class PlaceHandler(webapp.RequestHandler):
         self.response.out.write(output)
     
     def post(self, ip):
+        site = GetSite()
         if 'Referer' in self.request.headers:
             go = self.request.headers['Referer']
         else:

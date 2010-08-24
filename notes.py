@@ -22,6 +22,7 @@ from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
 from v2ex.babel import Note
+from v2ex.babel import Site
 
 from v2ex.babel import SYSTEM_VERSION
 
@@ -33,10 +34,12 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class NotesHomeHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = 'V2EX › 记事本'
+        template_values['page_title'] = site.title + u' › 记事本'
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
@@ -59,9 +62,11 @@ class NotesHomeHandler(webapp.RequestHandler):
             
 class NotesNewHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = 'V2EX › 新建记事'
+        template_values['page_title'] = site.title + u' › 新建记事'
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
@@ -72,9 +77,11 @@ class NotesNewHandler(webapp.RequestHandler):
             self.redirect('/signin')
     
     def post(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['page_title'] = 'V2EX › 新建记事'
+        template_values['page_title'] = site.title + u' › 新建记事'
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
@@ -120,8 +127,10 @@ class NotesNewHandler(webapp.RequestHandler):
 
 class NotesItemHandler(webapp.RequestHandler):
     def get(self, num):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if member:
@@ -147,7 +156,9 @@ class NotesItemHandler(webapp.RequestHandler):
 
 class NotesItemEraseHandler(webapp.RequestHandler):
     def get(self, num):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = 'V2EX › 记事本'
         member = CheckAuth(self)
@@ -167,7 +178,9 @@ class NotesItemEraseHandler(webapp.RequestHandler):
 
 class NotesItemEditHandler(webapp.RequestHandler):
     def get(self, num):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = 'V2EX › 记事本 › 编辑'
         member = CheckAuth(self)
@@ -189,7 +202,9 @@ class NotesItemEditHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
     def post(self, num):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = 'V2EX › 记事本'
         member = CheckAuth(self)

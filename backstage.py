@@ -18,15 +18,20 @@ from v2ex.babel import Member
 from v2ex.babel import Counter
 from v2ex.babel import Section
 from v2ex.babel import Node
+from v2ex.babel import Site
 
 from v2ex.babel import SYSTEM_VERSION
 
 from v2ex.babel.security import *
 from v2ex.babel.ext.cookies import Cookies
+from v2ex.babel.ua import *
+from v2ex.babel.da import *
 
 class BackstageHomeHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
@@ -47,7 +52,9 @@ class BackstageHomeHandler(webapp.RequestHandler):
         
 class BackstageNewSectionHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
@@ -62,7 +69,9 @@ class BackstageNewSectionHandler(webapp.RequestHandler):
             self.redirect('/signin')
     
     def post(self):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
@@ -159,7 +168,9 @@ class BackstageNewSectionHandler(webapp.RequestHandler):
 
 class BackstageSectionHandler(webapp.RequestHandler):
     def get(self, section_name):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -187,7 +198,9 @@ class BackstageSectionHandler(webapp.RequestHandler):
 
 class BackstageNewNodeHandler(webapp.RequestHandler):
     def get(self, section_name):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -207,7 +220,9 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
     def post(self, section_name):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -313,7 +328,9 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
 
 class BackstageNodeHandler(webapp.RequestHandler):
     def get(self, node_name):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -354,7 +371,9 @@ class BackstageNodeHandler(webapp.RequestHandler):
             self.redirect('/signin')
     
     def post(self, node_name):
+        site = GetSite()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):

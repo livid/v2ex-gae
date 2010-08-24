@@ -35,9 +35,11 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class MemberHandler(webapp.RequestHandler):
     def get(self, member_username):
+        site = GetSite()
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
@@ -49,7 +51,7 @@ class MemberHandler(webapp.RequestHandler):
         one = GetMemberByUsername(member_username)
         if one is not False:
             template_values['one'] = one
-            template_values['page_title'] = u'V2EX › ' + one.username
+            template_values['page_title'] = site.title + u' › ' + one.username
         if one is not False:
             q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
             template_values['topics'] = q2
@@ -97,14 +99,16 @@ class MemberHandler(webapp.RequestHandler):
         
 class MemberApiHandler(webapp.RequestHandler):
     def get(self, member_username):
+        site = GetSite()
         one = GetMemberByUsername(member_username)
         if one:
             if one.avatar_mini_url:
                 if (one.avatar_mini_url[0:1] == '/'):
-                    one.avatar_mini_url = 'http://v2ex.appspot.com' + one.avatar_mini_url
-                    one.avatar_normal_url = 'http://v2ex.appspot.com' + one.avatar_normal_url
-                    one.avatar_large_url = 'http://v2ex.appspot.com' + one.avatar_large_url
+                    one.avatar_mini_url = 'http://' + site.domain + one.avatar_mini_url
+                    one.avatar_normal_url = 'http://' +  site.domain + one.avatar_normal_url
+                    one.avatar_large_url = 'http://' + site.domain + one.avatar_large_url
             template_values = {}
+            template_values['site'] = site
             template_values['one'] = one
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'member.json')
             self.response.headers['Content-type'] = 'application/json;charset=UTF-8'
@@ -116,10 +120,12 @@ class MemberApiHandler(webapp.RequestHandler):
 
 class SettingsHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
-        template_values['page_title'] = u'V2EX › 设置'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 设置'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -177,9 +183,10 @@ class SettingsHandler(webapp.RequestHandler):
             self.redirect('/signin')
         
     def post(self):
+        site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 设置'
+        template_values['page_title'] = site.title + u' › 设置'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         member = CheckAuth(self)
@@ -371,10 +378,12 @@ class SettingsHandler(webapp.RequestHandler):
 
 class SettingsPasswordHandler(webapp.RequestHandler):
     def post(self):
+        site = GetSite()
         browser = detect(self.request)
         self.session = Session()
         template_values = {}
-        template_values['page_title'] = u'V2EX › 密码设置'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 密码设置'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         member = CheckAuth(self)
@@ -426,10 +435,12 @@ class SettingsPasswordHandler(webapp.RequestHandler):
 
 class SettingsAvatarHandler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         self.session = Session()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = u'V2EX › 头像'
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 头像'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
@@ -447,9 +458,11 @@ class SettingsAvatarHandler(webapp.RequestHandler):
             self.redirect('/signin')
         
     def post(self):
+        site = GetSite()
         self.session = Session()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         if (member):
