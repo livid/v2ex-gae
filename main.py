@@ -463,6 +463,7 @@ class ForgotHandler(webapp.RequestHandler):
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         template_values['site'] = site
         member = CheckAuth(self)
         if member:
@@ -476,6 +477,7 @@ class ForgotHandler(webapp.RequestHandler):
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['rnd'] = random.randrange(1, 100)
         template_values['site'] = site
         member = CheckAuth(self)
         if member:
