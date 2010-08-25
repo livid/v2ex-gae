@@ -363,7 +363,7 @@ class SettingsHandler(webapp.RequestHandler):
                     member.twitter_sync = member_twitter_sync
                 member.bio = member_bio
                 member.put()
-                memcache.delete('member_' + str(member.num))
+                memcache.delete('Member_' + str(member.num))
                 self.redirect('/settings')
             else:
                 if browser['ios']:
@@ -419,7 +419,7 @@ class SettingsPasswordHandler(webapp.RequestHandler):
                 member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
                 member.put()
                 memcache.set(member.auth, member.num, 86400 * 365)
-                memcache.set('member_' + str(member.num), member, 86400 * 365)
+                memcache.set('Member_' + str(member.num), member, 86400 * 365)
                 self.session['message'] = '密码已成功更新，下次请用新密码登录'
                 self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
                 self.redirect('/settings')
@@ -491,8 +491,8 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_large.content = db.Blob(avatar_73)
                 avatar_large.num = counter1.value
                 avatar_large.put()
-                member.avatar_large_url = '/avatar/' + str(member.num) + '/large'
-                member.put()
+            member.avatar_large_url = '/avatar/' + str(member.num) + '/large'
+            member.put()
             # Normal 48x48
             q2 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'avatar_' + str(member.num) + '_normal')
             if (q2.count() == 1):
@@ -514,8 +514,8 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_normal.content = db.Blob(avatar_48)
                 avatar_normal.num = counter2.value
                 avatar_normal.put()
-                member.avatar_normal_url = '/avatar/' + str(member.num) + '/normal'
-                member.put() 
+            member.avatar_normal_url = '/avatar/' + str(member.num) + '/normal'
+            member.put() 
             # Mini 24x24
             q3 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'avatar_' + str(member.num) + '_mini')
             if (q3.count() == 1):
@@ -537,8 +537,8 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_mini.content = db.Blob(avatar_24)
                 avatar_mini.num = counter3.value
                 avatar_mini.put()
-                member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
-                member.put()
+            member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
+            member.put()
             # Upload to MobileMe
             if config.mobileme_enabled:
                 headers = {'Authorization' : 'Basic ' + base64.b64encode(config.mobileme_username + ':' + config.mobileme_password)}
@@ -567,7 +567,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 if response.status == 201 or response.status == 204:
                     member.avatar_large_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/avatars/' + str(shard) + '/large/' + str(member.num) + '.png?r=' + timestamp
                 member.put()
-            memcache.set('member_' + str(member.num), member, 86400 * 365)
+            memcache.set('Member_' + str(member.num), member, 86400 * 365)
             memcache.delete('Avatar::avatar_' + str(member.num) + '_large')
             memcache.delete('Avatar::avatar_' + str(member.num) + '_normal')
             memcache.delete('Avatar::avatar_' + str(member.num) + '_mini')

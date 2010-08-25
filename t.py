@@ -58,14 +58,14 @@ class TwitterUnlinkHandler(webapp.RequestHandler):
         self.session = Session()
         member = CheckAuth(self)
         if member:
-            memcache.delete('member_' + str(member.num))
+            memcache.delete('Member_' + str(member.num))
             member = GetKindByNum('Member', member.num)
             member.twitter_oauth = 0
             member.twitter_oauth_key = ''
             member.twitter_oauth_secret = ''
             member.twitter_sync = 0
             member.put()
-            memcache.set('member_' + str(member.num), member, 86400)
+            memcache.set('Member_' + str(member.num), member, 86400)
             self.redirect('/settings')
         else:
             self.redirect('/signin')
@@ -83,7 +83,7 @@ class TwitterCallbackHandler(webapp.RequestHandler):
                 access_token = twitter.getAccessToken()
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 user = twitter.GetUserInfo()
-                memcache.delete('member_' + str(member.num))
+                memcache.delete('Member_' + str(member.num))
                 member = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member.num)[0]
                 member.twitter_oauth = 1
                 member.twitter_oauth_key = access_token.key
@@ -102,7 +102,7 @@ class TwitterCallbackHandler(webapp.RequestHandler):
                 member.twitter_friends_count = user.friends_count
                 member.twitter_favourites_count = user.favourites_count
                 member.put()
-                memcache.set('member_' + str(member.num), member, 86400)
+                memcache.set('Member_' + str(member.num), member, 86400)
                 self.redirect('/settings')
             else:
                 self.redirect('/signin')
@@ -114,7 +114,7 @@ class TwitterCallbackHandler(webapp.RequestHandler):
                 access_token = twitter.getAccessToken()
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 user = twitter.GetUserInfo()
-                memcache.delete('member_' + str(member.num))
+                memcache.delete('Member_' + str(member.num))
                 member = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member.num)[0]
                 member.twitter_oauth = 1
                 member.twitter_oauth_key = access_token.key
@@ -133,7 +133,7 @@ class TwitterCallbackHandler(webapp.RequestHandler):
                 member.twitter_friends_count = user.friends_count
                 member.twitter_favourites_count = user.favourites_count
                 member.put()
-                memcache.set('member_' + str(member.num), member, 86400)
+                memcache.set('Member_' + str(member.num), member, 86400)
                 self.redirect('/settings')
             else:
                 oauth_token = self.request.get('oauth_token')
