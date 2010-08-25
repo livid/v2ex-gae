@@ -17,6 +17,8 @@ from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
 
+from v2ex.babel.da import *
+
 template.register_template_library('v2ex.templatetags.filters')
 
 class FeedHomeHandler(webapp.RequestHandler):
