@@ -7,6 +7,7 @@ import time
 import datetime
 import hashlib
 import string
+import random
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -30,11 +31,14 @@ from v2ex.babel.da import *
 class BackstageHomeHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
+        browser = detect(self.request)
+        member = CheckAuth(self)
         template_values = {}
         template_values['site'] = site
+        template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
-        member = CheckAuth(self)
         template_values['member'] = member
+        template_values['page_title'] = site.title + u' › 后台'
         if (member):
             if (member.num == 1):
                 q = db.GqlQuery("SELECT * FROM Section ORDER BY nodes DESC")
@@ -42,7 +46,10 @@ class BackstageHomeHandler(webapp.RequestHandler):
                 q2 = db.GqlQuery("SELECT * FROM Counter WHERE name = :1", 'member.max')
                 counter = q2[0]
                 template_values['member_max'] = counter.value
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_home.html')
+                if browser['ios']:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_home.html')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_home.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
             else:
@@ -705,6 +712,16 @@ class BackstageSiteHandler(webapp.RequestHandler):
         else:
             self.redirect('/')
 
+class BackstageRemoveMemcacheHandler(webapp.RequestHandler):
+    def post(self):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                mc = self.request.get('mc')
+                if mc is not None:
+                    memcache.delete(mc)
+        self.redirect('/backstage')
+
 def main():
     application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
@@ -717,7 +734,8 @@ def main():
     ('/backstage/tidy/topic/([0-9]+)', BackstageTidyTopicHandler),
     ('/backstage/deactivate/user/(.*)', BackstageDeactivateUserHandler),
     ('/backstage/move/topic/(.*)', BackstageMoveTopicHandler),
-    ('/backstage/site', BackstageSiteHandler)
+    ('/backstage/site', BackstageSiteHandler),
+    ('/backstage/remove/mc', BackstageRemoveMemcacheHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
