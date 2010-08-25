@@ -1,0 +1,12 @@
+<div class="box">
+    <div class="cell">
+        <span class="fade">下属节点</span>
+    </div>
+    <div class="grid" style="font-size: 12px">
+        <table cellpadding="10" cellspacing="0" border="0" width="100%">
+        {% for node in nodes %}
+        <tr><td width="20" align="right" style="border-bottom: 1px solid #e2e2e2;"><strong class="fade">{{ node.topics }}</strong></td><td align="left" width="auto" style="border-bottom: 1px solid #e2e2e2; border-left: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/backstage/node/{{ node.name }}">{{ node.title }}</a></td></tr>
+        {% endfor %}
+        </table
+    </div>
+</div>
