@@ -285,10 +285,12 @@ class BackstageSectionHandler(webapp.RequestHandler):
                             section_name_error = 2
                         else:
                             if (re.search('^[a-zA-Z0-9\-\_]+$', section_name)):
-                                q = db.GqlQuery('SELECT * FROM Section WHERE name = :1 AND num != :2', section_name.lower(), section.num)
+                                q = db.GqlQuery('SELECT * FROM Section WHERE name = :1', section_name.lower())
                                 if (q.count() > 0):
-                                    errors = errors + 1
-                                    section_name_error = 4
+                                    for possible_conflict in q:
+                                        if possible_conflict.num != section.num:
+                                            errors = errors + 1
+                                            section_name_error = 4
                             else:
                                 errors = errors + 1
                                 section_name_error = 3
@@ -362,7 +364,7 @@ class BackstageSectionHandler(webapp.RequestHandler):
                         section.header = section_header
                         section.footer = section_footer
                         section.put()
-                        memcache.delete('Section_' + section.num)
+                        memcache.delete('Section_' + str(section.num))
                         memcache.delete('Section::' + section_name)
                         self.redirect('/backstage')
                     else:

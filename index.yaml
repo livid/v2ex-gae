@@ -100,11 +100,6 @@ indexes:
   - name: created
     direction: desc
 
-- kind: Section
-  properties:
-  - name: name
-  - name: num
-
 - kind: Topic
   properties:
   - name: __key__
