@@ -6,9 +6,9 @@
         <div id="Sidebar">   
         </div>
         <div id="Rightbar">
-            {% include 'rightbar/user.html' %}
+            {% include 'rightbar/stats.html' %}
             <div class="sep20"></div>
-            {% include 'rightbar/ads.html' %}
+            {% include 'rightbar/backstage_latest_members.html' %}
         </div>
         <div id="Content">
             <div class="box">
@@ -17,7 +17,7 @@
                 <div class="grid" style="font-size: 14px;">
                     <table cellpadding="10" cellspacing="0" border="0" width="100%">
                         <tr>
-                            <td align="center" valign="top" width="40" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><img src="/static/img/info24.png" align="absmiddle" /></td>
+                            <td align="center" valign="top" width="48" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><img src="/static/img/app48.png" align="absmiddle" /></td>
                             <td align="left" valign="top" width="auto" style="border-bottom: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/backstage/site">站点设置</a>
                             <div class="sep10"></div>
                             <span class="fade" style="font-size: 12px">各类基本信息，包括站点名，标语，域名及简介等。</span>    
@@ -35,7 +35,7 @@
                     <table cellpadding="10" cellspacing="0" border="0" width="100%">
                         {% for section in sections %}
                         <tr>
-                            <td align="center" valign="middle" width="40" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><strong style="font-size: 24px; font-family: DINPro">{{ section.nodes }}</strong></td>
+                            <td align="center" valign="middle" width="48" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><strong style="font-size: 24px; font-family: DINPro">{{ section.nodes }}</strong></td>
                             <td align="left" valign="top" width="auto" style="border-bottom: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/backstage/section/{{ section.name }}">{{ section.title|escape }}</a>
                             <div class="sep10"></div>
                             <span class="fade" style="font-size: 12px">{% if section.header %}{{ section.header }}{% endif %}</span>    
@@ -52,7 +52,7 @@
                 <div class="grid" style="font-size: 14px;">
                     <table cellpadding="10" cellspacing="0" border="0" width="100%">
                         <tr>
-                            <td align="center" valign="top" width="40" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><img src="/static/img/cloud24.png" align="absmiddle" /></td>
+                            <td align="center" valign="top" width="48" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><img src="/static/img/cloud48.png" align="absmiddle" /></td>
                             <td align="left" valign="top" width="auto" style="border-bottom: 1px solid #e2e2e2; background-color: #f9f9f9;">删除指定缓存
                             <div class="sep10"></div>
                             <span class="fade" style="font-size: 12px">请输入想要删除的缓存项目的名称，然后按下删除按钮即可。</span>
@@ -63,7 +63,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td align="center" valign="top" width="40" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><img src="/static/img/util24.png" align="absmiddle" /></td>
+                            <td align="center" valign="top" width="48" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><img src="/static/img/update48.png" align="absmiddle" /></td>
                             <td align="left" valign="top" width="auto" style="border-bottom: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/mapreduce" target="_blank">MapReduce</a>
                             <div class="sep10"></div>
                             <span class="fade" style="font-size: 12px">使用 MapReduce 对 Topic / Reply / Member 进行整理，请谨慎操作。</span>    

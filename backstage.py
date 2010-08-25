@@ -28,6 +28,10 @@ from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
 
+template.register_template_library('v2ex.templatetags.filters')
+
+import config
+
 class BackstageHomeHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
@@ -39,13 +43,39 @@ class BackstageHomeHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = member
         template_values['page_title'] = site.title + u' › 后台'
+        member_total = memcache.get('member_total')
+        if member_total is None:
+            q3 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'member.total'")
+            if (q3.count() > 0):
+                member_total = q3[0].value
+            else:
+                member_total = 0
+            memcache.set('member_total', member_total, 600)
+        template_values['member_total'] = member_total
+        topic_total = memcache.get('topic_total')
+        if topic_total is None:
+            q4 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'topic.total'")
+            if (q4.count() > 0):
+                topic_total = q4[0].value
+            else:
+                topic_total = 0
+            memcache.set('topic_total', topic_total, 600)
+        template_values['topic_total'] = topic_total
+        reply_total = memcache.get('reply_total')
+        if reply_total is None:
+            q5 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'reply.total'")
+            if (q5.count() > 0):
+                reply_total = q5[0].value
+            else:
+                reply_total = 0
+            memcache.set('reply_total', reply_total, 600)
+        template_values['reply_total'] = reply_total
         if (member):
             if (member.num == 1):
                 q = db.GqlQuery("SELECT * FROM Section ORDER BY nodes DESC")
                 template_values['sections'] = q
-                q2 = db.GqlQuery("SELECT * FROM Counter WHERE name = :1", 'member.max')
-                counter = q2[0]
-                template_values['member_max'] = counter.value
+                q2 = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 10")
+                template_values['latest_members'] = q2
                 if browser['ios']:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_home.html')
                 else:
