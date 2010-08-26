@@ -1,8 +1,9 @@
 <div class="cell_bottom">&copy; 2010 <a href="http://picky.olivida.com/about" target="_blank">OLIVIDA</a> / Powered by <a href="/go/babel">Project Babel V{{ system_version }}</a></div>
+{% if site.analytics %}
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-11940834-2']);
+  _gaq.push(['_setAccount', '{{ site.analytics }}']);
   _gaq.push(['_setDomainName', 'none']);
   _gaq.push(['_setAllowLinker', true]);
   _gaq.push(['_trackPageview']);
@@ -14,3 +15,4 @@
   })();
 
 </script>
+{% endif %}

@@ -506,10 +506,11 @@
     </table>
     <div class="sep20"></div>
     </div>
+    {% if site.analytics %}
     <script type="text/javascript">
 
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-11940834-2']);
+      _gaq.push(['_setAccount', '{{ site.analytics }}']);
       _gaq.push(['_setDomainName', 'none']);
       _gaq.push(['_setAllowLinker', true]);
       _gaq.push(['_trackPageview']);
@@ -521,5 +522,6 @@
       })();
 
     </script>
+    {% endif %}
 </body>
 </html>

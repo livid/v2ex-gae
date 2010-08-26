@@ -35,6 +35,9 @@
         				{% if site_description_error %}
         				<li>{{ site_description_error_message }}</li>
         				{% endif %}
+        				{% if site_analytics_error %}
+        				<li>{{ site_analytics_error_message }}</li>
+        				{% endif %}
         			</ul>
         			<div class="sep10"></div>
         			{% endif %}
@@ -69,6 +72,14 @@
         			        </td>
         			        <td width="200" align="left">
         			            <textarea class="ml" name="description">{{ site_description|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            Analytics ID
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="analytics" value="{{ site_analytics|escape }}" maxlength="40" />
         			        </td>
         			    </tr>
         			    <tr>

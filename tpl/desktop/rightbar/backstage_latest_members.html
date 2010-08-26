@@ -7,6 +7,6 @@
             {% for one in latest_members %}
             <tr><td width="48" align="center" style="border-bottom: 1px solid #e2e2e2;">{{ one|avatar:"normal" }}</td><td align="left" width="auto" style="border-bottom: 1px solid #e2e2e2; border-left: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/member/{{ one.username|escape }}"><strong>{{ one.username|escape }}</strong></a><div class="sep5"></div><span class="fade">{{ one.email }}</span></td></tr>
             {% endfor %}
-        </table
+        </table>
     </div>
 </div>

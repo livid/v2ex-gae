@@ -784,6 +784,10 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site_slogan'] = site.slogan
                 template_values['site_domain'] = site.domain
                 template_values['site_description'] = site.description
+                if site.analytics is not None:
+                    template_values['site_analytics'] = site.analytics
+                else:
+                    template_values['site_analytics'] = ''
                 template_values['member'] = member
                 template_values['system_version'] = SYSTEM_VERSION
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_site.html')
@@ -802,7 +806,6 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site'] = site
                 template_values['member'] = member
                 template_values['system_version'] = SYSTEM_VERSION
-                
                 errors = 0
                 # Verification: title (required)
                 site_title_error = 0
@@ -872,11 +875,31 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site_description'] = site_description
                 template_values['site_description_error'] = site_description_error
                 template_values['site_description_error_message'] = site_description_error_messages[site_description_error]
+                # Verification: analytics (optional)
+                site_analytics_error = 0
+                site_analytics_error_messages = ['',
+                    u'Analytics ID 格式不正确'
+                ]
+                site_analytics = self.request.get('analytics').strip()
+                if len(site_analytics) > 0:
+                    if re.findall('^UA\-[0-9]+\-[0-9]+$', site_analytics):
+                        site_analytics_error = 0
+                    else:
+                        errors = errors + 1
+                        site_analytics_error = 1
+                else:
+                    site_analytics = ''
+                template_values['site_analytics'] = site_analytics
+                template_values['site_analytics_error'] = site_analytics_error
+                template_values['site_analytics_error_message'] = site_analytics_error_messages[site_analytics_error]
+                template_values['errors'] = errors
                 if errors == 0:
                     site.title = site_title
                     site.slogan = site_slogan
                     site.domain = site_domain
                     site.description = site_description
+                    if site_analytics != '':
+                        site.analytics = site_analytics
                     site.put()
                     template_values['message'] = '站点信息更新成功';
                     template_values['site'] = site

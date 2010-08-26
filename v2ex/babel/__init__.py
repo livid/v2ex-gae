@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.3.11'
+SYSTEM_VERSION = '2.3.12'
 
 import datetime
 import hashlib
@@ -163,3 +163,4 @@ class Site(db.Model):
     slogan = db.StringProperty(required=False, indexed=False)
     description = db.TextProperty(required=False)
     domain = db.StringProperty(required=False, indexed=False)
+    analytics = db.StringProperty(required=False, indexed=False)

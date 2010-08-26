@@ -11,9 +11,10 @@
         <div class="sep5"></div>
         <small>VERSION: {{ system_version }}<br />♥ Do have a faith in what you're doing.</small>
     </div>
+    {% if site.analytics %}
     <script type="text/javascript">
       var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-11940834-2']);
+      _gaq.push(['_setAccount', '{{ site.analytics }}']);
       _gaq.push(['_setDomainName', 'none']);
       _gaq.push(['_setAllowLinker', true]);
       _gaq.push(['_trackPageview']);
@@ -24,4 +25,5 @@
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
     </script>
+    {% endif %}
 </div>
