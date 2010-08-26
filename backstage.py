@@ -74,7 +74,7 @@ class BackstageHomeHandler(webapp.RequestHandler):
             if (member.num == 1):
                 q = db.GqlQuery("SELECT * FROM Section ORDER BY nodes DESC")
                 template_values['sections'] = q
-                q2 = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 10")
+                q2 = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 5")
                 template_values['latest_members'] = q2
                 if browser['ios']:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_home.html')

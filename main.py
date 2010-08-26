@@ -720,7 +720,7 @@ class SearchHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
-        template_values['page_title'] = site.title + u' › 搜索 ' + q
+        template_values['page_title'] = site.title + u' › 搜索 ' + q.decode('utf-8')
         template_values['q'] = q
         if config.fts_enabled is not True:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'search_unavailable.html')
