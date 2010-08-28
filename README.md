@@ -20,11 +20,21 @@ Then you can rename *v2ex* to whatever you want to match your own App Engine App
 
 If you have any questions or feature requests, feel free to discuss it in official development node at V2EX:
 
-http://v2ex.appspot.com/go/babel
+[http://v2ex.appspot.com/go/babel](http://v2ex.appspot.com/go/babel)
 
 ## Troubleshooting
 
 ## FAQ
+
+### Why I got an error page says it needs index?
+
+For newly deployed App Engine app, it took some time for Google to build indexes so that your data can be fast accessed. It usually take up to an hour to build all indexes required for a new installation of Project Babel 2.
+
+### How about performance?
+
+According to our actual operation data, Project Babel 2 is able to support 100,000 pageviews under App Engine free quota. If you don't mind enabling billing, Project Babel 2 is able to support large sites with millions pageviews/day as long as you have enough budget for traffic.
+
+Performance is always our area of focus, we'll keep improving it.
 
 ## License
 
