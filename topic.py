@@ -441,7 +441,7 @@ class TopicHandler(webapp.RequestHandler):
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
                     access_token = OAuthToken.from_string(member.twitter_oauth_string)
                     twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
-                    link = 'http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
+                    link = 'http://' + self.request.headers['Host'] + '/t/' + str(topic.num) + '#r' + str(reply.num)
                     link_length = len(link)
                     reply_content_length = len(reply.content)
                     available = 140 - link_length - 1
