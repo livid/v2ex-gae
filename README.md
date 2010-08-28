@@ -1,10 +1,22 @@
 # Project Babel 2
 
-## Introduction
-
 Project Babel 2 is an open source software package for creating and supporting communities. It's written in Python and running on [Google App Engine](http://code.google.com/appengine), which is a free and robust cloud hosting infrastructure.
 
 [V2EX](http://v2ex.appspot.com/), a community about sharing and discovering interesting stuff of the world, is proudly powered by Project Babel 2.
+
+## Features
+
+* Topics are organized under Nodes (Discussion Areas), you can have many Nodes in one community
+* Nodes can have header, foot and category property, or organized under Sections
+* Two clean themes: one for desktop browser, another for iPhone and Android
+* Optimized for modern browsers
+* Built-in WebDAV avatar facility, you can host all avatars with MobileMe or other WebDAV servers
+* Atom feed output
+* HTML5
+* Built-in MapReduce tasks for optimizing community data
+* Built-in OAuth Twitter client for tweeting and syncing topics/replies
+* Built-in Notes feature
+* Gravatar support
 
 ## Installation
 
