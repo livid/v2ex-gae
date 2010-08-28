@@ -2,11 +2,25 @@
 
 ## Introduction
 
-Project Babel 2 is a software package for creating and supporting communities. It's written in Python and running on Google App Engine, which is a free and robust cloud hosting infrastructure.
+Project Babel 2 is an open source software package for creating and supporting communities. It's written in Python and running on [Google App Engine](http://code.google.com/appengine), which is a free and robust cloud hosting infrastructure.
 
 [V2EX](http://v2ex.appspot.com/), a community about sharing and discovering interesting stuff of the world, is proudly powered by Project Babel 2.
 
 ## Installation
+
+It's recommended to get the latest codebase of Project Babel 2 with git:
+
+    git clone http://github.com/livid/v2ex.git v2ex
+    
+Then you can rename *v2ex* to whatever you want to match your own App Engine AppID. And follow the steps:
+
+1. Copy app.yaml.example to app.yaml and change its *application* to match your own AppID.
+2. Copy config.py.example to config.py, and if you want to use the built-in Twitter features, please fill in your own OAuth consumer key and secret. And callback address for Twitter is http://your_app_id.appspot.com/twitter/oauth .
+3. Add this folder to Google App Engine Launcher as an existing application, and click Deploy. It's done and quite simple, right?
+
+If you have any questions or feature requests, feel free to discuss it in official development node at V2EX:
+
+http://v2ex.appspot.com/go/babel
 
 ## Troubleshooting
 
@@ -16,7 +30,7 @@ Project Babel 2 is a software package for creating and supporting communities. I
 
 Project Babel 2 is licensed under very liberal BSD license.
 
-Copyright (c) 2010, Xin Liu <livid@olivida.com>
+Copyright (c) 2010, Xin Liu
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
