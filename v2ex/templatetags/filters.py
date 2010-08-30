@@ -1,4 +1,5 @@
 import re
+import logging
 
 from django import template
 from datetime import timedelta
@@ -36,6 +37,18 @@ def clly(value):
     else:
         return value
 register.filter(clly)
+
+# auto convert youtube.com links to player
+def youtube(value):
+    videos = re.findall('(http://www.youtube.com/watch\?v=[a-zA-Z0-9\-\_]+)\s?', value)
+    if (len(videos) > 0):
+        for video in videos:
+            video_id = re.findall('http://www.youtube.com/watch\?v=([a-zA-Z0-9\-\_]+)', video)
+            value = value.replace('http://www.youtube.com/watch?v=' + video_id[0], '<object width="480" height="385"><param name="movie" value="http://www.youtube.com/v/' + video_id[0] + '?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/' + video_id[0] + '?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="480" height="385"></embed></object>')
+        return value
+    else:
+        return value
+register.filter(youtube)
 
 # auto convert @username to clickable links
 def mentions(value):
