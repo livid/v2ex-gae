@@ -107,9 +107,19 @@ indexes:
 
 - kind: Topic
   properties:
+  - name: member
+  - name: created
+
+- kind: Topic
+  properties:
   - name: member_num
   - name: created
     direction: desc
+
+- kind: Topic
+  properties:
+  - name: node
+  - name: created
 
 - kind: Topic
   properties:

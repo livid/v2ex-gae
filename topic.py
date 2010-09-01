@@ -267,6 +267,7 @@ class TopicHandler(webapp.RequestHandler):
             output = template.render(path, {'topic' : topic})
             topic = db.get(topic.key())
             topic.content_rendered = output.decode('utf-8')
+            memcache.delete('Topic_' + str(topic.num))
             topic.put()
         template_values['topic'] = topic
         if member:

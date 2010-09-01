@@ -1,0 +1,23 @@
+[
+{% for node in nodes %}
+    {
+        "id" : {{ node.num }},
+        "name" : "{{ node.name }}",
+        "url" : "http://{{ site.domain }}/go/{{ node.name }}",
+        "title" : "{{ node.title|escapejs }}",
+        "title_alternative" : "{{ node.title_alternative|escapejs }}",
+        "topics" : {{ node.topics }},
+        {% if node.header %}
+        "header" : "{{ node.header|escapejs }}",
+        {% else %}
+        "header" : null,
+        {% endif %}
+        {% if node.footer %}
+        "footer" : "{{ node.footer|escapejs }}",
+        {% else %}
+        "footer" : null,
+        {% endif %}
+        "created" : "{{ node.created }}"
+    },
+{% endfor %}
+]

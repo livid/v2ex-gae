@@ -1,0 +1,6 @@
+{
+    "title" : "{{ site.title }}",
+    "slogan" : "{{ site.slogan }}",
+    "description" : "{{ site.description }}",
+    "domain" : "{{ site.domain }}"
+}
