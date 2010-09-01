@@ -8,6 +8,7 @@ import datetime
 import hashlib
 import string
 import random
+import base64
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -201,6 +202,27 @@ class TopicsShowHandler(webapp.RequestHandler):
                 self.response.headers['Content-type'] = 'application/json'
                 self.response.out.write(output)
 
+# /api/topics/create.json
+class TopicsCreateHandler(webapp.RequestHandler):
+    def post(self):
+        authenticated = False
+        if 'Authorization' in self.request.headers:
+            auth = self.request.headers['Authorization']
+            decoded = base64.b64decode(auth[6:])
+            authenticated = True
+        if authenticated:
+            self.response.out.write('OK')
+        else:    
+            site = GetSite()
+            template_values = {}
+            template_values['site'] = site
+            template_values['message'] = "Authentication required"
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
+            output = template.render(path, template_values)
+            self.response.set_status(401, 'Unauthorized')
+            self.response.headers['Content-type'] = 'application/json'
+            self.response.headers['WWW-Authenticate'] = 'Basic realm="' + site.domain + '"'
+            self.response.out.write(output)
 
 def main():
     application = webapp.WSGIApplication([
@@ -208,7 +230,8 @@ def main():
     ('/api/nodes/all.json', NodesAllHandler),
     ('/api/nodes/show.json', NodesShowHandler),
     ('/api/topics/latest.json', TopicsLatestHandler),
-    ('/api/topics/show.json', TopicsShowHandler)
+    ('/api/topics/show.json', TopicsShowHandler),
+    ('/api/topics/create.json', TopicsCreateHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
