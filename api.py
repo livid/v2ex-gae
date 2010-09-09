@@ -33,18 +33,19 @@ from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
 
-# legacy methods
-class StatsHandler(webapp.RequestHandler):
+
+# Site
+# /api/site/stats.json
+class SiteStatsHandler(webapp.RequestHandler):
     def get(self):
         template_values = {}
         template_values['topic_max'] = GetKindByName('Counter', 'topic.max')
         template_values['member_max'] = GetKindByName('Counter', 'member.max')
-        path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'stats.json')
+        path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'site_stats.json')
         output = template.render(path, template_values)
         self.response.headers['Content-type'] = 'application/json'
         self.response.out.write(output)
 
-# Site
 # /api/site/info.json
 class SiteInfoHandler(webapp.RequestHandler):
     def get(self):
@@ -123,6 +124,7 @@ class TopicsLatestHandler(webapp.RequestHandler):
             topics = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 20")
             memcache.set('api_topics_latest', topics, 120)
         template_values['topics'] = topics
+        template_values['topics_count'] = topics.count()
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'topics_latest.json')
         output = template.render(path, template_values)
         self.response.headers['Content-type'] = 'application/json'
@@ -162,34 +164,38 @@ class TopicsShowHandler(webapp.RequestHandler):
             self.response.out.write(output)
         else:
             topics = False
+            topic = False
             if parameter_id:
                 try:
                     topic = GetKindByNum('Topic', int(parameter_id))
                     if topic is not False:
                         topics = []
                         topics.append(topic)
+                        template_values['topic'] = topic
                 except:
                     topics = False
             if topics is False:
                 if parameter_username:
                     one = GetMemberByUsername(parameter_username)
                     if one is not False:
-                        topics = db.GqlQuery("SELECT * FROM Topic WHERE member = :1 ORDER BY created LIMIT 20", one)
+                        topics = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 20", one.num)
+                        template_values['topics'] = topics
             if topics is False:
                 try:
                     if parameter_node_id:
-                        node = GetKindByNum('Node', int(node_id))
+                        node = GetKindByNum('Node', int(parameter_node_id))
                         if node is not False:
-                            topics = db.GqlQuery("SELECT * FROM Topic WHERE node = :1 ORDER BY created LIMIT 20", node)
+                            topics = db.GqlQuery("SELECT * FROM Topic WHERE node_num = :1 ORDER BY last_touched DESC LIMIT 20", node.num)
+                            template_values['topics'] = topics
                 except:
                     topics = False
             if topics is False:
                 if parameter_node_name:
                     node = GetKindByName('Node', str(parameter_node_name))
                     if node is not False:
-                        topics = db.GqlQuery("SELECT * FROM Topic WHERE node = :1 ORDER BY created LIMIT 20", node)
-            if topics:
-                template_values['topics'] = topics
+                        topics = db.GqlQuery("SELECT * FROM Topic WHERE node_num = :1 ORDER BY last_touched DESC LIMIT 20", node.num)
+                        template_values['topics'] = topics
+            if topic or topics:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'topics_show.json')
                 output = template.render(path, template_values)
                 self.response.headers['Content-type'] = 'application/json'
@@ -224,14 +230,53 @@ class TopicsCreateHandler(webapp.RequestHandler):
             self.response.headers['WWW-Authenticate'] = 'Basic realm="' + site.domain + '"'
             self.response.out.write(output)
 
+# Users
+# /api/members/show.json
+class MembersShowHandler(webapp.RequestHandler):
+    def get(self):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        username = self.request.get('username')
+        if username:
+            one = GetMemberByUsername(username)
+            if one is not False:
+                if one.avatar_mini_url:
+                    if (one.avatar_mini_url[0:1] == '/'):
+                        one.avatar_mini_url = 'http://' + site.domain + one.avatar_mini_url
+                        one.avatar_normal_url = 'http://' +  site.domain + one.avatar_normal_url
+                        one.avatar_large_url = 'http://' + site.domain + one.avatar_large_url
+                template_values['member'] = one
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'members_show.json')
+                output = template.render(path, template_values)
+                self.response.headers['Content-type'] = 'application/json'
+                self.response.out.write(output)
+            else:
+                template_values['message'] = "Member not found"
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
+                output = template.render(path, template_values)
+                self.response.set_status(400, 'Bad Request')
+                self.response.headers['Content-type'] = 'application/json'
+                self.response.out.write(output)
+        else:
+            template_values['message'] = "Required parameter username is missing"
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
+            output = template.render(path, template_values)
+            self.response.set_status(400, 'Bad Request')
+            self.response.headers['Content-type'] = 'application/json'
+            self.response.out.write(output)
+                
+
 def main():
     application = webapp.WSGIApplication([
+    ('/api/site/stats.json', SiteStatsHandler),
     ('/api/site/info.json', SiteInfoHandler),
     ('/api/nodes/all.json', NodesAllHandler),
     ('/api/nodes/show.json', NodesShowHandler),
     ('/api/topics/latest.json', TopicsLatestHandler),
     ('/api/topics/show.json', TopicsShowHandler),
-    ('/api/topics/create.json', TopicsCreateHandler)
+    ('/api/topics/create.json', TopicsCreateHandler),
+    ('/api/members/show.json', MembersShowHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
