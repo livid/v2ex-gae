@@ -1,0 +1,4 @@
+{
+"topic_max" : {{ topic_max.value }},
+"member_max" : {{ member_max.value }}
+}

@@ -10,6 +10,7 @@ import hashlib
 import string
 import random
 import pickle
+import zlib
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -213,7 +214,6 @@ class TopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
         site = GetSite()
         browser = detect(self.request)
-        self.session = Session()
         template_values = {}
         template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
@@ -302,24 +302,30 @@ class TopicHandler(webapp.RequestHandler):
             template_values['section'] = section
             replies = False
             if filter_mode:
-                replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered')
+                replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed')
                 if replies is None:
                     q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC", topic.num, topic.member.num)
                     replies = q5
-                    memcache.set('topic_' + str(topic.num) + '_replies_filtered', replies, 7200)
+                    memcache.set('topic_' + str(topic.num) + '_replies_filtered_compressed', GetPacked(replies), 7200)
+                else:
+                    replies = GetUnpacked(replies)
             else:    
                 if reply_reversed:
-                    replies = memcache.get('topic_' + str(topic.num) + '_replies_desc')
+                    replies = memcache.get('topic_' + str(topic.num) + '_replies_desc_compressed')
                     if replies is None:
                         q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
                         replies = q4
-                        memcache.set('topic_' + str(topic.num) + '_replies_desc', q4, 86400)
+                        memcache.set('topic_' + str(topic.num) + '_replies_desc_compressed', GetPacked(q4), 86400)
+                    else:
+                        replies = GetUnpacked(replies)
                 else:
-                    replies = memcache.get('topic_' + str(topic.num) + '_replies_asc')
+                    replies = memcache.get('topic_' + str(topic.num) + '_replies_asc_compressed')
                     if replies is None:
                         q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
                         replies = q4
-                        memcache.set('topic_' + str(topic.num) + '_replies_asc', q4, 86400)
+                        memcache.set('topic_' + str(topic.num) + '_replies_asc_compressed', GetPacked(q4), 86400)
+                    else:
+                        replies = GetUnpacked(replies)
             template_values['replies'] = replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic.html')

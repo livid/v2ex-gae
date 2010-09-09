@@ -3,6 +3,8 @@
 
 import hashlib
 import logging
+import zlib
+import pickle
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
@@ -135,3 +137,15 @@ def GetSite():
             site.put()
             memcache.set('site', site, 86400)
             return site
+
+# input is a compressed string
+# output is an object
+def GetUnpacked(data):
+    decompressed = zlib.decompress(data)
+    return pickle.loads(decompressed)
+
+# input is an object
+# output is an compressed string
+def GetPacked(data):
+    s = pickle.dumps(data)
+    return zlib.compress(s)

@@ -57,7 +57,6 @@ class HomeHandler(webapp.RequestHandler):
             return
         site = GetSite()
         browser = detect(self.request)
-        self.session = Session()
         template_values = {}
         template_values['site'] = GetSite()
         template_values['rnd'] = random.randrange(1, 100)

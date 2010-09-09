@@ -1,0 +1,14 @@
+{
+    "id" : {{ member.num }},
+    "url" : "http://{{ site.domain }}/member/{{ member.username }}",
+    "username" : "{{ member.username }}",
+    "website" : "{{ member.website }}",
+    "twitter" : "{{ member.twitter }}",
+    "location" : "{{ member.location }}",
+    "tagline" : "{{ member.tagline }}",
+    "bio" : "{{ member.bio }}",
+    "avatar_mini" : "{{ member.avatar_mini_url }}",
+    "avatar_normal" : "{{ member.avatar_normal_url }}",
+    "avatar_large" : "{{ member.avatar_large_url }}",
+    "created" : "{{ member.created }}"
+}

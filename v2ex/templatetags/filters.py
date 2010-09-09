@@ -50,6 +50,21 @@ def youtube(value):
         return value
 register.filter(youtube)
 
+# auto convert youku.com links to player
+# example: http://v.youku.com/v_show/id_XMjA1MDU2NTY0.html
+def youku(value):
+    videos = re.findall('(http://v.youku.com/v_show/id_[a-zA-Z0-9]+.html)\s?', value)
+    logging.error(value)
+    logging.error(videos)
+    if (len(videos) > 0):
+        for video in videos:
+            video_id = re.findall('http://v.youku.com/v_show/id_([a-zA-Z0-9]+).html', video)
+            value = value.replace('http://v.youku.com/v_show/id_' + video_id[0] + '.html', '<embed src="http://player.youku.com/player.php/sid/' + video_id[0] + '/v.swf" quality="high" width="480" height="400" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>')
+        return value
+    else:
+        return value
+register.filter(youku)
+
 # auto convert @username to clickable links
 def mentions(value):
     ms = re.findall('(@[a-zA-Z0-9\_]+\.?)\s?', value)
