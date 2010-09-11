@@ -693,6 +693,15 @@ class BackstageRemoveReplyHandler(webapp.RequestHandler):
                         topic.last_reply_by = None
                     topic.put()
                     memcache.delete('Topic_' + str(topic.num))
+                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
                     self.redirect('/t/' + str(topic.num))
                 else:
                     self.redirect('/')
@@ -716,9 +725,20 @@ class BackstageTidyReplyHandler(webapp.RequestHandler):
                     reply.member_num = member.num
                     q3 = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", topic_num)
                     topic = q3[0]
-                    reply.topic = topic
-                    reply.topic_num = topic.num
-                    reply.put()
+                    # Begin to do real stuff
+                    reply2 = Reply(parent=topic)
+                    reply2.num = reply.num
+                    reply2.content = reply.content
+                    reply2.topic = topic
+                    reply2.topic_num = topic.num
+                    reply2.member = reply.member
+                    reply2.member_num = reply.member_num
+                    reply2.created_by = reply.created_by
+                    reply2.source = reply.source
+                    reply2.created = reply.created
+                    reply2.last_modified = reply.last_modified
+                    reply2.put()
+                    reply.delete()
                     self.redirect('/t/' + str(topic_num))
                 else:
                     self.redirect('/')

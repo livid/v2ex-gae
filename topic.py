@@ -139,7 +139,7 @@ class NewTopicHandler(webapp.RequestHandler):
             template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
             template_values['errors'] = errors
             if (errors == 0):
-                topic = Topic()
+                topic = Topic(parent=node)
                 q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.max')
                 if (q.count() == 1):
                     counter = q[0]
@@ -241,6 +241,10 @@ class TopicHandler(webapp.RequestHandler):
                 blocked = []
             if (len(blocked) > 0):
                 template_values['blocked'] = ','.join(map(str, blocked))
+            if member.num == 1:
+                template_values['is_admin'] = 1
+            else:
+                template_values['is_admin'] = 0
         topic_num_str = str(topic_num)
         if len(topic_num_str) > 8:
             if browser['ios']:
@@ -280,53 +284,67 @@ class TopicHandler(webapp.RequestHandler):
             section = False
             node = GetKindByNum('Node', topic.node_num)
             if (node):
-                if member:
-                    recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
-                    recent_nodes_ids = memcache.get('member::' + str(member.num) + '::recent_nodes_ids')
-                    if recent_nodes and recent_nodes_ids:
-                        if (node.num in recent_nodes_ids) is not True:
-                            recent_nodes.insert(0, node)
-                            recent_nodes_ids.insert(0, node.num)
-                            memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
-                            memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
-                    else:
-                        recent_nodes = []
-                        recent_nodes.append(node)
-                        recent_nodes_ids = []
-                        recent_nodes_ids.append(node.num)
-                        memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
-                        memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
-                    template_values['recent_nodes'] = recent_nodes
                 section = GetKindByNum('Section', node.section_num)
             template_values['node'] = node
             template_values['section'] = section
             replies = False
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_replies_mobile.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_replies.html')
             if filter_mode:
-                replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed')
-                if replies is None:
-                    q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC", topic.num, topic.member.num)
-                    replies = q5
-                    memcache.set('topic_' + str(topic.num) + '_replies_filtered_compressed', GetPacked(replies), 7200)
+                if browser['ios']:
+                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered'
                 else:
-                    replies = GetUnpacked(replies)
+                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_mobile'
+                r = memcache.get(replies_rendered_tag)
+                if r is None:
+                    replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed')
+                    if replies is None:
+                        q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC", topic.num, topic.member.num)
+                        replies = q5
+                        memcache.set('topic_' + str(topic.num) + '_replies_filtered_compressed', GetPacked(replies), 7200)
+                    else:
+                        replies = GetUnpacked(replies)
+                    template_values['replies'] = replies
+                    r = template.render(path, template_values)
+                    memcache.set(r_tag, r, 86400)
             else:    
                 if reply_reversed:
-                    replies = memcache.get('topic_' + str(topic.num) + '_replies_desc_compressed')
-                    if replies is None:
-                        q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
-                        replies = q4
-                        memcache.set('topic_' + str(topic.num) + '_replies_desc_compressed', GetPacked(q4), 86400)
+                    if browser['ios']:
+                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered'
                     else:
-                        replies = GetUnpacked(replies)
+                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_mobile'
+                    r = memcache.get(r_tag)
+                    if r is None:
+                        replies = memcache.get('topic_' + str(topic.num) + '_replies_desc_compressed')
+                        if replies is None:
+                            q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
+                            replies = q4
+                            memcache.set('topic_' + str(topic.num) + '_replies_desc_compressed', GetPacked(q4), 86400)
+                        else:
+                            replies = GetUnpacked(replies)
+                        template_values['replies'] = replies
+                        r = template.render(path, template_values)
+                        memcache.set(r_tag, r, 86400)
                 else:
-                    replies = memcache.get('topic_' + str(topic.num) + '_replies_asc_compressed')
-                    if replies is None:
-                        q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
-                        replies = q4
-                        memcache.set('topic_' + str(topic.num) + '_replies_asc_compressed', GetPacked(q4), 86400)
+                    if browser['ios']:
+                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered'
                     else:
-                        replies = GetUnpacked(replies)
-            template_values['replies'] = replies
+                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_mobile'
+                    r = memcache.get(r_tag)
+                    if r is None:
+                        replies = memcache.get('topic_' + str(topic.num) + '_replies_asc_compressed')
+                        if replies is None:
+                            q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
+                            replies = q4
+                            memcache.set('topic_' + str(topic.num) + '_replies_asc_compressed', GetPacked(q4), 86400)
+                        else:
+                            replies = GetUnpacked(replies)
+                        template_values['replies'] = replies
+                        r = template.render(path, template_values)
+                        memcache.set(r_tag, r, 86400)
+            template_values['r'] = r
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic.html')
             else:
@@ -387,7 +405,7 @@ class TopicHandler(webapp.RequestHandler):
             template_values['reply_content_error_message'] = reply_content_error_messages[reply_content_error]
             template_values['errors'] = errors
             if (topic and (errors == 0)):
-                reply = Reply()
+                reply = Reply(parent=topic)
                 q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'reply.max')
                 if (q.count() == 1):
                     counter = q[0]
@@ -439,9 +457,15 @@ class TopicHandler(webapp.RequestHandler):
                 counter.put()
                 counter2.put()
                 memcache.set('Topic_' + str(topic.num), topic, 86400)
-                memcache.delete('topic_' + str(topic.num) + '_replies_desc')
-                memcache.delete('topic_' + str(topic.num) + '_replies_asc')
-                memcache.delete('topic_' + str(topic.num) + '_replies_filtered')
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed')
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed')
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed')
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered')
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered')
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered')
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile')
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
                 memcache.delete('member::' + str(member.num) + '::participated')
                 taskqueue.add(url='/index/topic/' + str(topic.num))
                 # Twitter Sync
@@ -757,9 +781,15 @@ class ReplyEditHandler(webapp.RequestHandler):
                     if (errors == 0):
                         reply.content = reply_content
                         reply.put()
-                        memcache.delete('topic_' + str(topic.num) + '_replies_asc')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_desc')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
+                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
                         self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
                     else:
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_reply.html')

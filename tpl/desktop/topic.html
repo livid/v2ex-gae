@@ -48,25 +48,12 @@
             <div class="sep20"></div>
             <div class="box">
                 <div class="cell"><div class="fr">{% if reply_reversed %}<a href="/t/{{ topic.num }}?r=0">按顺序显示回复</a>{% else %}<a href="/t/{{ topic.num }}?r=1">按倒序显示回复</a>{% endif %} &nbsp; {% if filter_mode %}<a href="/t/{{ topic.num }}?f=0">显示全部</a>{% else %}<a href="/t/{{ topic.num }}?f=1">只看楼主</a>{% endif %}</div><span class="fade">截至 {{ topic.last_touched|timezone:8|date:"Y-n-j G:i:s A" }} 共收到 {{ topic.replies }} 条回复</span></div>
+                <script type="text/javascript">
+                    is_admin = {{ is_admin }};
+                    replies_keys = new Array(); replies_ids = new Array(); replies_parents = new Array();
+                </script>
                 <div id="replies">
-                {% for reply in replies %}
-                <div class="cell reply from_{{ reply.member_num }}">
-                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                        <tr>
-                            <td width="48" valign="top"><a href="/member/{{ reply.created_by }}">{{ reply.member|avatar:"normal" }}</a></td>
-                            <td width="10"></td>
-                            <td width="auto" valign="top">
-																<div class="fr" id="reply_{{ reply.num }}_buttons">
-																	<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago{% if member %} &nbsp; <img src="/static/img/reply.png" align="absmiddle" border="0" alt="回复 {{ reply.member.username }}" onclick="replyOne('{{ reply.member.username }}')" class="clickable" />{% endif %}{% ifequal member.num 1 %} &nbsp; <a href="/backstage/tidy/reply/{{ reply.num }}">TIDY</a> &nbsp; <a href="/edit/reply/{{ reply.num }}">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm('确认删除此回复？')) { location.href = '/backstage/remove/reply/{{ reply.key }}'; }">DEL</a>{% endifequal %}</small></strong>
-																</div>
-                                <div class="sep3"></div>
-                                <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
-                                <div class="sep5"></div>
-                                <div class="content reply_content">{{ reply.content|escape|youku|imgly|clly|mentions|gist|urlize|linebreaksbr }}</div>
-                            </td>
-                    </table>
-                </div>
-                {% endfor %}
+                {{ r }}
                 </div>
                 {% if member %}
                 <script type="text/javascript">
@@ -78,6 +65,12 @@
                         }
                     }
                 });
+                $("#replies").children('.cell').each( function(index) {
+                    if (is_admin) {
+                        $(this).find("span.ops").html(' &nbsp; <a href="/backstage/tidy/reply/' + replies_ids[index] + '">TIDY</a> &nbsp; <a href="/edit/reply/' + replies_ids[index] + '">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm(\'确认删除此回复？\')) { location.href = \'/backstage/remove/reply/' + replies_keys[index] + '\'; }">DEL</a> &nbsp;<img src="/static/img/' + (replies_parents[index] ? 'dot_green.png' : 'dot_red.png') + '" align="absmiddle" />');
+                    }
+                }
+                );
                 </script>
                 {% endif %}
             </div>
