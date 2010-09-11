@@ -1,0 +1,22 @@
+{% for reply in replies %}
+<div class="cell from_{{ reply.member_num }}">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+		<td valign="top" class="avatar_mini">{{ reply.member|avatar:"mini" }}</td>
+		<td style="padding-left: 5px" valign="top"><div class="fr"><span class="ago">#{{ forloop.counter }} - {{ reply.created|timesince }} ago <span class="ops"></span></span></div>
+			<a href="/member/{{ reply.created_by|escape }}">{{ reply.created_by|escape }}</a>{% if reply.source %} <span class="fade">via {{ reply.source }}</span>{% endif %}
+			<div class="sep5"></div>
+			{{ reply.content|escape|imgly|mentions|urlize|linebreaksbr }}
+		</td>
+		</tr>
+	</table>
+	<script>
+    replies_keys[({{ forloop.counter }} - 1)] = '{{ reply.key }}';
+    replies_ids[({{ forloop.counter }} - 1)] = '{{ reply.num }}';
+    {% if reply.parent %}
+    replies_parents[({{ forloop.counter }} - 1)] = 1;
+    {% else %}
+    replies_parents[({{ forloop.counter }} - 1)] = 0;
+    {% endif %}
+    </script>
+</div>
+{% endfor %}
