@@ -111,13 +111,36 @@ class HomeHandler(webapp.RequestHandler):
                         s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
                 memcache.set('home_sections_neue', s, 600)
             template_values['s'] = s
-        latest = memcache.get('q_latest_16')
-        if (latest):
-            template_values['latest'] = latest
+        if browser['ios']:
+            home_rendered = memcache.get('home_rendered_mobile')
+            if home_rendered is None:
+                latest = memcache.get('q_latest_16')
+                if (latest):
+                    template_values['latest'] = latest
+                else:
+                    q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
+                    memcache.set('q_latest_16', q2, 600)
+                    latest = q2
+                    template_values['latest'] = latest
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'home_mobile.html')
+                home_rendered = template.render(path, template_values)
+                memcache.set('home_rendered_mobile', home_rendered, 600)
+            template_values['home'] = home_rendered
         else:
-            q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
-            memcache.set('q_latest_16', q2, 120)
-            template_values['latest'] = q2
+            home_rendered = memcache.get('home_rendered')
+            if home_rendered is None:
+                latest = memcache.get('q_latest_16')
+                if (latest):
+                    template_values['latest'] = latest
+                else:
+                    q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
+                    memcache.set('q_latest_16', q2, 600)
+                    latest = q2
+                    template_values['latest'] = latest
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'home.html')
+                home_rendered = template.render(path, template_values)
+                memcache.set('home_rendered', home_rendered, 600)
+            template_values['home'] = home_rendered
         member_total = memcache.get('member_total')
         if member_total is None:
             q3 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'member.total'")

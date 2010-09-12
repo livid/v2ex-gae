@@ -1,0 +1,14 @@
+{% for topic in latest %}
+<div class="cell from_{{ topic.member.num }}">
+<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+	<td valign="top" class="avatar"><a href="/member/{{ topic.created_by }}">{{ topic.member|avatar:"normal" }}</a></td>
+	<td style="padding-left: 8px" valign="top">
+		<span class="fade"><a href="/member/{{ topic.created_by|escape }}">{{ topic.created_by|escape }}</a>{% if topic.node_name %} in <a href="/go/{{ topic.node_name }}">{{ topic.node_title|escape }}</a>{% endif %}{% ifequal topic.replies 0 %}{% else %}<small class="fade"> &nbsp;收到 {{ topic.replies }} 回复</small>{% endifequal %}</span>
+		<div class="sep5"></div>
+		<span class="bigger"><a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a></span>
+		<span class="created">{{ topic.last_touched|timesince }} ago</span>
+	</td>
+	</tr>
+</table>
+</div>
+{% endfor %}

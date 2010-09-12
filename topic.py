@@ -189,6 +189,8 @@ class NewTopicHandler(webapp.RequestHandler):
                 memcache.delete('feed_index')
                 memcache.delete('Node_' + str(topic.node_num))
                 memcache.delete('Node::' + str(node.name))
+                memcache.delete('home_rendered')
+                memcache.delete('home_rendered_mobile')
                 taskqueue.add(url='/index/topic/' + str(topic.num))
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
@@ -297,7 +299,7 @@ class TopicHandler(webapp.RequestHandler):
                     r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered'
                 else:
                     r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_mobile'
-                r = memcache.get(replies_rendered_tag)
+                r = memcache.get(r_tag)
                 if r is None:
                     replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed')
                     if replies is None:
@@ -467,6 +469,8 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
                 memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
                 memcache.delete('member::' + str(member.num) + '::participated')
+                memcache.delete('home_rendered')
+                memcache.delete('home_rendered_mobile')
                 taskqueue.add(url='/index/topic/' + str(topic.num))
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
@@ -676,6 +680,9 @@ class TopicDeleteHandler(webapp.RequestHandler):
                         counter2 = q4[0]
                         counter2.value = counter2.value - 1
                         counter2.put()
+                    memcache.delete('q_latest_16')
+                    memcache.delete('home_rendered')
+                    memcache.delete('home_rendered_mobile')
         self.redirect('/')
                     
 
