@@ -5,11 +5,7 @@
 	<td style="padding-left: 12px" valign="top">
 	    {% ifequal topic.replies 0 %}{% else %}
 	        <div class="fr">
-	            {% ifequal member.num topic.member_num %}
-	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_green">{{ topic.replies }}</a>
-	            {% else %}
-	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_blue">{{ topic.replies }}</a>
-	            {% endifequal %}
+	            <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count">{{ topic.replies }}</a>
 	        </div>
 	    {% endifequal %}
 	    <div class="sep3"></div>
@@ -22,15 +18,3 @@
 </table>
 </div>
 {% endfor %}
-{% if member %}
-<script type="text/javascript">
-blocked = [{{ blocked }}];
-$("#topics_index").children('.cell').each( function(index) {
-    for (i in blocked) {
-        if ($(this).hasClass('from_' + blocked[i])) {
-            $(this).css('display', 'none');
-        }
-    }
-});
-</script>
-{% endif %}

@@ -503,6 +503,19 @@ td.avatar_mini {
 
 /* VARIOUS COUNT */
 
+a.count {
+	line-height: 12px;
+	font-weight: bold;
+	color: white;
+	background-color: #e5e5e5;
+	display: block;
+	padding: 2px 10px 2px 10px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	margin: 18px 12px 0px 0px;
+	text-decoration: none;
+}
+
 a.count_blue:visited, a.count_green:visited, a.count_orange:visited {
 	line-height: 12px;
 	font-weight: bold;

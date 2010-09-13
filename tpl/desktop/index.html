@@ -23,6 +23,27 @@
         <div id="Content">
             <div class="box" id="topics_index">
                 {{ home }}
+                {% if member %}
+                <script type="text/javascript">
+                blocked = [{{ blocked }}];
+                $("#topics_index").children('.cell').each( function(index) {
+                    for (i in blocked) {
+                        if ($(this).hasClass('from_' + blocked[i])) {
+                            $(this).css('display', 'none');
+                        }
+                    }
+                    {% if member %}
+                    if ($(this).hasClass('from_{{ member.num }}')) {
+                        $(this).find('a.count').addClass('count_green');
+                    } else {
+                        $(this).find('a.count').addClass('count_blue');
+                    }
+                    {% else %}
+                    $(this).find('a.count').addClass('count_blue');
+                    {% endif %}
+                });
+                </script>
+                {% endif %}
                 <div class="inner">
         		    » <a href="/recent">更多最近的 50 个帖子</a>
         		</div>

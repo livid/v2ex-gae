@@ -6,7 +6,7 @@
             <td width="10"></td>
             <td width="auto" valign="top">
 												<div class="fr" id="reply_{{ reply.num }}_buttons">
-													<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago{% if member %} &nbsp; <img src="/static/img/reply.png" align="absmiddle" border="0" alt="回复 {{ reply.member.username }}" onclick="replyOne('{{ reply.member.username }}')" class="clickable" />{% endif %}<span class="ops"></span></small></strong>
+													<strong><small class="snow">#{{ forloop.counter }} - {{ reply.created|timesince }} ago &nbsp; <img src="/static/img/reply.png" align="absmiddle" border="0" alt="回复 {{ reply.member.username }}" onclick="replyOne('{{ reply.member.username }}')" class="clickable" /><span class="ops"></span></small></strong>
 												</div>
                 <div class="sep3"></div>
                 <strong><a href="/member/{{ reply.created_by }}" class="dark">{{ reply.created_by }}</a></strong>{% if reply.source %}<span class="snow">&nbsp; via {{ reply.source }}</span>{% endif %}
