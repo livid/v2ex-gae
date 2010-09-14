@@ -804,6 +804,10 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site_slogan'] = site.slogan
                 template_values['site_domain'] = site.domain
                 template_values['site_description'] = site.description
+                if site.home_categories is not None:
+                    template_values['site_home_categories'] = site.home_categories
+                else:
+                    template_values['site_home_categories'] = ''
                 if site.analytics is not None:
                     template_values['site_analytics'] = site.analytics
                 else:
@@ -912,15 +916,34 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site_analytics'] = site_analytics
                 template_values['site_analytics_error'] = site_analytics_error
                 template_values['site_analytics_error_message'] = site_analytics_error_messages[site_analytics_error]
+                # Verification: home_categories (optional)
+                site_home_categories_error = 0
+                site_home_categories_error_messages = ['',
+                    u'首页分类信息不要超过 2000 个字符'
+                ]
+                site_home_categories = self.request.get('home_categories').strip()
+                site_home_categories_length = len(site_home_categories)
+                if len(site_home_categories) > 0:
+                    if site_home_categories_length > 2000:
+                        errors = errors + 1
+                        site_home_categories_error = 1
+                else:
+                    site_home_categories = ''
+                template_values['site_home_categories'] = site_home_categories
+                template_values['site_home_categories_error'] = site_home_categories_error
+                template_values['site_home_categories_error_message'] = site_home_categories_error_messages[site_home_categories_error]
                 template_values['errors'] = errors
                 if errors == 0:
                     site.title = site_title
                     site.slogan = site_slogan
                     site.domain = site_domain
                     site.description = site_description
+                    if site_home_categories != '':
+                        site.home_categories = site_home_categories
                     if site_analytics != '':
                         site.analytics = site_analytics
                     site.put()
+                    memcache.delete('index_categories')
                     template_values['message'] = '站点信息更新成功';
                     template_values['site'] = site
                     memcache.delete('site')

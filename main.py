@@ -184,8 +184,12 @@ class HomeHandler(webapp.RequestHandler):
             if c is None:
                 c = ''
                 i = 0
-                categories = [u'分享与探索', u'城市', u'V2EX', u'iOS', u'Apple', u'生活', u'Internet', u'Geek', u'电子游戏', u'品牌']
+                if site.home_categories is not None:
+                    categories = site.home_categories.split("\n")
+                else:
+                    categories = []
                 for category in categories:
+                    category = category.strip()
                     i = i + 1
                     if i == len(categories):
                         css_class = 'inner'

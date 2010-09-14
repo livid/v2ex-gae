@@ -391,7 +391,7 @@ td.avatar_mini {
 	padding: 3px;
 	font-size: 14px;
 	border: 1px solid #ccc;
-	width: 240px;
+	width: 320px;
 	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
@@ -443,8 +443,8 @@ td.avatar_mini {
 	font-size: 14px;
 	border: 1px solid #ccc;
 	display: block;
-	width: 240px;
-	height: 120px;
+	width: 320px;
+	height: 160px;
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 

@@ -35,6 +35,9 @@
         				{% if site_description_error %}
         				<li>{{ site_description_error_message }}</li>
         				{% endif %}
+        				{% if site_home_categories_error %}
+        				<li>{{ site_home_categories_error_message }}</li>
+        				{% endif %}
         				{% if site_analytics_error %}
         				<li>{{ site_analytics_error_message }}</li>
         				{% endif %}
@@ -72,6 +75,16 @@
         			        </td>
         			        <td width="200" align="left">
         			            <textarea class="ml" name="description">{{ site_description|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            首页分类
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="home_categories">{{ site_home_categories|escape }}</textarea>
+        			            <div class="sep5"></div>
+        			            <span class="fade">每行一个</span>
         			        </td>
         			    </tr>
         			    <tr>
