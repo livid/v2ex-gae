@@ -165,3 +165,20 @@ class Site(db.Model):
     domain = db.StringProperty(required=False, indexed=False)
     analytics = db.StringProperty(required=False, indexed=False)
     home_categories = db.TextProperty(required=False, indexed=False)
+    
+class Minisite(db.Model):
+    num = db.IntegerProperty(required=False, indexed=True)
+    name = db.StringProperty(required=False, indexed=True)
+    title = db.StringProperty(required=False, indexed=False)
+    pages = db.IntegerProperty(default=0)
+    created = db.DateTimeProperty(auto_now_add=True)
+    last_modified = db.DateTimeProperty(auto_now=True)
+
+class Page(db.Model):
+    num = db.IntegerProperty(required=False, indexed=True)
+    name = db.StringProperty(required=False, indexed=True)
+    minisite = db.ReferenceProperty(Minisite)
+    content = db.TextProperty(default='')
+    content_rendered = db.TextProperty(default='')
+    created = db.DateTimeProperty(auto_now_add=True)
+    last_modified = db.DateTimeProperty(auto_now=True)

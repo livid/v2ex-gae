@@ -20,6 +20,7 @@ from v2ex.babel import Counter
 from v2ex.babel import Section
 from v2ex.babel import Node
 from v2ex.babel import Site
+from v2ex.babel import Minisite
 
 from v2ex.babel import SYSTEM_VERSION
 
@@ -76,6 +77,8 @@ class BackstageHomeHandler(webapp.RequestHandler):
                 template_values['sections'] = q
                 q2 = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 5")
                 template_values['latest_members'] = q2
+                q3 = db.GqlQuery("SELECT * FROM Minisite ORDER BY created DESC")
+                template_values['minisites'] = q3
                 if browser['ios']:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_home.html')
                 else:
@@ -86,6 +89,26 @@ class BackstageHomeHandler(webapp.RequestHandler):
                 self.redirect('/')
         else:
             self.redirect('/signin')
+            
+class BackstageNewMinisiteHandler(webapp.RequestHandler):
+    def get(self):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 添加新站点'
+        template_values['system_version'] = SYSTEM_VERSION
+        member = CheckAuth(self)
+        template_values['member'] = member
+        if (member):
+            if (member.num == 1):    
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_minisite.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+        
         
 class BackstageNewSectionHandler(webapp.RequestHandler):
     def get(self):
@@ -667,6 +690,8 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     node.header = node_header
                     node.footer = node_footer
                     node.put()
+                    memcache.delete('Node_' + str(node.num))
+                    memcache.delete('Node::' + node.name)
                     self.redirect('/backstage/node/' + node.name)
                 else:    
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_node.html')
@@ -966,6 +991,7 @@ class BackstageRemoveMemcacheHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
+    ('/backstage/new/minisite', BackstageNewMinisiteHandler),
     ('/backstage/new/section', BackstageNewSectionHandler),
     ('/backstage/section/(.*)', BackstageSectionHandler),
     ('/backstage/new/node/(.*)', BackstageNewNodeHandler),
