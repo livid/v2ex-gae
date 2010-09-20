@@ -132,6 +132,9 @@ handlers:
 - url: /unblock/(.*)
   script: member.py
 
+- url: /webluker-verif.html
+  script: misc.py
+
 - url: .*
   script: main.py
 

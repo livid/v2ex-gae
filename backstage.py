@@ -21,6 +21,7 @@ from v2ex.babel import Section
 from v2ex.babel import Node
 from v2ex.babel import Site
 from v2ex.babel import Minisite
+from v2ex.babel import Page
 
 from v2ex.babel import SYSTEM_VERSION
 
@@ -28,6 +29,7 @@ from v2ex.babel.security import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 
 template.register_template_library('v2ex.templatetags.filters')
 
@@ -38,12 +40,14 @@ class BackstageHomeHandler(webapp.RequestHandler):
         site = GetSite()
         browser = detect(self.request)
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
         template_values = {}
+        template_values['l10n'] = l10n
         template_values['site'] = site
         template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = member
-        template_values['page_title'] = site.title + u' › 后台'
+        template_values['page_title'] = site.title + u' › ' + l10n.backstage
         member_total = memcache.get('member_total')
         if member_total is None:
             q3 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'member.total'")
@@ -99,6 +103,8 @@ class BackstageNewMinisiteHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):    
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_minisite.html')
@@ -108,7 +114,134 @@ class BackstageNewMinisiteHandler(webapp.RequestHandler):
                 self.redirect('/')
         else:
             self.redirect('/signin')
-        
+    
+    def post(self):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › 添加新站点'
+        template_values['system_version'] = SYSTEM_VERSION
+        member = CheckAuth(self)
+        template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if (member):
+            if (member.num == 1):
+                errors = 0
+                # Verification: name
+                minisite_name_error = 0
+                minisite_name_error_messages = ['',
+                    u'请输入站点名',
+                    u'站点名长度不能超过 32 个字符',
+                    u'站点名只能由 a-Z 0-9 及 - 和 _ 组成',
+                    u'抱歉这个站点名已经存在了']
+                minisite_name = self.request.get('name').strip().lower()
+                if (len(minisite_name) == 0):
+                    errors = errors + 1
+                    minisite_name_error = 1
+                else:
+                    if (len(minisite_name) > 32):
+                        errors = errors + 1
+                        minisite_name_error = 2
+                    else:
+                        if (re.search('^[a-zA-Z0-9\-\_]+$', minisite_name)):
+                            q = db.GqlQuery('SELECT __key__ FROM Minisite WHERE name = :1', minisite_name.lower())
+                            if (q.count() > 0):
+                                errors = errors + 1
+                                minisite_name_error = 4
+                        else:
+                            errors = errors + 1
+                            minisite_name_error = 3
+                template_values['minisite_name'] = minisite_name
+                template_values['minisite_name_error'] = minisite_name_error
+                template_values['minisite_name_error_message'] = minisite_name_error_messages[minisite_name_error]
+                # Verification: title
+                minisite_title_error = 0
+                minisite_title_error_messages = ['',
+                    u'请输入站点标题',
+                    u'站点标题长度不能超过 32 个字符'
+                ]
+                minisite_title = self.request.get('title').strip()
+                if (len(minisite_title) == 0):
+                    errors = errors + 1
+                    minisite_title_error = 1
+                else:
+                    if (len(minisite_title) > 32):
+                        errors = errors + 1
+                        minisite_title_error = 2
+                template_values['minisite_title'] = minisite_title
+                template_values['minisite_title_error'] = minisite_title_error
+                template_values['minisite_title_error_message'] = minisite_title_error_messages[minisite_title_error]
+                # Verification: description
+                minisite_description_error = 0
+                minisite_description_error_messages = ['',
+                    u'请输入站点描述',
+                    u'站点描述长度不能超过 2000 个字符'
+                ]
+                minisite_description = self.request.get('description').strip()
+                if (len(minisite_description) == 0):
+                    errors = errors + 1
+                    minisite_description_error = 1
+                else:
+                    if (len(minisite_description) > 2000):
+                        errors = errors + 1
+                        minisite_description_error = 2
+                template_values['minisite_description'] = minisite_description
+                template_values['minisite_description_error'] = minisite_description_error
+                template_values['minisite_description_error_message'] = minisite_description_error_messages[minisite_description_error]
+                template_values['errors'] = errors
+                if (errors == 0):
+                    minisite = Minisite()
+                    q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'minisite.max')
+                    if (q.count() == 1):
+                        counter = q[0]
+                        counter.value = counter.value + 1
+                    else:
+                        counter = Counter()
+                        counter.name = 'minisite.max'
+                        counter.value = 1
+                    minisite.num = counter.value
+                    minisite.name = minisite_name
+                    minisite.title = minisite_title
+                    minisite.description = minisite_description
+                    minisite.put()
+                    counter.put()
+                    self.redirect('/backstage')
+                else:    
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_minisite.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+            
+class BackstageMinisiteHandler(webapp.RequestHandler):
+    def get(self, minisite_name):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        template_values['page_title'] = site.title + u' › Minisite'
+        template_values['system_version'] = SYSTEM_VERSION
+        member = CheckAuth(self)
+        template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if (member):
+            if (member.num == 1):
+                minisite = GetKindByName('Minisite', minisite_name)
+                if minisite is not False:
+                    template_values['minisite'] = minisite
+                    template_values['page_title'] = site.title + u' › ' + minisite.title
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_minisite.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+                else:
+                    self.redirect('/backstage')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
         
 class BackstageNewSectionHandler(webapp.RequestHandler):
     def get(self):
@@ -118,6 +251,8 @@ class BackstageNewSectionHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):    
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_new_section.html')
@@ -135,6 +270,8 @@ class BackstageNewSectionHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):
                 errors = 0
@@ -235,6 +372,8 @@ class BackstageSectionHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):
                 template_values['member'] = member
@@ -284,6 +423,8 @@ class BackstageSectionHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             if member.num == 1:
                 template_values['member'] = member
@@ -408,6 +549,8 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):
                 template_values['member'] = CheckAuth(self)
@@ -430,6 +573,8 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):        
                 template_values['member'] = member
@@ -538,6 +683,8 @@ class BackstageNodeHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):
                 template_values['member'] = member
@@ -581,6 +728,8 @@ class BackstageNodeHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):        
                 template_values['member'] = member
@@ -787,6 +936,7 @@ class BackstageTidyTopicHandler(webapp.RequestHandler):
                     node = q3[0]
                     topic.node = node
                     topic.put()
+                    memcache.delete('Topic_' + str(topic.num))
                     self.redirect('/t/' + str(topic.num))
                 else:
                     self.redirect('/')
@@ -818,11 +968,13 @@ class BackstageMoveTopicHandler(webapp.RequestHandler):
         
 class BackstageSiteHandler(webapp.RequestHandler):
     def get(self):
+        template_values = {}
         site = GetSite()
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             if member.num == 1:
-                template_values = {}
                 template_values['page_title'] = site.title + u' › 站点设置'
                 template_values['site'] = site
                 template_values['site_title'] = site.title
@@ -846,11 +998,13 @@ class BackstageSiteHandler(webapp.RequestHandler):
             self.redirect('/')
     
     def post(self):
+        template_values = {}
         site = GetSite()
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             if member.num == 1:
-                template_values = {}
                 template_values['page_title'] = site.title + u' › 站点设置'
                 template_values['site'] = site
                 template_values['member'] = member
@@ -992,6 +1146,7 @@ def main():
     application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
     ('/backstage/new/minisite', BackstageNewMinisiteHandler),
+    ('/backstage/minisite/(.*)', BackstageMinisiteHandler),
     ('/backstage/new/section', BackstageNewSectionHandler),
     ('/backstage/section/(.*)', BackstageSectionHandler),
     ('/backstage/new/node/(.*)', BackstageNewNodeHandler),

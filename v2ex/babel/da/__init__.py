@@ -1,5 +1,5 @@
 # coding=utf-8
-# "da" means Data Access, this file contains various quick methods for accessing data.
+# "da" means Data Access, this file contains various quick (or dirty) methods for accessing data.
 
 import hashlib
 import logging
@@ -125,6 +125,8 @@ def GetSite():
         q = db.GqlQuery("SELECT * FROM Site WHERE num = 1")
         if q.count() == 1:
             site = q[0]
+            if site.l10n is None:
+                site.l10n = 'en'
             memcache.set('site', site, 86400)
             return site
         else:
@@ -133,6 +135,7 @@ def GetSite():
             site.title = 'V2EX'
             site.domain = 'v2ex.appspot.com'
             site.slogan = 'way to explore'
+            site.l10n = 'en'
             site.description = ''
             site.put()
             memcache.set('site', site, 86400)

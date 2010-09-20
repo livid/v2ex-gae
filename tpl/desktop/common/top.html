@@ -4,26 +4,26 @@
         <div id="Navigation">
             {% if member %}
             <ul>
-                <li><a href="/" class="white">首页</a></li>
+                <li><a href="/" class="white">{{ l10n.home }}</a></li>
                 <li><a href="/member/{{ member.username }}" class="white">{{ member.username }}</a></li>
                 {% ifequal member.twitter_oauth 1 %}
                 <li><a href="/twitter" class="white"><img src="/static/img/bird.png" style="padding: 0px 3px 0px 3px;" border="0" alt="Twitter" /></a></li>
                 <!--<li><a href="/images" class="white">图片上传</a></li>-->
                 {% endifequal %}
                 <!--<li><a href="/mentions" class="white">提到我的</a></li>-->
-                <li><a href="/notes" class="white">记事本</a></li>
-                <li><a href="/place/{{ member.ip }}" class="white">附近</a></li>
-                <li><a href="/settings" class="white">设置</a></li>
+                <li><a href="/notes" class="white">{{ l10n.notes }}</a></li>
+                <li><a href="/place/{{ member.ip }}" class="white">{{ l10n.nearby }}</a></li>
+                <li><a href="/settings" class="white">{{ l10n.settings }}</a></li>
                 {% ifequal member.num 1 %}
-                <li><a href="/backstage" class="white">后台</a></li>
+                <li><a href="/backstage" class="white">{{ l10n.backstage }}</a></li>
                 {% endifequal %}
-                <li><a href="/signout" class="white">登出</a></li>
+                <li><a href="/signout" class="white">{{ l10n.signout }}</a></li>
             </ul>
             {% else %}
             <ul>
-                <li><a href="/" class="white">首页</a></li>
-                <li><a href="/signup" class="white">注册</a></li>
-                <li><a href="/signin" class="white">登入</a></li>
+                <li><a href="/" class="white">{{ l10n.home }}</a></li>
+                <li><a href="/signup" class="white">{{ l10n.signup }}</a></li>
+                <li><a href="/signin" class="white">{{ l10n.signin }}</a></li>
             </ul>
             {% endif %}
         </div>

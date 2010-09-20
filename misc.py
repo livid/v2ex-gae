@@ -44,9 +44,17 @@ class WorldClockHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
+class WeblukerHandler(webapp.RequestHandler):
+    def head(self):
+        self.response.out.write('webluker-site-verification:webluker-8d00e4a6a4a4fc50.html')
+
+    def get(self):
+        self.response.out.write('webluker-site-verification:webluker-8d00e4a6a4a4fc50.html')
+
 def main():
     application = webapp.WSGIApplication([
-    ('/time/?', WorldClockHandler)
+    ('/time/?', WorldClockHandler),
+    ('/webluker-verif.html', WeblukerHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

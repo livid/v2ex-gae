@@ -33,10 +33,11 @@ from v2ex.babel import SYSTEM_VERSION
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
 
-from v2ex.babel.handler import GenericHandler
+from v2ex.babel.handlers import GenericHandler
 
 from django.utils import simplejson as json
 
@@ -63,6 +64,8 @@ class HomeHandler(webapp.RequestHandler):
         template_values['page_title'] = site.title
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
             template_values['member'] = member
@@ -216,6 +219,8 @@ class RecentHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 最近的 50 个主题'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
             try:
@@ -246,7 +251,10 @@ class UAHandler(webapp.RequestHandler):
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
-        template_values['member'] = CheckAuth(self)
+        member = CheckAuth(self)
+        template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         template_values['ua'] = os.environ['HTTP_USER_AGENT']
         template_values['page_title'] = site.title + u' › 用户代理字符串'
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'ua.html')
@@ -257,11 +265,14 @@ class UAHandler(webapp.RequestHandler):
 class SigninHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
+        member = False
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['page_title'] = site.title + u' › 登入'
         template_values['system_version'] = SYSTEM_VERSION
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         errors = 0
         template_values['errors'] = errors
         if browser['ios']:
@@ -273,6 +284,7 @@ class SigninHandler(webapp.RequestHandler):
  
     def post(self):
         site = GetSite()
+        member = False
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
@@ -280,6 +292,8 @@ class SigninHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         u = self.request.get('u').strip()
         p = self.request.get('p').strip()
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         errors = 0
         error_messages = ['', '请输入用户名和密码', '你输入的用户名或密码不正确']
         if (len(u) > 0 and len(p) > 0):
@@ -307,6 +321,7 @@ class SigninHandler(webapp.RequestHandler):
 class SignupHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
+        member = False
         chtml = captcha.displayhtml(
             public_key = config.recaptcha_public_key,
             use_ssl = False,
@@ -318,6 +333,8 @@ class SignupHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['errors'] = 0
         template_values['captchahtml'] = chtml
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if browser['ios']:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'signup.html')
         else:
@@ -327,11 +344,14 @@ class SignupHandler(webapp.RequestHandler):
         
     def post(self):
         site = GetSite()
+        member = False
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['page_title'] = site.title + u' › 注册'
         template_values['system_version'] = SYSTEM_VERSION
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         errors = 0
         # Verification: username
         member_username_error = 0
@@ -471,10 +491,13 @@ class SignoutHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
         browser = detect(self.request)
+        member = False
         template_values = {}
         template_values['site'] = site
         template_values['page_title'] = site.title + u' › 登出'
         template_values['system_version'] = SYSTEM_VERSION
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         cookies = Cookies(self, max_age = 86400, path = '/')
         del cookies['auth']
         if browser['ios']:
@@ -492,6 +515,8 @@ class ForgotHandler(webapp.RequestHandler):
         template_values['rnd'] = random.randrange(1, 100)
         template_values['site'] = site
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › 重新设置密码'
@@ -506,6 +531,8 @@ class ForgotHandler(webapp.RequestHandler):
         template_values['rnd'] = random.randrange(1, 100)
         template_values['site'] = site
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › 重新设置密码'
@@ -560,6 +587,9 @@ class PasswordResetHandler(GenericHandler):
         site = GetSite()
         template_values = {}
         template_values['site'] = site
+        member = False
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         token = str(token.strip().lower())
         q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
         if q.count() == 1:
@@ -578,6 +608,9 @@ class PasswordResetHandler(GenericHandler):
         site = GetSite()
         template_values = {}
         template_values['site'] = site
+        member = False
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         token = str(token.strip().lower())
         q = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE token = :1 AND valid = 1", token)
         if q.count() == 1:
@@ -633,6 +666,8 @@ class NodeHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n    
         node = GetKindByName('Node', node_name)
         template_values['node'] = node
         pagination = False
@@ -744,6 +779,8 @@ class SearchHandler(webapp.RequestHandler):
         template_values = {}
         template_values['site'] = site
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › 搜索 ' + q.decode('utf-8')

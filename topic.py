@@ -32,6 +32,7 @@ from v2ex.babel import SYSTEM_VERSION
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
 
@@ -56,6 +57,8 @@ class NewTopicHandler(webapp.RequestHandler):
         template_values['page_title'] = site.title + u' › 创建新主题'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
@@ -89,6 +92,8 @@ class NewTopicHandler(webapp.RequestHandler):
         template_values['page_title'] = site.title + u' › 创建新主题'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             template_values['member'] = member
             q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
@@ -236,6 +241,8 @@ class TopicHandler(webapp.RequestHandler):
         template_values['errors'] = errors
         member = CheckAuth(self)
         template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member is not False:
             try:
                 blocked = pickle.loads(member.blocked.encode('utf-8'))
@@ -367,6 +374,8 @@ class TopicHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         topic_num_str = str(topic_num)
         if len(topic_num_str) > 8:
             if browser['ios']:
@@ -521,6 +530,8 @@ class TopicEditHandler(webapp.RequestHandler):
         errors = 0
         template_values['errors'] = errors
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):
                 template_values['member'] = member
@@ -568,6 +579,8 @@ class TopicEditHandler(webapp.RequestHandler):
         browser = detect(self.request)
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if (member.num == 1):
                 template_values['member'] = member
@@ -726,6 +739,8 @@ class ReplyEditHandler(webapp.RequestHandler):
     def get(self, reply_num):
         site = GetSite()
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             if member.num == 1:
                 template_values = {}
@@ -753,6 +768,8 @@ class ReplyEditHandler(webapp.RequestHandler):
     def post(self, reply_num):
         site = GetSite()
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             if member.num == 1:
                 template_values = {}

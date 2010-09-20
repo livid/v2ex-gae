@@ -16,7 +16,7 @@
             <div class="sep20"></div>
             {% endif %}
             <div class="box">
-                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">后台</a> <span class="chevron">&nbsp;›&nbsp;</span> 站点设置</span></div>
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">{{ l10n.backstage }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 站点设置</span></div>
                 <div class="inner">
                     <form action="/backstage/site" method="post">
                     {% if errors %}
@@ -93,6 +93,17 @@
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="analytics" value="{{ site_analytics|escape }}" maxlength="40" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            站点默认语言
+        			        </td>
+        			        <td width="200" align="left">
+        			            <select name="l10n">
+        			                <option value="en">English</option>
+        			                <option value="zh-Hans">简体中文</option>
+        			            </select>
         			        </td>
         			    </tr>
         			    <tr>

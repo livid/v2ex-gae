@@ -29,6 +29,7 @@ from v2ex.babel import SYSTEM_VERSION
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -42,6 +43,8 @@ class NotesHomeHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 记事本'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
             q = db.GqlQuery("SELECT * FROM Note WHERE member = :1 ORDER BY last_modified DESC", member)
@@ -69,6 +72,8 @@ class NotesNewHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 新建记事'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
@@ -84,6 +89,8 @@ class NotesNewHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 新建记事'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
             # Verification: content
@@ -134,6 +141,8 @@ class NotesItemHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             q = db.GqlQuery("SELECT * FROM Note WHERE num = :1", int(num))
             if q.count() > 0:
@@ -163,6 +172,8 @@ class NotesItemEraseHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 记事本'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             q = db.GqlQuery("SELECT * FROM Note WHERE num = :1", int(num))
             if q.count() > 0:
@@ -185,6 +196,8 @@ class NotesItemEditHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 记事本 › 编辑'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             q = db.GqlQuery("SELECT * FROM Note WHERE num = :1", int(num))
             if q.count() > 0:
@@ -209,6 +222,8 @@ class NotesItemEditHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         template_values['page_title'] = site.title + u' › 记事本'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
             # Verification: content

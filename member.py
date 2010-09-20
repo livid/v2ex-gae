@@ -24,6 +24,7 @@ from v2ex.babel import Counter
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
 
@@ -47,6 +48,8 @@ class MemberHandler(webapp.RequestHandler):
         if member:
             if member.num == 1:
                 template_values['show_extra_options'] = True
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         one = False
         one = GetMemberByUsername(member_username)
         if one is not False:
@@ -128,6 +131,10 @@ class SettingsHandler(webapp.RequestHandler):
         template_values['page_title'] = site.title + u' › 设置'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        template_values['lang'] = GetSupportedLanguages()
+        template_values['lang_names'] = GetSupportedLanguagesNames()
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username
@@ -190,6 +197,8 @@ class SettingsHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username
@@ -387,6 +396,8 @@ class SettingsPasswordHandler(webapp.RequestHandler):
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username
@@ -443,6 +454,8 @@ class SettingsAvatarHandler(webapp.RequestHandler):
         template_values['page_title'] = site.title + u' › 头像'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
             if 'message' in self.session:
                 template_values['message'] = self.session['message']
@@ -465,7 +478,10 @@ class SettingsAvatarHandler(webapp.RequestHandler):
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         if (member):
+            timestamp = str(int(time.time()))
             avatar = self.request.get('avatar')
             avatar_73 = images.resize(avatar, 73, 73)
             avatar_48 = images.resize(avatar, 48, 48)
@@ -491,7 +507,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_large.content = db.Blob(avatar_73)
                 avatar_large.num = counter1.value
                 avatar_large.put()
-            member.avatar_large_url = '/avatar/' + str(member.num) + '/large'
+            member.avatar_large_url = '/avatar/' + str(member.num) + '/large?r=' + timestamp
             member.put()
             # Normal 48x48
             q2 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'avatar_' + str(member.num) + '_normal')
@@ -514,7 +530,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_normal.content = db.Blob(avatar_48)
                 avatar_normal.num = counter2.value
                 avatar_normal.put()
-            member.avatar_normal_url = '/avatar/' + str(member.num) + '/normal'
+            member.avatar_normal_url = '/avatar/' + str(member.num) + '/normal?r=' + timestamp
             member.put() 
             # Mini 24x24
             q3 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'avatar_' + str(member.num) + '_mini')
@@ -537,7 +553,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 avatar_mini.content = db.Blob(avatar_24)
                 avatar_mini.num = counter3.value
                 avatar_mini.put()
-            member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini'
+            member.avatar_mini_url = '/avatar/' + str(member.num) + '/mini?r=' + timestamp
             member.put()
             # Upload to MobileMe
             if config.mobileme_enabled:
@@ -568,6 +584,7 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                     member.avatar_large_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/avatars/' + str(shard) + '/large/' + str(member.num) + '.png?r=' + timestamp
                 member.put()
             memcache.set('Member_' + str(member.num), member, 86400 * 365)
+            memcache.set('Member::' + member.username_lower, member, 86400 * 365)
             memcache.delete('Avatar::avatar_' + str(member.num) + '_large')
             memcache.delete('Avatar::avatar_' + str(member.num) + '_normal')
             memcache.delete('Avatar::avatar_' + str(member.num) + '_mini')
