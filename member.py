@@ -55,6 +55,7 @@ class MemberHandler(webapp.RequestHandler):
         if one is not False:
             template_values['one'] = one
             template_values['page_title'] = site.title + u' › ' + one.username
+            template_values['canonical'] = 'http://' + site.domain + '/member/' + one.username
         if one is not False:
             q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
             template_values['topics'] = q2

@@ -60,6 +60,7 @@ class HomeHandler(webapp.RequestHandler):
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = GetSite()
+        template_values['canonical'] = 'http://' + site.domain + '/'
         template_values['rnd'] = random.randrange(1, 100)
         template_values['page_title'] = site.title
         template_values['system_version'] = SYSTEM_VERSION
@@ -680,6 +681,7 @@ class NodeHandler(webapp.RequestHandler):
         has_previous = False
         previous = 1
         if node:
+            template_values['canonical'] = 'http://' + site.domain + '/go/' + node.name
             if member:
                 recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
                 recent_nodes_ids = memcache.get('member::' + str(member.num) + '::recent_nodes_ids')
@@ -725,6 +727,7 @@ class NodeHandler(webapp.RequestHandler):
                     has_previous = True
                     previous = page - 1    
                 start = (page - 1) * page_size
+                template_values['canonical'] = 'http://' + site.domain + '/go/' + node.name + '?p=' + str(page)
         else:
             template_values['page_title'] = site.title + u' › 节点未找到'
         template_values['pagination'] = pagination

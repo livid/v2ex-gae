@@ -273,6 +273,7 @@ class TopicHandler(webapp.RequestHandler):
         if topic:
             taskqueue.add(url='/hit/topic/' + str(topic.key()))
             template_values['page_title'] = site.title + u' › ' + topic.title
+            template_values['canonical'] = 'http://' + site.domain + '/t/' + str(topic.num)
         else:
             template_values['page_title'] = site.title + u' › 主题未找到'
         if topic.content_rendered is None:
