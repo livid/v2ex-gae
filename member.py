@@ -134,8 +134,6 @@ class SettingsHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['lang'] = GetSupportedLanguages()
-        template_values['lang_names'] = GetSupportedLanguagesNames()
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username
@@ -155,13 +153,18 @@ class SettingsHandler(webapp.RequestHandler):
             if (member.bio == None):
                 member.bio = ''
             template_values['member_bio'] = member.bio
+            if (member.l10n == None):
+                member.l10n = 'en'
+            template_values['member_l10n'] = member.l10n
+            s = GetLanguageSelect(member.l10n)
+            template_values['s'] = s
             if member.twitter_sync == 1:
                 template_values['member_twitter_sync'] = 1
             if 'message' in self.session:
-              message = self.session['message']
-              del self.session['message']
+                message = self.session['message']
+                del self.session['message']
             else:
-              message = None
+                message = None
             template_values['message'] = message
             try:
                 blocked = pickle.loads(member.blocked.encode('utf-8'))
@@ -355,6 +358,17 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_bio_error'] = member_bio_error
             template_values['member_bio_error_message'] = member_bio_error_messages[member_bio_error]
             template_values['errors'] = errors
+            # Verification: l10n
+            member_l10n = self.request.get('l10n').strip()
+            supported = GetSupportedLanguages()
+            if member_l10n == '':
+                member_l10n = site.l10n
+            else:
+                if member_l10n not in supported:
+                    member_l10n = site.l10n
+            s = GetLanguageSelect(member_l10n)
+            template_values['s'] = s
+            template_values['member_l10n'] = member_l10n
             # Verification: twitter_sync
             if member.twitter_oauth == 1:
                 member_twitter_sync = self.request.get('twitter_sync')
@@ -372,6 +386,7 @@ class SettingsHandler(webapp.RequestHandler):
                 if member.twitter_oauth == 1:
                     member.twitter_sync = member_twitter_sync
                 member.bio = member_bio
+                member.l10n = member_l10n
                 member.put()
                 memcache.delete('Member_' + str(member.num))
                 self.redirect('/settings')

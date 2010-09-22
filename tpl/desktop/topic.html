@@ -43,11 +43,11 @@
             </div>
             {% ifequal topic.replies 0 %}
             <div class="sep20"></div>
-            <div class="glass" align="center"><div class="inner"><span class="fade">目前尚无回复</span></div></div>
+            <div class="glass" align="center"><div class="inner"><span class="fade">{{ l10n.no_reply }}</span></div></div>
             {% else %}
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><div class="fr">{% if reply_reversed %}<a href="/t/{{ topic.num }}?r=0">按顺序显示回复</a>{% else %}<a href="/t/{{ topic.num }}?r=1">按倒序显示回复</a>{% endif %} &nbsp; {% if filter_mode %}<a href="/t/{{ topic.num }}?f=0">显示全部</a>{% else %}<a href="/t/{{ topic.num }}?f=1">只看楼主</a>{% endif %}</div><span class="fade">截至 {{ topic.last_touched|timezone:8|date:"Y-n-j G:i:s A" }} 共收到 {{ topic.replies }} 条回复</span></div>
+                <div class="cell"><div class="fr">{% if reply_reversed %}<a href="/t/{{ topic.num }}?r=0">{{ l10n.earlier_replies_first }}</a>{% else %}<a href="/t/{{ topic.num }}?r=1">{{ l10n.newer_replies_first }}</a>{% endif %} &nbsp;<span class="snow">|</span>&nbsp; {% if filter_mode %}<a href="/t/{{ topic.num }}?f=0">{{ l10n.show_all }}</a>{% else %}<a href="/t/{{ topic.num }}?f=1">{{ l10n.just_topic_creator }}</a>{% endif %}</div><span class="fade">截至 {{ topic.last_touched|timezone:8|date:"Y-n-j G:i:s A" }} 共收到 {{ topic.replies }} 条回复</span></div>
                 <script type="text/javascript">
                     is_admin = {{ is_admin }};
                     {% if member %}
@@ -87,7 +87,7 @@
                 r = document.getElementById('reply_content');
                 if (r.value.length == 0) {
                     e = document.getElementById('e');
-                    e.innerHTML = '你尚未输入回复内容';
+                    e.innerHTML = "{{ l10n.reply_content_cannot_be_empty }}";
                     return false;
                 }
             }
@@ -103,19 +103,19 @@
                 <div class="cell">{% if errors %}
                 <strong class="black">{{ reply_content_error_message }}</strong>
                 {% else %}
-                <span class="fade">现在就加盖一层</span>
+                <span class="fade">{{ l10n.add_a_reply_now }}</span>
                 {% endif %}
                 </div>
                 <div class="inner">
                     <textarea class="mll" name="content" id="reply_content"  onkeyup="c();"></textarea>
                     <div class="sep10"></div>
                     <div class="fr fade" id="e"></div>
-                    <input type="submit" class="super normal button" value="发送" />
+                    <input type="submit" class="super normal button" value="{{ l10n.send }}" />
                 </div></form>
             </div>
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade" style="line-height: 200%;">{{ site.title }} 是一个关于分享和探索的地方，欢迎在这里表明你的态度和立场，但是争吵是毫无必要的。如果你实在觉得不想再看到某人的回复和新主题，你可以点击他的个人主页，然后按下“屏蔽”按钮。在这里，你可以选择只与自己兴味相投的人进行平等对话。</span></div>
+                <div class="inner"><span class="fade" style="line-height: 200%;">{{ l10n.better_to_block }}</span></div>
             </div>
             {% endif %}
         </div>

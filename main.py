@@ -178,10 +178,9 @@ class HomeHandler(webapp.RequestHandler):
             hottest = memcache.get('index_hottest_sidebar')
             if hottest is None:
                 qhot = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 25")
-                hottest = u'<div class="box"><div class="cell"><span class="fade">最热节点</span></div><div class="inner" style="line-height: 200%;">'
+                hottest = u''
                 for node in qhot:
                     hottest = hottest + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
-                hottest = hottest + '</div></div>'
                 memcache.set('index_hottest_sidebar', hottest, 5000)
             template_values['index_hottest_sidebar'] = hottest
             c = memcache.get('index_categories')

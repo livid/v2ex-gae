@@ -47,7 +47,7 @@ class BackstageHomeHandler(webapp.RequestHandler):
         template_values['rnd'] = random.randrange(1, 100)
         template_values['system_version'] = SYSTEM_VERSION
         template_values['member'] = member
-        template_values['page_title'] = site.title + u' › ' + l10n.backstage
+        template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8')
         member_total = memcache.get('member_total')
         if member_total is None:
             q3 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'member.total'")
