@@ -110,12 +110,15 @@ updated_every_4_hours = "Updated Every 4 Hours"
 
 # Messages on /member/
 
-
+recent_topics = 'Recent Topics'
+recent_participated_topics = 'Recent Participated Topics'
 
 # Messages on /backstage
 
 site_settings = 'Site Settings'
 site_settings_explained = 'Site name, slogan, description and other details.'
+topic_settings = 'Topic Settings'
+topic_settings_explained = 'Configure topic types and who can post, who can reply'
 sections = 'Sections'
 add_new_section = 'Add New Section'
 minisites = 'Minisites'

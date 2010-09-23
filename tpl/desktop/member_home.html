@@ -64,14 +64,13 @@
             </div>
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade">最近创建的主题</span></div>
+                <div class="cell"><span class="fade">{{ l10n.recent_topics }}</span></div>
                 <div class="inner">
                     <table cellpadding="5" cellspacing="0" border="0" width="100%" class="topics">
                         <tr>
-                            <th align="right" width="50">回复数</td>
-                            <th align="left" width="auto">主题</td>
-                            <th align="left" width="80">最后回复者</td>
-                            <th align="left" width="110">最后回复时间</td>
+                            <th align="right" width="50">{{ l10n.header_replies }}</td>
+                            <th align="left" width="auto">{{ l10n.header_subject }}</td>
+                            <th align="left" width="200" colspan="2">{{ l10n.header_last_replied }}</td>
                         </tr>
                         {% for topic in topics %}
                         <tr>
@@ -87,14 +86,13 @@
             {% if replies %}
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade">最近参与过的主题</span></div>
+                <div class="cell"><span class="fade">{{ l10n.recent_participated_topics }}</span></div>
                 <div class="inner">
                     <table cellpadding="5" cellspacing="0" border="0" width="100%" class="topics">
                         <tr>
-                            <th align="right" width="50">回复数</td>
-                            <th align="left" width="auto">主题</td>
-                            <th align="left" width="80">最后回复者</td>
-                            <th align="left" width="110">最后回复时间</td>
+                            <th align="right" width="50">{{ l10n.header_replies }}</td>
+                            <th align="left" width="auto">{{ l10n.header_subject }}</td>
+                            <th align="left" width="200" colspan="2">{{ l10n.header_last_replied }}</td>
                         </tr>
                         {% for reply in replies %}
                         <tr>
