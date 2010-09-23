@@ -16,11 +16,11 @@
             <div class="sep20"></div>
             {% endif %}
             <div class="box">
-                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">{{ l10n.backstage }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 站点设置</span></div>
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">{{ l10n.backstage }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ l10n.site_settings }}</span></div>
                 <div class="inner">
                     <form action="/backstage/site" method="post">
                     {% if errors %}
-        			<strong>请解决以下错误之后继续。</strong>
+        			<strong>{{ l10n.resolve_errors }}</strong>
         			<div class="sep10"></div>
         			<ul>
         				{% if site_title_error %}
@@ -46,49 +46,49 @@
         			{% endif %}
                     <table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
-        			        <td width="80" align="right">
-        			            站点名
+        			        <td width="100" align="right">
+        			            {{ l10n.site_name }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="title" value="{{ site_title|escape }}" />
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
-        			            站点标语
+        			        <td width="100" align="right">
+        			            {{ l10n.site_slogan }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="slogan" value="{{ site_slogan|escape }}" />
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
-        			            主要域名
+        			        <td width="100" align="right">
+        			            {{ l10n.site_domain }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="domain" value="{{ site_domain|escape }}" />
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
-        			            站点简介
+        			        <td width="100" align="right">
+        			            {{ l10n.site_description }}
         			        </td>
         			        <td width="200" align="left">
         			            <textarea class="ml" name="description">{{ site_description|escape }}</textarea>
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
-        			            首页分类
+        			        <td width="100" align="right">
+        			            {{ l10n.site_home_categories }}
         			        </td>
         			        <td width="200" align="left">
         			            <textarea class="ml" name="home_categories">{{ site_home_categories|escape }}</textarea>
         			            <div class="sep5"></div>
-        			            <span class="fade">每行一个</span>
+        			            <span class="fade">{{ l10n.one_category_per_line }}</span>
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
+        			        <td width="100" align="right">
         			            Analytics ID
         			        </td>
         			        <td width="200" align="left">
@@ -96,21 +96,18 @@
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
-        			            站点默认语言
+        			        <td width="100" align="right">
+        			            {{ l10n.language }}
         			        </td>
         			        <td width="200" align="left">
-        			            <select name="l10n">
-        			                <option value="en">English</option>
-        			                <option value="zh-Hans">简体中文</option>
-        			            </select>
+        			            {{ s }}
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
+        			        <td width="100" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="submit" value="保存" class="super normal button" />
+        			            <input type="submit" value="{{ l10n.save }}" class="super normal button" />
         			        </td>
         			    </tr>
         			</table>

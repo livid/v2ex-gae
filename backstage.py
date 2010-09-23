@@ -989,6 +989,8 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     template_values['site_analytics'] = site.analytics
                 else:
                     template_values['site_analytics'] = ''
+                s = GetLanguageSelect(site.l10n)
+                template_values['s'] = s
                 template_values['member'] = member
                 template_values['system_version'] = SYSTEM_VERSION
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_site.html')
@@ -1095,6 +1097,17 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site_analytics'] = site_analytics
                 template_values['site_analytics_error'] = site_analytics_error
                 template_values['site_analytics_error_message'] = site_analytics_error_messages[site_analytics_error]
+                # Verification: l10n (required)
+                site_l10n = self.request.get('l10n').strip()
+                supported = GetSupportedLanguages()
+                if site_l10n == '':
+                    site_l10n = site.l10n
+                else:
+                    if site_l10n not in supported:
+                        site_l10n = site.l10n
+                s = GetLanguageSelect(site_l10n)
+                template_values['s'] = s
+                template_values['site_l10n'] = site_l10n
                 # Verification: home_categories (optional)
                 site_home_categories_error = 0
                 site_home_categories_error_messages = ['',
@@ -1121,9 +1134,10 @@ class BackstageSiteHandler(webapp.RequestHandler):
                         site.home_categories = site_home_categories
                     if site_analytics != '':
                         site.analytics = site_analytics
+                    site.l10n = site_l10n
                     site.put()
                     memcache.delete('index_categories')
-                    template_values['message'] = '站点信息更新成功';
+                    template_values['message'] = l10n.site_settings_updated;
                     template_values['site'] = site
                     memcache.delete('site')
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_site.html')

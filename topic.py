@@ -54,11 +54,11 @@ class NewTopicHandler(webapp.RequestHandler):
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
-        template_values['page_title'] = site.title + u' › 创建新主题'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic
         if (member):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
@@ -89,11 +89,11 @@ class NewTopicHandler(webapp.RequestHandler):
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
-        template_values['page_title'] = site.title + u' › 创建新主题'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic
         if (member):
             template_values['member'] = member
             q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)

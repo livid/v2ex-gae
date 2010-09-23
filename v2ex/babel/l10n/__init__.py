@@ -21,8 +21,12 @@ def GetMessages(handler, member=False, site=False):
             from v2ex.babel.l10n.messages import zhHans as messages
             return messages
     else:
-        from v2ex.babel.l10n.messages import en as messages
-        return messages
+        if site.l10n == 'en':
+            from v2ex.babel.l10n.messages import en as messages
+            return messages
+        if site.l10n == 'zh-Hans':
+            from v2ex.babel.l10n.messages import zhHans as messages
+            return messages
 
 def GetSupportedLanguages():
     return ['en', 'zh-Hans']

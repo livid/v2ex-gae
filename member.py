@@ -129,11 +129,11 @@ class SettingsHandler(webapp.RequestHandler):
         self.session = Session()
         template_values = {}
         template_values['site'] = site
-        template_values['page_title'] = site.title + u' › 设置'
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        template_values['page_title'] = site.title + u' › ' + l10n.settings
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username
@@ -197,12 +197,12 @@ class SettingsHandler(webapp.RequestHandler):
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
-        template_values['page_title'] = site.title + u' › 设置'
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        template_values['page_title'] = site.title + u' › ' + l10n.settings
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username

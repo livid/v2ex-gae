@@ -14,14 +14,21 @@ signout = 'Sign Out'
 
 # Messages shared by forms
 
+chevron = '<span class="chevron">&nbsp;›&nbsp;</span>'
 resolve_errors = "Please resolve the following errors."
 failed_signin = "Username/password not matched"
+delete = 'Delete'
+submit = 'Submit'
+save = 'Save'
+create = 'Create'
+return_to = 'Return to'
 
 # Messages on /signin
 
 password = "Password"
 remember_1_year = "Cookie will be remembered for a year."
 forgot_password = "I Forgot Password"
+existing_member = 'Existing member please <a href="/signin">sign in</a>'
 
 # Messages on /signup
 
@@ -31,6 +38,8 @@ username_invalid = 'Username can only use a-z, A-Z and underscore'
 username_taken = 'Sorry, this username is taken by other'
 
 # Messages on /signout
+
+signin_again = 'Sign In Again'
 
 # Messages on /
 
@@ -98,3 +107,31 @@ twitter_link_explained = "Link your Twitter account securely via OAuth, then you
 personal_records = "Personal Records"
 blocked = "Blocked"
 updated_every_4_hours = "Updated Every 4 Hours"
+
+# Messages on /member/
+
+
+
+# Messages on /backstage
+
+site_settings = 'Site Settings'
+site_settings_explained = 'Site name, slogan, description and other details.'
+sections = 'Sections'
+add_new_section = 'Add New Section'
+minisites = 'Minisites'
+add_new_minisite = 'Add New Minisite'
+data_management = 'Data Management'
+delete_specified_cached_item = 'Delete Specified Cached Item'
+delete_specified_cached_item_explained = 'You can clear specified cached item by entering its name here.'
+mapreduce_explained = 'MapReduce is a very powerful tool for tidying all data, use with caution.'
+latest_joined = 'Latest Joined'
+
+# Messages on /backstage/site
+
+site_name = 'Site Name'
+site_slogan = 'Site Slogan'
+site_domain = 'Site Domain'
+site_description = 'Description'
+site_home_categories = 'Home Categories'
+one_category_per_line = 'One featured category per line'
+site_settings_updated = 'Site settings updated successfully'

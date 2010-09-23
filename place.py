@@ -30,6 +30,7 @@ from v2ex.babel import SYSTEM_VERSION
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -43,6 +44,8 @@ class PlaceHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         template_values['ip'] = ip
         substance = GetPlaceByIP(ip)
         if substance:
@@ -88,6 +91,8 @@ class PlaceHandler(webapp.RequestHandler):
         else:
             go = '/place'
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         place = GetPlaceByIP(ip)
         say = self.request.get('say').strip()
         if len(say) > 0 and len(say) < 280 and member and place:

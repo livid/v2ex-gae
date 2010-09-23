@@ -10,10 +10,12 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><span class="fade">登出</span></div>
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> {{ l10n.chevron }} {{ l10n.signout }}</span></div>
                 <div class="inner">你已经成功从 {{ site.title }} 登出。没有任何个人信息留在这台设备上。
     			<div class="sep10"></div>
-    			<a href="/signin">重新登录</a></div>
+    			<div class="sep5"></div>
+    			<a href="/signin" class="super normal button">{{ l10n.signin_again }}</a>
+    			<div class="sep5"></div></div>
             </div>
         </div>
     <div class="c"></div>
