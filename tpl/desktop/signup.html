@@ -10,11 +10,11 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><span class="fade">注册</span></div>
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ l10n.signup }}</span></div>
                 <div class="inner">
                     <form action="/signup" method="post">
         			{% if errors %}
-        			<strong>请解决以下错误之后继续。</strong>
+        			<strong>{{ l10n.resolve_errors }}</strong>
         			<div class="sep10"></div>
         			<ul>
         				{% if member_username_error %}
@@ -40,7 +40,7 @@
         			<table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="80" align="right">
-        			            用户名
+        			            {{ l10n.username }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="username" value="{{ member_username|escape }}" />
@@ -48,7 +48,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            密码
+        			            {{ l10n.password }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="password" class="sl" name="password" value="{{ member_password|escape }}" />
@@ -56,7 +56,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            电子邮件地址
+        			            {{ l10n.email }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="email" value="{{ member_email|escape }}" />
@@ -73,7 +73,7 @@
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="submit" value="注册新用户" class="super normal button" />
+        			            <input type="submit" value="{{ l10n.signup }}" class="super normal button" />
         			        </td>
         			    </tr>
         			</table>

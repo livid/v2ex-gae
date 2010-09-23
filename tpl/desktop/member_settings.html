@@ -9,25 +9,25 @@
             {% include 'rightbar/user.html' %}
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade">个人纪录</span>
+                <div class="cell"><span class="fade">{{ l10n.personal_records }}</span>
                 </div>
                 <div class="cell">
                     <table cellpadding="5" cellspacing="0" border="0">
                         <tr>
-                            <td align="right"><span class="fade">创建主题数</span></td>
+                            <td align="right"><span class="fade">{{ l10n.total_topics }}</span></td>
                             <td align="left"><strong>{{ member_stats_topics }}</strong></td>
                         </tr>
                         <tr>
-                            <td align="right"><span class="fade">回复数</span></td>
+                            <td align="right"><span class="fade">{{ l10n.total_replies }}</span></td>
                             <td align="left"><strong>{{ member_stats_replies }}</strong></td>
                         </tr>
                         <tr>
-                            <td align="right"><span class="fade">屏蔽人数</span></td>
+                            <td align="right"><span class="fade">{{ l10n.blocked }}</span></td>
                             <td align="left"><strong>{{ member_stats_blocks }}</strong></td>
                         </tr>
                     </table>
                 </div>
-                <div class="inner"><span class="fade">以上数据大概每 4 小时更新一次</span></div>
+                <div class="inner"><span class="fade">{{ l10n.updated_every_4_hours }}</span></div>
             </div>
         </div>
         <div id="Content">
@@ -66,7 +66,7 @@
                     <table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="80" align="right">
-        			            用户名
+        			            {{ l10n.username }}
         			        </td>
         			        <td width="200" align="left">
         			            {{ member_username|escape }}
@@ -74,7 +74,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            电子邮件地址
+        			            {{ l10n.email }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="email" value="{{ member_email|escape }}" />
@@ -82,7 +82,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            个人网站
+        			            {{ l10n.website }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="website" value="{{ member_website|escape }}" />
@@ -90,7 +90,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            Twitter 用户名
+        			            {{ l10n.twitter }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="twitter" value="{{ member_twitter|escape }}" />
@@ -98,7 +98,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            所在地
+        			            {{ l10n.location }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="location" value="{{ member_location|escape }}" maxlength="40" />
@@ -106,7 +106,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            个人签名
+        			            {{ l10n.tagline }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="tagline" value="{{ member_tagline|escape }}" />
@@ -114,7 +114,7 @@
         			    </tr>
                         <tr>
         			        <td width="80" align="right">
-        			            个人简介
+        			            {{ l10n.bio }}
         			        </td>
         			        <td width="200" align="left">
         			            <textarea class="ml" name="bio">{{ member_bio|escape }}</textarea>
@@ -122,7 +122,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            界面语言
+        			            {{ l10n.language }}
         			        </td>
         			        <td width="200" align="left">
         			            {{ s }}
@@ -146,7 +146,7 @@
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="submit" value="更改设置" class="super normal button" />
+        			            <input type="submit" value="{{ l10n.save_settings }}" class="super normal button" />
         			        </td>
         			    </tr>
         			</table>
@@ -155,12 +155,12 @@
             </div>
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade">头像</span></div>
+                <div class="cell"><span class="fade">{{ l10n.avatar }}</span></div>
                 <div class="inner">
         			<table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="80" align="right">
-        			            当前的头像
+        			            {{ l10n.current_avatar }}
         			        </td>
         			        <td align="left">
         			            {{ member|avatar:"large" }}&nbsp; 
@@ -174,7 +174,7 @@
         			        </td>
         			        <td align="left">
         			            <div class="sep5"></div>
-        			            <a href="/settings/avatar" class="super normal button">上传新头像</a> &nbsp; <span class="fade">本站亦支持 <a href="http://www.gravatar.com/" target="_blank">Gravatar</a> 头像</span>
+        			            <a href="/settings/avatar" class="super normal button">{{ l10n.upload_new_avatar }}</a> &nbsp; <span class="fade">{{ l10n.gravatar_support }}</span>
         			        </td>
         			    </tr>
         			</table>
@@ -184,7 +184,7 @@
             <div class="sep20"></div>
             <div class="box">
                 <div class="cell">
-                    <span class="fade">密码设置</span>
+                    <span class="fade">{{ l10n.security }}</span>
                 </div>
                 <div class="inner">
                     <form action="/settings/password" method="post">
@@ -198,13 +198,13 @@
         			</ul>
         			<div class="sep10"></div>
         			{% else %}
-        			<strong class="fade">如果不希望修改密码，请留空以下。</strong>
+        			<strong class="fade">{{ l10n.leave_blank }}</strong>
         			{% endif %}
         			<div class="sep5"></div>
         			<table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="80" align="right">
-        			            当前密码
+        			            {{ l10n.current_password }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="password" class="sl" name="password_current" value="{{ password_current|escape }}" />
@@ -212,7 +212,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            新密码
+        			            {{ l10n.new_password }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="password" class="sl" name="password_new" value="{{ password_new|escape }}" />
@@ -222,7 +222,7 @@
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="submit" value="更改密码" class="super normal button" />
+        			            <input type="submit" value="{{ l10n.change_password }}" class="super normal button" />
         			        </td>
         			    </tr>
         			</table>
@@ -259,10 +259,10 @@
                         {% else %}
                         <tr>
         			        <td width="80" align="right">
-        			            帐号绑定
+        			            {{ l10n.account_status }}
         			        </td>
         			        <td width="200" align="left">
-        			            <span class="fade">当前尚未绑定 Twitter 帐号</span>
+        			            <span class="fade">{{ l10n.twitter_not_linked }}</span>
         			        </td>
         			    </tr>
         			    <tr>
@@ -276,7 +276,7 @@
         			</table>
                 </div>
                 <div class="inner">
-                    通过 OAuth 绑定 Twitter 帐号将可以自动同步你的主题和回帖，同时使用更多 Twitter 高级功能。
+                    {{ l10n.twitter_link_explained }}
                 </div>
             </div>
         </div>

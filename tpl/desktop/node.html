@@ -13,7 +13,7 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><div class="fr snow">共有 {{ node.topics }} 个讨论主题</div>
+                <div class="cell"><div class="fr"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong></span></div>
                 <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
                 {% if node.header %}
                 <div class="sep10"></div>
@@ -22,17 +22,17 @@
                 {% if member %}
                 <div class="sep10"></div>
                 <div class="sep5"></div>
-                <a href="/new/{{ node.name }}" class="super normal button">创建新主题</a>
+                <a href="/new/{{ node.name }}" class="super normal button">{{ l10n.create_new_topic }}</a>
                 <div class="sep5"></div>
                 {% endif %}
                 </div>
                 <div class="cell">
                     <table cellpadding="5" cellspacing="0" border="0" width="100%" class="topics">
                         <tr>
-                            <th align="right" width="50">回复数</td>
-                            <th align="left" width="auto">主题</td>
-                            <th align="left" width="80">作者</td>
-                            <th align="left" width="110">最后回复时间</td>
+                            <th align="right" width="50">{{ l10n.header_replies }}</td>
+                            <th align="left" width="auto">{{ l10n.header_subject }}</td>
+                            <th align="left" width="80">{{ l10n.header_author }}</td>
+                            <th align="left" width="110">{{ l10n.header_last_replied }}</td>
                         </tr>
                         {% include 'common/topics.html' %}
                     </table>
@@ -44,7 +44,7 @@
                                 <td width="100" align="left">
                                     {% if has_previous %}
                                     <div class="sep5"></div>
-                                    <a href="/go/{{ node.name }}?p={{ previous }}" class="super normal button">上一页</a>
+                                    <a href="/go/{{ node.name }}?p={{ previous }}" class="super normal button">{{ l10n.previous }}</a>
                                     <div class="sep5"></div>
                                     {% endif %}
                                 </td>
@@ -54,7 +54,7 @@
                                 <td width="100" align="right">
                                     {% if has_more %}
                                     <div class="sep5"></div>
-                                    <a href="/go/{{ node.name }}?p={{ more }}" class="super normal button">下一页</a>
+                                    <a href="/go/{{ node.name }}?p={{ more }}" class="super normal button">{{ l10n.next }}</a>
                                     <div class="sep5"></div>
                                     {% endif %}
                                 </td>

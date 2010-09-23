@@ -10,7 +10,7 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><span class="fade">登入</span></div>
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ l10n.signin }}</span></div>
                 <div class="inner">
                     <form action="/signin" method="post">
         			{% if errors %}
@@ -20,7 +20,7 @@
         			<table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="80" align="right">
-        			            用户名
+        			            {{ l10n.username }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="u" value="{{ u|escape }}" />
@@ -28,7 +28,7 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
-        			            密码
+        			            {{ l10n.password }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="password" class="sl" name="p" value="{{ p|escape }}" />
@@ -38,21 +38,21 @@
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <input type="submit" value="登入" class="super normal button" />
+        			            <input type="submit" value="{{ l10n.signin }}" class="super normal button" />
         			        </td>
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <span class="fade">成功登入后，Cookie 将被浏览器记住一年。</span>
+        			            <span class="fade">{{ l10n.remember_1_year }}</span>
         			        </td>
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
-        			            <span class="fade"><a href="/forgot">忘记密码了？</a></span>
+        			            <span class="fade"><a href="/forgot">{{ l10n.forgot_password }}</a></span>
         			        </td>
         			    </tr>
         			</table>

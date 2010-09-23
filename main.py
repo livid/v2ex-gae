@@ -356,10 +356,10 @@ class SignupHandler(webapp.RequestHandler):
         # Verification: username
         member_username_error = 0
         member_username_error_messages = ['',
-            u'请输入你的用户名',
-            u'用户名长度不能超过 32 个字符',
-            u'用户名只能由 a-Z 0-9 及 - 和 _ 组成',
-            u'抱歉这个用户名已经有人使用了']
+            l10n.username_empty,
+            l10n.username_too_long,
+            l10n.username_invalid,
+            l10n.username_taken]
         member_username = self.request.get('username').strip()
         if (len(member_username) == 0):
             errors = errors + 1
@@ -369,7 +369,7 @@ class SignupHandler(webapp.RequestHandler):
                 errors = errors + 1
                 member_username_error = 2
             else:
-                if (re.search('^[a-zA-Z0-9\-\_]+$', member_username)):
+                if (re.search('^[a-zA-Z0-9\_]+$', member_username)):
                     q = db.GqlQuery('SELECT __key__ FROM Member WHERE username_lower = :1', member_username.lower())
                     if (q.count() > 0):
                         errors = errors + 1
