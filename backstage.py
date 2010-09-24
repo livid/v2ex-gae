@@ -1146,6 +1146,87 @@ class BackstageSiteHandler(webapp.RequestHandler):
         else:
             self.redirect('/')
 
+class BackstageTopicHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        site = GetSite()
+        member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.num == 1:
+                template_values['page_title'] = site.title + u' › ' + l10n.backstage + u' › ' + l10n.topic_settings
+                template_values['site'] = site
+                template_values['site_use_topic_types'] = site.use_topic_types
+                if site.topic_types is None:
+                    template_values['site_topic_types'] = ''
+                else:
+                    template_values['site_topic_types'] = site.topic_types
+                if site.use_topic_types is not True:
+                    s = '<select name="use_topic_types"><option value="1">Enabled</option><option value="0" selected="selected">Disabled</option></select>'
+                else:
+                    s = '<select name="use_topic_types"><option value="1" selected="selected">Enabled</option><option value="0">Disabled</option></select>'
+                template_values['s'] = s
+                template_values['member'] = member
+                template_values['system_version'] = SYSTEM_VERSION
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_topic.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+        else:
+            self.redirect('/')
+
+    def post(self):
+        template_values = {}
+        site = GetSite()
+        member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.num == 1:
+                template_values['page_title'] = site.title + u' › ' + l10n.backstage + u' › ' + l10n.topic_settings
+                template_values['site'] = site
+                template_values['site_use_topic_types'] = site.use_topic_types
+                if site.topic_types is None:
+                    template_values['site_topic_types'] = ''
+                else:
+                    template_values['site_topic_types'] = site.topic_types
+                if site.use_topic_types is not True:
+                    s = '<select name="use_topic_types"><option value="1">Enabled</option><option value="0" selected="selected">Disabled</option></select>'
+                else:
+                    s = '<select name="use_topic_types"><option value="1" selected="selected">Enabled</option><option value="0">Disabled</option></select>'
+                template_values['s'] = s
+                template_values['member'] = member
+                template_values['system_version'] = SYSTEM_VERSION
+                errors = 0
+                # Verification: use_topic_types
+                site_use_topic_types = self.request.get('use_topic_types').strip()
+                if site_use_topic_types is None:
+                    s = '<select name="use_topic_types"><option value="1">Enabled</option><option value="0" selected="selected">Disabled</option></select>'
+                else:
+                    if site_use_topic_types == '1':
+                        s = '<select name="use_topic_types"><option value="1" selected="selected">Enabled</option><option value="0">Disabled</option></select>'
+                    else:
+                        s = '<select name="use_topic_types"><option value="1">Enabled</option><option value="0" selected="selected">Disabled</option></select>'
+                template_values['s'] = s
+                # Verification: topic_types
+                site_topic_types = self.request.get('topic_types').strip()
+                if errors == 0:
+                    if site_use_topic_types == '1':
+                        site.use_topic_types = True
+                    else:
+                        site.use_topic_types = False
+                    site.topic_types = site_topic_types
+                    site.put()
+                    memcache.delete('site')
+                    self.redirect('/backstage')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_topic.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+        else:
+            self.redirect('/')
+
+
 class BackstageRemoveMemcacheHandler(webapp.RequestHandler):
     def post(self):
         member = CheckAuth(self)
@@ -1171,6 +1252,7 @@ def main():
     ('/backstage/deactivate/user/(.*)', BackstageDeactivateUserHandler),
     ('/backstage/move/topic/(.*)', BackstageMoveTopicHandler),
     ('/backstage/site', BackstageSiteHandler),
+    ('/backstage/topic', BackstageTopicHandler),
     ('/backstage/remove/mc', BackstageRemoveMemcacheHandler)
     ],
                                          debug=True)

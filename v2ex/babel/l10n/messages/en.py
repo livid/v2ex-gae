@@ -21,7 +21,9 @@ delete = 'Delete'
 submit = 'Submit'
 save = 'Save'
 create = 'Create'
-return_to = 'Return to'
+back_to = 'Back to'
+yes = 'Yes'
+no = 'No'
 
 # Messages on /signin
 
@@ -118,7 +120,7 @@ recent_participated_topics = 'Recent Participated Topics'
 site_settings = 'Site Settings'
 site_settings_explained = 'Site name, slogan, description and other details.'
 topic_settings = 'Topic Settings'
-topic_settings_explained = 'Configure topic types and who can post, who can reply'
+topic_settings_explained = 'Configure topic types and who can post, who can reply.'
 sections = 'Sections'
 add_new_section = 'Add New Section'
 minisites = 'Minisites'
@@ -138,3 +140,9 @@ site_description = 'Description'
 site_home_categories = 'Home Categories'
 one_category_per_line = 'One featured category per line'
 site_settings_updated = 'Site settings updated successfully'
+
+# Messages on /backstage/topic
+
+enable_topic_types = 'Enable Topic Types'
+topic_types = 'Topic Types'
+topic_types_explained = 'One type per line, use colon to separate name and color'

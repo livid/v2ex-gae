@@ -133,7 +133,7 @@ class SettingsHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['page_title'] = site.title + u' › ' + l10n.settings
+        template_values['page_title'] = site.title + u' › ' + l10n.settings.decode('utf-8')
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username
@@ -202,7 +202,7 @@ class SettingsHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['page_title'] = site.title + u' › ' + l10n.settings
+        template_values['page_title'] = site.title + u' › ' + l10n.settings.decode('utf-8')
         if (member):
             template_values['member'] = member
             template_values['member_username'] = member.username

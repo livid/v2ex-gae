@@ -13,7 +13,7 @@
 	        </div>
 	    {% endifequal %}
 	    <div class="sep3"></div>
-		<span class="bigger" style="font-size: 16px"><a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a></span>
+		<span class="bigger" style="font-size: 16px">{% if site.use_topic_types %}{% if topic.type %}<span style="display: inline-block; background-color: {{ topic.type_color }}; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; color: #fff; padding: 0px 8px 0px 8px; font-size: 13px;">{{ topic.type }}</span> &nbsp;{% endif %}{% endif %}<a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a></span>
 		<div class="sep5"></div>
 		<span class="fade" style="font-size: 10px;">By <strong><a href="/member/{{ topic.created_by|escape }}" class="dark">{{ topic.created_by|escape }}</a></strong>{% if topic.node_name %} in <strong><a href="/go/{{ topic.node_name }}" class="dark">{{ topic.node_title|escape }}</a></strong>{% endif %}<br />
         <span class="created">{{ topic.last_touched|timesince }} ago{% if topic.last_reply_by %} replied by <a href="/member/{{ topic.last_reply_by }}" class="dark">{{ topic.last_reply_by }}</a>{% endif %}</span>

@@ -63,12 +63,20 @@ class NewTopicHandler(webapp.RequestHandler):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
             template_values['node'] = node
-            section = False
-            if node:
-                q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                if (q2.count() == 1):
-                    section = q2[0]
+            section = GetKindByNum('Section', node.section_num)
             template_values['section'] = section
+            if site.use_topic_types:
+                types = site.topic_types.split("\n")
+                options = '<option value="0">&nbsp;&nbsp;&nbsp;&nbsp;</option>'
+                i = 0
+                for a_type in types:
+                    i = i + 1
+                    detail = a_type.split(':')
+                    options = options + '<option value="' + str(i) + '">' + detail[0] + '</option>'
+                tt = '<div class="sep5"></div><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td width="60" align="right">Topic Type</td><td width="auto" align="left"><select name="type">' + options + '</select></td></tr></table>'
+                template_values['tt'] = tt
+            else:
+                template_values['tt'] = ''
             if browser['ios']:
                 if node:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
@@ -142,6 +150,38 @@ class NewTopicHandler(webapp.RequestHandler):
             template_values['topic_content'] = topic_content
             template_values['topic_content_error'] = topic_content_error
             template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
+            # Verification: type
+            if site.use_topic_types:
+                types = site.topic_types.split("\n")
+                if len(types) > 0:
+                    topic_type = self.request.get('type').strip()
+                    try:
+                        topic_type = int(topic_type)
+                        if topic_type < 0:
+                            topic_type = 0
+                        if topic_type > len(types):
+                            topic_type = 0
+                        if topic_type > 0:
+                            detail = types[topic_type - 1].split(':')
+                            topic_type_label = detail[0]
+                            topic_type_color = detail[1]
+                    except:
+                        topic_type = 0
+                else:
+                    topic_type = 0
+                options = '<option value="0">&nbsp;&nbsp;&nbsp;&nbsp;</option>'
+                i = 0
+                for a_type in types:
+                    i = i + 1
+                    detail = a_type.split(':')
+                    if topic_type == i:
+                        options = options + '<option value="' + str(i) + '" selected="selected">' + detail[0] + '</option>'
+                    else:
+                        options = options + '<option value="' + str(i) + '">' + detail[0] + '</option>'
+                tt = '<div class="sep5"></div><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td width="60" align="right">Topic Type</td><td width="auto" align="left"><select name="type">' + options + '</select></td></tr></table>'
+                template_values['tt'] = tt
+            else:
+                template_values['tt'] = ''
             template_values['errors'] = errors
             if (errors == 0):
                 topic = Topic(parent=node)
@@ -185,7 +225,11 @@ class NewTopicHandler(webapp.RequestHandler):
                 if (re.findall('Android', ua)):
                     topic.source = 'Android'
                 if (re.findall('Mozilla\/5.0 \(PLAYSTATION 3;', ua)):
-                    topic.source = 'PS3'            
+                    topic.source = 'PS3'
+                if site.use_topic_types:
+                    if topic_type > 0:
+                        topic.type = topic_type_label
+                        topic.type_color = topic_type_color          
                 node.topics = node.topics + 1
                 node.put()
                 topic.put()

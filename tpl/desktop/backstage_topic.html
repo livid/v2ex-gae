@@ -1,0 +1,68 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+        </div>
+        <div id="Content">
+            {% if message %}
+            <div class="box">
+                <div class="inner">{{ message }}</div>
+            </div>
+            <div class="sep20"></div>
+            {% endif %}
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">{{ l10n.backstage }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ l10n.topic_settings }}</span></div>
+                <div class="inner">
+                    <form action="/backstage/topic" method="post">
+                    {% if errors %}
+        			<strong>{{ l10n.resolve_errors }}</strong>
+        			<div class="sep10"></div>
+        			<ul>
+        				{% if site_topic_types_error %}
+        				<li>{{ site_topic_types_message }}</li>
+        				{% endif %}
+        			</ul>
+        			<div class="sep10"></div>
+        			{% endif %}
+                    <table cellpadding="5" cellspacing="0" border="0">
+        			    <tr>
+        			        <td width="120" align="right">
+        			            {{ l10n.enable_topic_types }}
+        			        </td>
+        			        <td width="200" align="left">
+        			            {{ s }}
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="120" align="right">
+        			            {{ l10n.topic_types }}
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="topic_types">{{ site_topic_types|escape }}</textarea>
+        			            <div class="sep5"></div>
+        			            <span class="fade">{{ l10n.topic_types_explained }}</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="100" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="submit" value="{{ l10n.save }}" class="super normal button" />
+        			        </td>
+        			    </tr>
+        			</table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

@@ -93,6 +93,8 @@ class Topic(db.Model):
     created_by = db.StringProperty(required=False, indexed=True)
     last_reply_by = db.StringProperty(required=False, indexed=True)
     source = db.StringProperty(required=False, indexed=True)
+    type = db.StringProperty(required=False, indexed=True)
+    type_color = db.StringProperty(required=False)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
     last_touched = db.DateTimeProperty()
@@ -167,6 +169,8 @@ class Site(db.Model):
     analytics = db.StringProperty(required=False, indexed=False)
     home_categories = db.TextProperty(required=False, indexed=False)
     l10n = db.StringProperty(default='en')
+    use_topic_types = db.BooleanProperty(default=False)
+    topic_types = db.TextProperty(default='')
     
 class Minisite(db.Model):
     num = db.IntegerProperty(required=False, indexed=True)

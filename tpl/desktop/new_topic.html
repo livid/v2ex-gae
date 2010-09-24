@@ -31,12 +31,13 @@
                     <input type="text" name="title" value="{{ topic_title|escape }}" class="sll" />
                     <div class="sep10"></div>
                     <textarea name="content" class="mll tall">{{ topic_content|escape }}</textarea>
+                    {{ tt }}
                     <div class="sep10"></div>
                     <input type="submit" value="{{ l10n.create }}" class="super normal button" />
                     </form>
                 </div>
                 <div class="inner">
-                    <span class="fade"><span class="chevron">‹&nbsp;</span>{{ l10n.return_to}} <a href="/go/{{ node.name }}">{{ node.title|escape }}</a></span>
+                    <span class="fade"><span class="chevron">‹&nbsp;</span>{{ l10n.back_to}} <a href="/go/{{ node.name }}">{{ node.title|escape }}</a></span>
                 </div>
             </div>
         </div>
