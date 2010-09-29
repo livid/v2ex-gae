@@ -81,7 +81,7 @@ register.filter(mentions)
 
 # avatar filter
 def avatar(value,arg):
-    default = "http://v2ex.com/static/img/avatar_" + str(arg) + ".png"
+    default = "http://v2ex.appspot.com/static/img/avatar_" + str(arg) + ".png"
     if type(value).__name__ != 'Member':
         return '<img src="' + default + '" border="0" align="absmiddle" />'
     if arg == 'large':
