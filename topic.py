@@ -58,7 +58,7 @@ class NewTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic
+        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic.decode('utf-8')
         if (member):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
@@ -101,7 +101,7 @@ class NewTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic
+        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic.decode('utf-8')
         if (member):
             template_values['member'] = member
             q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
