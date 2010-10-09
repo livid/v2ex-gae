@@ -29,6 +29,7 @@ from v2ex.babel import SYSTEM_VERSION
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
 
@@ -152,6 +153,8 @@ class TwitterHomeHandler(webapp.RequestHandler):
                 template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
+                l10n = GetMessages(self, member, site)
+                template_values['l10n'] = l10n
                 template_values['page_title'] = site.title + u' › Twitter › Home'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
@@ -194,6 +197,8 @@ class TwitterMentionsHandler(webapp.RequestHandler):
                 template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
+                l10n = GetMessages(self, member, site)
+                template_values['l10n'] = l10n
                 template_values['page_title'] = site.title + u' › Twitter › Mentions'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
@@ -236,6 +241,8 @@ class TwitterDMInboxHandler(webapp.RequestHandler):
                 template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
+                l10n = GetMessages(self, member, site)
+                template_values['l10n'] = l10n
                 template_values['page_title'] = site.title + u' › Twitter › Direct Messages › Inbox'
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
@@ -277,6 +284,8 @@ class TwitterUserTimelineHandler(webapp.RequestHandler):
                 template_values['site'] = site
                 template_values['rnd'] = random.randrange(1, 100)
                 template_values['member'] = member
+                l10n = GetMessages(self, member, site)
+                template_values['l10n'] = l10n
                 template_values['page_title'] = site.title + u' › Twitter › ' + screen_name
                 template_values['screen_name'] = screen_name
                 access_token = OAuthToken.from_string(member.twitter_oauth_string)

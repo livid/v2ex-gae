@@ -91,8 +91,6 @@ class PlaceHandler(webapp.RequestHandler):
         else:
             go = '/place'
         member = CheckAuth(self)
-        l10n = GetMessages(self, member, site)
-        template_values['l10n'] = l10n
         place = GetPlaceByIP(ip)
         say = self.request.get('say').strip()
         if len(say) > 0 and len(say) < 280 and member and place:
