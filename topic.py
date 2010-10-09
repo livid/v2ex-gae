@@ -58,7 +58,7 @@ class NewTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic
+        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic.decode('utf-8')
         if (member):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
@@ -101,7 +101,7 @@ class NewTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic
+        template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic.decode('utf-8')
         if (member):
             template_values['member'] = member
             q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
@@ -782,13 +782,13 @@ class TopicIndexHandler(webapp.RequestHandler):
 
 class ReplyEditHandler(webapp.RequestHandler):
     def get(self, reply_num):
+        template_values = {}
         site = GetSite()
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
             if member.num == 1:
-                template_values = {}
                 template_values['page_title'] = site.title + u' › 编辑回复'
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
@@ -811,13 +811,13 @@ class ReplyEditHandler(webapp.RequestHandler):
             self.redirect('/signin')
     
     def post(self, reply_num):
+        template_values = {}
         site = GetSite()
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
             if member.num == 1:
-                template_values = {}
                 template_values['page_title'] = site.title + u' › 编辑回复'
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
