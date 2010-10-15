@@ -184,6 +184,7 @@ class Minisite(db.Model):
 class Page(db.Model):
     num = db.IntegerProperty(required=False, indexed=True)
     name = db.StringProperty(required=False, indexed=True)
+    title = db.StringProperty(required=False, indexed=False)
     minisite = db.ReferenceProperty(Minisite)
     content = db.TextProperty(default='')
     content_rendered = db.TextProperty(default='')

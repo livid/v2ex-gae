@@ -245,7 +245,7 @@ class NewTopicHandler(webapp.RequestHandler):
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
                     access_token = OAuthToken.from_string(member.twitter_oauth_string)
                     twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
-                    status = topic.title + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
+                    status = topic.title + ' #' + topic.node.name + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
                     try:
                         twitter.PostUpdate(status.encode('utf-8'))
                     except:

@@ -233,11 +233,163 @@ class BackstageMinisiteHandler(webapp.RequestHandler):
                 if minisite is not False:
                     template_values['minisite'] = minisite
                     template_values['page_title'] = site.title + u' › ' + minisite.title
+                    q = db.GqlQuery("SELECT * FROM Page WHERE minisite = :1 ORDER BY weight ASC", minisite)
+                    template_values['pages'] = q
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_minisite.html')
                     output = template.render(path, template_values)
                     self.response.out.write(output)
                 else:
                     self.redirect('/backstage')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+
+class BackstageNewPageHandler(webapp.RequestHandler):
+    def get(self, minisite_name):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        template_values['system_version'] = SYSTEM_VERSION
+        member = CheckAuth(self)
+        template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if (member):
+            if (member.num == 1):
+                minisite = GetKindByName('Minisite', minisite_name)
+                if minisite is not False:
+                    template_values['minisite'] = minisite
+                    template_values['page_title'] = site.title + u' › ' + minisite.title + u' › 添加新页面'
+                    template_values['page_content_type'] = 'text/html;charset=utf-8'
+                    template_values['page_weight'] = 0
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_page.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+                else:
+                    self.redirect('/backstage')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+
+    def post(self, minisite_name):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        template_values['system_version'] = SYSTEM_VERSION
+        member = CheckAuth(self)
+        template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if (member):
+            if (member.num == 1):
+                minisite = GetKindByName('Minisite', minisite_name)
+                if minisite is False:
+                    self.redirect('/backstage')
+                else:
+                    template_values['minisite'] = minisite
+                    template_values['page_title'] = site.title + u' › ' + minisite.title + u' › 添加新页面'
+                    errors = 0
+                    # Verification: name
+                    page_name_error = 0
+                    page_name_error_messages = ['',
+                        u'请输入页面名',
+                        u'页面名长度不能超过 64 个字符',
+                        u'页面名只能由 a-Z 0-9 及 . - _ 组成',
+                        u'抱歉这个页面名已经存在了']
+                    page_name = self.request.get('name').strip().lower()
+                    if (len(page_name) == 0):
+                        errors = errors + 1
+                        page_name_error = 1
+                    else:
+                        if (len(page_name) > 64):
+                            errors = errors + 1
+                            page_name_error = 2
+                        else:
+                            if (re.search('^[a-zA-Z0-9\-\_\.]+$', page_name)):
+                                q = db.GqlQuery('SELECT __key__ FROM Page WHERE name = :1', page_name.lower())
+                                if (q.count() > 0):
+                                    if q[0].minisite.name == minisite.name:
+                                        errors = errors + 1
+                                        page_name_error = 4
+                            else:
+                                errors = errors + 1
+                                page_name_error = 3
+                    template_values['page_name'] = page_name
+                    template_values['page_name_error'] = page_name_error
+                    template_values['page_name_error_message'] = page_name_error_messages[page_name_error]
+                    # Verification: title
+                    page_t_error = 0
+                    page_t_error_messages = ['',
+                        u'请输入页面标题',
+                        u'页面标题长度不能超过 100 个字符'
+                    ]
+                    page_t = self.request.get('t').strip()
+                    if (len(page_t) == 0):
+                        errors = errors + 1
+                        page_t_error = 1
+                    else:
+                        if (len(page_t) > 100):
+                            errors = errors + 1
+                            page_t_error = 2
+                    template_values['page_t'] = page_t
+                    template_values['page_t_error'] = page_t_error
+                    template_values['page_t_error_message'] = page_t_error_messages[page_t_error]
+                    # Verification: content
+                    page_content_error = 0
+                    page_content_error_messages = ['',
+                        u'请输入页面内容',
+                        u'页面内容长度不能超过 200000 个字符'
+                    ]
+                    page_content = self.request.get('content').strip()
+                    if (len(page_content) == 0):
+                        errors = errors + 1
+                        page_content_error = 1
+                    else:
+                        if (len(page_content) > 200000):
+                            errors = errors + 1
+                            page_content_error = 2
+                    template_values['page_content'] = page_content
+                    template_values['page_content_error'] = page_content_error
+                    template_values['page_content_error_message'] = page_content_error_messages[page_content_error]
+                    template_values['errors'] = errors
+                    if (errors == 0):
+                        page = Page()
+                        q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'page.max')
+                        if (q.count() == 1):
+                            counter = q[0]
+                            counter.value = counter.value + 1
+                        else:
+                            counter = Counter()
+                            counter.name = 'page.max'
+                            counter.value = 1
+                        q2 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'page.total')
+                        if (q2.count() == 1):
+                            counter2 = q[0]
+                            counter2.value = counter.value + 1
+                        else:
+                            counter2 = Counter()
+                            counter2.name = 'page.total'
+                            counter2.value = 1
+                        page.num = counter.value
+                        page.name = page_name
+                        page.title = page_t
+                        page.content = page_content
+                        page.content_rendered = page_content
+                        page.minisite = minisite
+                        page.put()
+                        counter.put()
+                        counter2.put()
+                        minisite.pages = minisite.pages + 1
+                        minisite.put()
+                        memcache.delete('Minisite_' + str(minisite.num))
+                        memcache.delete('Minisite::' + str(minisite.name))
+                        self.redirect('/backstage/minisite/' + minisite.name)
+                    else:    
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_page.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
             else:
                 self.redirect('/')
         else:
@@ -1242,6 +1394,7 @@ def main():
     ('/backstage', BackstageHomeHandler),
     ('/backstage/new/minisite', BackstageNewMinisiteHandler),
     ('/backstage/minisite/(.*)', BackstageMinisiteHandler),
+    ('/backstage/new/page/(.*)', BackstageNewPageHandler),
     ('/backstage/new/section', BackstageNewSectionHandler),
     ('/backstage/section/(.*)', BackstageSectionHandler),
     ('/backstage/new/node/(.*)', BackstageNewNodeHandler),

@@ -59,6 +59,11 @@ indexes:
   - name: last_modified
     direction: desc
 
+- kind: Page
+  properties:
+  - name: minisite
+  - name: weight
+
 - kind: PlaceMessage
   properties:
   - name: place
