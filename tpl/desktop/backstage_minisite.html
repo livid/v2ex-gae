@@ -9,7 +9,7 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><div class="fr"><div class="sep5"></div><a href="/backstage/new/page/{{ minisite.name }}" class="super normal button">添加新页面</a></div>
+                <div class="cell"><div class="fr"><input type="button" class="super normal button" value="添加新页面" onclick="location.href='/backstage/new/page/{{ minisite.name }}';" /></div>
                     <div class="sep5"></div><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">{{ l10n.backstage }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ minisite.title|escape }}</span><div class="sep3"></div></div>
                 <div class="grid" style="font-size: 14px;">
                     <table cellpadding="10" cellspacing="0" border="0" width="100%">

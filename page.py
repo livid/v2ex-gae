@@ -22,6 +22,7 @@ from v2ex.babel import Site
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -40,6 +41,8 @@ class AboutHandler(webapp.RequestHandler):
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › About'
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'about.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -58,6 +61,8 @@ class FAQHandler(webapp.RequestHandler):
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › FAQ'
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'faq.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -76,6 +81,8 @@ class MissionHandler(webapp.RequestHandler):
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › Mission'
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'mission.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -90,6 +97,8 @@ class AdvertiseHandler(webapp.RequestHandler):
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › Advertise'
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'advertise.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
@@ -104,6 +113,8 @@ class AdvertisersHandler(webapp.RequestHandler):
         if member:
             template_values['member'] = member
         template_values['page_title'] = site.title + u' › Advertisers'
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'advertisers.html')
         output = template.render(path, template_values)
         self.response.out.write(output)

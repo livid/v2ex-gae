@@ -1,0 +1,105 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+        </div>
+        <div id="Content">
+            {% if message %}
+            <div class="box">
+                <div class="inner">{{ message }}</div>
+            </div>
+            <div class="sep20"></div>
+            {% endif %}
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">后台</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage/minisite/{{ minisite.name }}">{{ minisite.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ page.title|escape }}</span></div>
+                <div class="inner">
+                    <form action="/backstage/page/{{ page.key }}" method="post">
+                    {% if errors %}
+        			<strong>请解决以下错误之后继续。</strong>
+        			<div class="sep10"></div>
+        			<ul>
+        				{% if page_title_error %}
+        				<li>{{ page_title_error_message }}</li>
+        				{% endif %}
+        				{% if page_name_error %}
+        				<li>{{ page_name_error_message }}</li>
+        				{% endif %}
+        				{% if page_description_error %}
+        				<li>{{ page_description_error_message }}</li>
+        				{% endif %}
+        			</ul>
+        			<div class="sep10"></div>
+        			{% endif %}
+                    <table cellpadding="5" cellspacing="0" border="0">
+        			    <tr>
+        			        <td width="80" align="right" valign="top">
+        			            <div class="sep5"></div>
+        			            页面名
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="name" value="{{ page_name|escape }}" />
+        			            <div class="sep5"></div>
+        			            <span class="fade">这将成为 URL 的一部分，只能使用半角字母和数字及点号</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            页面标题
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="t" value="{{ page_t|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            页面内容
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="content">{{ page_content|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right" valign="top">
+        			            <div class="sep5"></div>
+        			            内容类型
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="content_type" value="{{ page_content_type|escape }}" />
+        			            <div class="sep5"></div>
+        			            <span class="fade">默认是 text/html;charset=utf-8</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right" valign="top">
+        			            <div class="sep5"></div>
+        			            内容重量
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sls" name="weight" value="{{ page_weight }}" />
+        			            <div class="sep5"></div>
+        			            <span class="fade">请输入一个整数</span>
+        			        </td>
+        			    </tr>
+                        <tr>
+        			        <td width="80" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="submit" value="保存" class="super normal button" />
+        			        </td>
+        			    </tr>
+        			</table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

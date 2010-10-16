@@ -828,6 +828,37 @@ class DispatcherHandler(webapp.RequestHandler):
         else:
             self.redirect(referer)
 
+class RouterHandler(webapp.RequestHandler):
+    def get(self, path):
+        if path.find('/') != -1:
+            parts = path.split('/')
+            if len(parts) == 2:
+                minisite_name = parts[0]
+                page_name = parts[1]
+                minisite = GetKindByName('Minisite', minisite_name)
+                if minisite is not False:
+                    page = memcache.get(path)
+                    if page:
+                        expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
+                        expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+                        self.response.headers.add_header("Expires", expires_str)
+                        self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
+                        self.response.headers['Content-Type'] = page.content_type
+                        self.response.out.write(page.content)
+                    else:
+                        q = db.GqlQuery("SELECT * FROM Page WHERE name = :1 AND minisite = :2", page_name, minisite)
+                        if q.count() == 1:
+                            page = q[0]
+                            memcache.set(path, page, 864000)
+                            expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
+                            expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+                            self.response.headers.add_header("Expires", expires_str)
+                            self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
+                            self.response.headers['Content-Type'] = page.content_type
+                            self.response.out.write(page.content)
+        else:
+            self.response.out.write('site: ' + paths)
+
 def main():
     application = webapp.WSGIApplication([
     ('/', HomeHandler),
@@ -841,7 +872,8 @@ def main():
     ('/go/(.*)', NodeHandler),
     ('/n/([a-zA-Z0-9]+).json', NodeApiHandler),
     ('/q/(.*)', SearchHandler),
-    ('/_dispatcher', DispatcherHandler)
+    ('/_dispatcher', DispatcherHandler),
+    ('/(.*)', RouterHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
