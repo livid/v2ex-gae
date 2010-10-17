@@ -562,6 +562,7 @@ class BackstagePageHandler(webapp.RequestHandler):
                         page.put()
                         memcache.delete('Page_' + str(page.num))
                         memcache.delete('Page::' + str(page.name))
+                        memcache.delete(minisite.name + '/' + page.name)
                         self.redirect('/backstage/minisite/' + minisite.name)
                     else:    
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_page.html')

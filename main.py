@@ -831,6 +831,7 @@ class DispatcherHandler(webapp.RequestHandler):
 class RouterHandler(webapp.RequestHandler):
     def get(self, path):
         if path.find('/') != -1:
+            # Page
             parts = path.split('/')
             if len(parts) == 2:
                 minisite_name = parts[0]
@@ -857,7 +858,15 @@ class RouterHandler(webapp.RequestHandler):
                             self.response.headers['Content-Type'] = page.content_type
                             self.response.out.write(page.content)
         else:
-            self.response.out.write('site: ' + paths)
+            # Site
+            page = memcache.get(path + '/index.html')
+            if page:
+                expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
+                expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+                self.response.headers.add_header("Expires", expires_str)
+                self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
+                self.response.headers['Content-Type'] = page.content_type
+                self.response.out.write(page.content)
 
 def main():
     application = webapp.WSGIApplication([
