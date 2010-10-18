@@ -79,8 +79,8 @@ def mentions(value):
         return value
 register.filter(mentions)
 
-# avatar filter
-def avatar(value,arg):
+# gravatar filter
+def gravatar(value,arg):
     default = "http://v2ex.appspot.com/static/img/avatar_" + str(arg) + ".png"
     if type(value).__name__ != 'Member':
         return '<img src="' + default + '" border="0" align="absmiddle" />'
@@ -100,6 +100,27 @@ def avatar(value,arg):
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(value.email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'s' : str(number_size), 'd' : default})
         return '<img src="' + gravatar_url + '" border="0" alt="' + value.username + '" align="absmiddle" />'
+register.filter(gravatar)
+
+# avatar filter
+def avatar(value, arg):
+    default = "http://v2ex.appspot.com/static/img/avatar_" + str(arg) + ".png"
+    if type(value).__name__ != 'Member':
+        return '<img src="' + default + '" border="0" align="absmiddle" />'
+    if arg == 'large':
+        number_size = 73
+        member_avatar_url = value.avatar_large_url
+    elif arg == 'normal':
+        number_size = 48
+        member_avatar_url = value.avatar_normal_url
+    elif arg == 'mini':
+        number_size = 24
+        member_avatar_url = value.avatar_mini_url
+        
+    if member_avatar_url:
+        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
+    else:
+        return '<img src="' + default + '" border="0" alt="' + value.username + '" />'
 register.filter(avatar)
 
 # github gist script support
