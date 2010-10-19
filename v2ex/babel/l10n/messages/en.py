@@ -71,6 +71,7 @@ just_topic_creator = "Just Topic Creator"
 replies = "replies"
 till = "Till"
 sure_to_delete = "Sure to delete?"
+no_pointless = "➥ Please avoid posting pointless replies, it's always great to save everyone's precious time."
 
 # Messages on /go/
 
