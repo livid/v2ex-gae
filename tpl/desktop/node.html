@@ -69,6 +69,22 @@
                     {% endif %}
                 </div>
             </div>
+            {% if member %}
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell">快速发贴</div>
+                <div class="cell">
+                    <form action="/new/{{ node.name }}" method="post">
+                    <input type="text" name="title" value="" class="sll" />
+                    <div class="sep10"></div>
+                    <textarea name="content" class="mll"></textarea>
+                    <div class="sep10"></div>
+                    <input type="submit" value="{{ l10n.create }}" class="super normal button" />
+                    </form>
+                </div>
+                <div class="inner"><span class="fade">请不要创建重复主题。</span></div>
+            </div>
+            {% endif %}
         </div>
     <div class="c"></div>
     </div>
