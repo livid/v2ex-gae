@@ -27,6 +27,8 @@ from v2ex.babel import SYSTEM_VERSION
 
 from v2ex.babel.security import *
 from v2ex.babel.ua import *
+from v2ex.babel.da import *
+from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -36,8 +38,11 @@ class WorldClockHandler(webapp.RequestHandler):
         site = GetSite()
         member = CheckAuth(self)
         template_values = {}
+        template_values['site'] = site
         if member:
             template_values['member'] = member
+        l10n = GetMessages(self, site, member)
+        template_values['l10n'] = l10n
         template_values['page_title'] = site.title + u' › World Clock 世界时钟'
         template_values['now'] = datetime.datetime.now()
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'time.html')
