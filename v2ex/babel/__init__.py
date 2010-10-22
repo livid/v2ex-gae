@@ -71,6 +71,7 @@ class Node(db.Model):
     title_alternative = db.StringProperty(required=False, indexed=True)
     header = db.TextProperty(required=False)
     footer = db.TextProperty(required=False)
+    sidebar = db.TextProperty(required=False)
     category = db.StringProperty(required=False, indexed=True)
     topics = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)

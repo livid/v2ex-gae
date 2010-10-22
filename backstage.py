@@ -1011,6 +1011,7 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
 class BackstageNodeHandler(webapp.RequestHandler):
     def get(self, node_name):
         site = GetSite()
+        browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
@@ -1038,6 +1039,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                         template_values['node_footer'] = ''
                     else:
                         template_values['node_footer'] = q[0].footer
+                    if q[0].sidebar is None:
+                        template_values['node_sidebar'] = ''
+                    else:
+                        template_values['node_sidebar'] = q[0].sidebar
                     template_values['node_topics'] = q[0].topics
                 else:
                     template_values['node'] = False
@@ -1046,7 +1051,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     template_values['section'] = q2[0]
                 else:
                     template_values['section'] = False
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_node.html')
+                if browser['ios']:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_node.html')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_node.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
             else:
@@ -1056,6 +1064,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
     
     def post(self, node_name):
         site = GetSite()
+        browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
@@ -1085,6 +1094,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                         template_values['node_footer'] = ''
                     else:
                         template_values['node_footer'] = q[0].footer
+                    if q[0].sidebar is None:
+                        template_values['node_sidebar'] = ''
+                    else:
+                        template_values['node_sidebar'] = q[0].sidebar
                     template_values['node_topics'] = q[0].topics
                 else:
                     template_values['node'] = False
@@ -1158,10 +1171,16 @@ class BackstageNodeHandler(webapp.RequestHandler):
                 template_values['node_title_alternative_error_message'] = node_title_alternative_error_messages[node_title_alternative_error]
                 # Verification: node_category
                 node_category = self.request.get('category').strip()
+                template_values['node_category'] = node_category
                 # Verification: node_header
                 node_header = self.request.get('header').strip()
+                template_values['node_header'] = node_header
                 # Verification: node_footer
                 node_footer = self.request.get('footer').strip()
+                template_values['node_footer'] = node_footer
+                # Verification: node_sidebar
+                node_sidebar = self.request.get('sidebar').strip()
+                template_values['node_sidebar'] = node_sidebar
                 template_values['errors'] = errors
                 if (errors == 0):
                     node.name = node_name
@@ -1170,6 +1189,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     node.category = node_category
                     node.header = node_header
                     node.footer = node_footer
+                    node.sidebar = node_sidebar
                     node.put()
                     memcache.delete('Node_' + str(node.num))
                     memcache.delete('Node::' + node.name)

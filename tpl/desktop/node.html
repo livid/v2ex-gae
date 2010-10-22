@@ -8,6 +8,10 @@
         <div id="Rightbar">
             {% include 'rightbar/user.html' %}
             <div class="sep20"></div>
+            {% if node.sidebar %}
+            <div class="box"><div class="inner">{{ node.sidebar }}</div></div>
+            <div class="sep20"></div>
+            {% endif %}
             {% include 'rightbar/ads.html' %}
             {% include 'rightbar/recent_nodes.html' %}
         </div>

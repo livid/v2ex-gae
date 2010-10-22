@@ -1,0 +1,133 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+        </div>
+        <div id="Content">
+            {% if message %}
+            <div class="box">
+                <div class="inner">{{ message }}</div>
+            </div>
+            <div class="sep20"></div>
+            {% endif %}
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">后台</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage/section/{{ section.name }}">{{ section.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span></div>
+                <div class="inner">
+                    <form action="/backstage/node/{{ node.name }}" method="post">
+                    {% if errors %}
+        			<strong>请解决以下错误之后继续。</strong>
+        			<div class="sep10"></div>
+        			<ul>
+        			    {% if node_name_error %}
+        				<li>{{ node_name_error_message }}</li>
+        				{% endif %}
+        				{% if node_title_error %}
+        				<li>{{ node_title_error_message }}</li>
+        				{% endif %}
+        				{% if node_title_alternative_error %}
+        				<li>{{ node_title_alternative_error_message }}</li>
+        				{% endif %}
+        				{% if node_category_error %}
+        				<li>{{ node_category_error_message }}</li>
+        				{% endif %}
+                        {% if node_header_error %}
+        				<li>{{ node_header_error_message }}</li>
+        				{% endif %}
+        				{% if node_footer_error %}
+        				<li>{{ node_footer_error_message }}</li>
+        				{% endif %}
+        				{% if node_sidebar_error %}
+        				<li>{{ node_sidebar_error_message }}</li>
+        				{% endif %}
+        			</ul>
+        			<div class="sep10"></div>
+        			{% endif %}
+                    <table cellpadding="5" cellspacing="0" border="0">
+        			    <tr>
+        			        <td width="80" align="right">
+        			            节点名
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="name" value="{{ node_name|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            节点标题
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="title" value="{{ node_title|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            节点副标题
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="title_alternative" value="{{ node_title_alternative|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            节点开放分类
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="category" value="{{ node_category|escape }}" />
+        			        </td>
+        			    </tr>
+                        <tr>
+        			        <td width="80" align="right">
+        			            头部信息
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="header">{{ node_header|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            尾部信息
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="footer">{{ node_footer|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            侧栏信息
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="sidebar">{{ node_sidebar|escape }}</textarea>
+        			            <div class="sep5"></div>
+        			            <span class="fade">头部，尾部及侧栏可使用 HTML</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			            节点主题数
+        			        </td>
+        			        <td width="200" align="left">
+        			            <strong>{{ node.topics }}</strong>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right">
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="submit" value="保存" class="super normal button" />
+        			        </td>
+        			    </tr>
+        			</table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
