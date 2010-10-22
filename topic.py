@@ -62,6 +62,10 @@ class NewTopicHandler(webapp.RequestHandler):
         if (member):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
+            if node is False:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'node_not_found.html')
+                output = template.render(path, template_values)
+                return self.response.out.write(output)
             template_values['node'] = node
             section = GetKindByNum('Section', node.section_num)
             template_values['section'] = section

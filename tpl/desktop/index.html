@@ -22,6 +22,9 @@
         </div>
         <div id="Content">
             <div class="box" id="topics_index">
+                {% if member %}
+                <div class="cell" align="center"><span class="snow">快速发贴 &nbsp;•&nbsp; <a href="/new/qna">提问</a> &nbsp;•&nbsp; <a href="/new/share">分享发现</a> &nbsp;•&nbsp; <a href="/new/random">随想</a> &nbsp;•&nbsp; <a href="/new/babel">Project Babel</a> &nbsp;•&nbsp; <a href="/new/iphone">iPhone</a> &nbsp;•&nbsp; <a href="/new/gae">Google App Engine</a> &nbsp;•&nbsp; <a href="/new/autistic">自言自语</a></span></div>
+                {% endif %}
                 {{ home }}
                 {% if member %}
                 <script type="text/javascript">
