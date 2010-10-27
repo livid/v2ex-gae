@@ -207,10 +207,10 @@ class HomeHandler(webapp.RequestHandler):
             template_values['c'] = c
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'index.html')
         output = template.render(path, template_values)
-        expires_date = datetime.datetime.utcnow() + datetime.timedelta(minutes=2)
+        expires_date = datetime.datetime.utcnow() + datetime.timedelta(seconds=20)
         expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
         self.response.headers.add_header("Expires", expires_str)
-        self.response.headers['Cache-Control'] = 'max-age=120, must-revalidate'
+        self.response.headers['Cache-Control'] = 'max-age=20, must-revalidate'
         self.response.out.write(output)
         
 class RecentHandler(webapp.RequestHandler):

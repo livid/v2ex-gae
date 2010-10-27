@@ -28,6 +28,12 @@
     <div class="inner">
     </div>
     {% endif %}
+    {% if member.avatar_large_url %}
+    {% else %}
+    <div class="yellow">
+        <span class="fade">你还没有上传头像 <a href="/settings/avatar">现在就上传</a></span>
+    </div>
+    {% endif %}
     {% else %}
     <div class="cell">
         <strong>{{ site.title }} = {{ site.slogan }}</strong>

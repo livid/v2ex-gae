@@ -222,6 +222,15 @@ a.dark:hover {
 	line-height: 16px;
 }
 
+.box .yellow {
+	padding: 10px;
+	font-size: 12px;
+	line-height: 16px;
+	background-color: #ffffe2;
+	border-top: 1px solid #ffffcc;
+	-moz-border-radius: 0px 0px 6px 6px;
+}
+
 .box .cell {
 	padding: 10px;
 	border-bottom: 1px solid #e2e2e2;
