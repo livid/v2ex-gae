@@ -1507,7 +1507,7 @@ class BackstageTopicHandler(webapp.RequestHandler):
         template_values['l10n'] = l10n
         if member:
             if member.num == 1:
-                template_values['page_title'] = site.title + u' › ' + l10n.backstage + u' › ' + l10n.topic_settings
+                template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + l10n.topic_settings.decode('utf-8')
                 template_values['site'] = site
                 template_values['site_use_topic_types'] = site.use_topic_types
                 if site.topic_types is None:
