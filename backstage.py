@@ -575,6 +575,26 @@ class BackstagePageHandler(webapp.RequestHandler):
         else:
             self.redirect('/signin')
     
+class BackstageRemovePageHandler(webapp.RequestHandler):
+    def get(self, page_key):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                page = db.get(db.Key(page_key))
+                if page:
+                    memcache.delete('Page_' + str(page.num))
+                    memcache.delete('Page::' + str(page.name))
+                    memcache.delete(page.minisite.name + '/' + page.name)
+                    minisite = page.minisite
+                    page.delete()
+                    minisite.pages = minisite.pages - 1
+                    minisite.put()
+                    self.redirect('/backstage/minisite/' + minisite.name)
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+
 class BackstageNewSectionHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
@@ -1596,6 +1616,7 @@ def main():
     ('/backstage/minisite/(.*)', BackstageMinisiteHandler),
     ('/backstage/new/page/(.*)', BackstageNewPageHandler),
     ('/backstage/page/(.*)', BackstagePageHandler),
+    ('/backstage/remove/page/(.*)', BackstageRemovePageHandler),
     ('/backstage/new/section', BackstageNewSectionHandler),
     ('/backstage/section/(.*)', BackstageSectionHandler),
     ('/backstage/new/node/(.*)', BackstageNewNodeHandler),
