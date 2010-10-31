@@ -131,6 +131,7 @@ delete_specified_cached_item = 'Delete Specified Cached Item'
 delete_specified_cached_item_explained = 'You can clear specified cached item by entering its name here.'
 mapreduce_explained = 'MapReduce is a very powerful tool for tidying all data, use with caution.'
 latest_joined = 'Latest Joined'
+sure_to_delete_minisite = 'Sure to delete this minisite and all its contents?'
 
 # Messages on /backstage/site
 

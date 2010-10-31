@@ -418,6 +418,34 @@ class BackstageNewPageHandler(webapp.RequestHandler):
         else:
             self.redirect('/signin')
 
+class BackstageRemoveMinisiteHandler(webapp.RequestHandler):
+    def get(self, minisite_key):
+        member = CheckAuth(self)
+        if member:
+            if member.num == 1:
+                minisite = db.get(db.Key(minisite_key))
+                if minisite:
+                    # Delete all contents
+                    pages = db.GqlQuery("SELECT * FROM Page WHERE minisite = :1", minisite)
+                    for page in pages:
+                        memcache.delete('Page_' + str(page.num))
+                        memcache.delete('Page::' + str(page.name))
+                        memcache.delete(minisite.name + '/' + page.name)
+                        page.delete()
+                    minisite.pages = 0
+                    minisite.put()
+                    # Delete the minisite
+                    memcache.delete('Minisite_' + str(minisite.num))
+                    memcache.delete('Minisite::' + str(minisite.name))
+                    minisite.delete()
+                    self.redirect('/backstage')
+                else:
+                    self.redirect('/backstage')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+
 class BackstagePageHandler(webapp.RequestHandler):
     def get(self, page_key):
         site = GetSite()
@@ -1614,6 +1642,7 @@ def main():
     ('/backstage', BackstageHomeHandler),
     ('/backstage/new/minisite', BackstageNewMinisiteHandler),
     ('/backstage/minisite/(.*)', BackstageMinisiteHandler),
+    ('/backstage/remove/minisite/(.*)', BackstageRemoveMinisiteHandler),
     ('/backstage/new/page/(.*)', BackstageNewPageHandler),
     ('/backstage/page/(.*)', BackstagePageHandler),
     ('/backstage/remove/page/(.*)', BackstageRemovePageHandler),

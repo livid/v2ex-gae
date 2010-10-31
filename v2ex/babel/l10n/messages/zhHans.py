@@ -131,6 +131,7 @@ delete_specified_cached_item = '删除指定的缓存项目'
 delete_specified_cached_item_explained = '你可以在这里输入指定的缓存项目的名字并删除它。'
 mapreduce_explained = 'MapReduce 是一个用于数据整理的超强工具，请谨慎使用。'
 latest_joined = '最新加入会员'
+sure_to_delete_minisite = '确认删除这个 minisite 及其所有内容？'
 
 # Messages on /backstage/site
 
