@@ -37,12 +37,12 @@
                     }
                     {% if member %}
                     if ($(this).hasClass('from_{{ member.num }}')) {
-                        $(this).find('a.count').addClass('count_green');
+                        $(this).find('a.count').addClass('count_orange');
                     } else {
-                        $(this).find('a.count').addClass('count_blue');
+                        $(this).find('a.count').addClass('count_livid');
                     }
                     {% else %}
-                    $(this).find('a.count').addClass('count_blue');
+                    $(this).find('a.count').addClass('count_livid');
                     {% endif %}
                 });
                 </script>

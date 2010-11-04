@@ -58,12 +58,12 @@ ul li {
 }
 
 a:link, a:visited, a:active {
-	color: #1c7fdb;
+	color: #838aa4;
 	text-decoration: none;
 }
 
 a:hover {
-	color: #1785eb;
+	color: #636a86;
 	text-decoration: underline;
 }
 
@@ -102,8 +102,8 @@ a.dark:hover {
 
 #Top {
 	background: #303033; 
-	background: -moz-linear-gradient(center top , #444, #111) repeat scroll 0 0 transparent; 
-	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111)); 
+	background: -moz-linear-gradient(center top , #b6bcd4, #636a86) repeat scroll 0 0 transparent; 
+	background: -webkit-gradient(linear, left top, left bottom, from(#b6bcd4), to(#636a86)); 
 	height: 40px;
 }
 
@@ -115,12 +115,12 @@ a.dark:hover {
 }
 
 #Logo {
-	background-image: url("/static/img/logo.png");
-	width: 70px;
-	height: 20px;
+	background-image: url("/static/img/logo_livid.png");
+	width: 88px;
+	height: 26px;
 	cursor: pointer;
 	float: left;
-	margin-top: 11px;
+	margin-top: 8px;
 	margin-left: 15px;
 }
 
@@ -135,7 +135,7 @@ a.dark:hover {
 	text-align: right;
 	font-size: 14px;
 	color: #fff;
-	margin-top: 14px;
+	margin-top: 13px;
 	line-height: 14px;
 }
 
@@ -156,9 +156,9 @@ a.dark:hover {
 }
 
 #Wrapper {
-	background-color: #e2e2e2;
-	border-top: 1px solid #777;
-	background-image: url("/static/img/bg_grid.png");
+	border-top: 1px solid #5a607a;
+	background-color: #b6bcd4;
+	background-image: url("/static/img/bg_grid.jpg");
 }
 
 #Main {
@@ -185,8 +185,8 @@ a.dark:hover {
 }
 
 #Bottom {
+	border-top: 1px solid #686f8b;
 	background-color: #fff;
-	border-top: 1px solid #b3cde4;
 }
 
 #BottomMain {
@@ -201,11 +201,12 @@ a.dark:hover {
 
 .box {
 	background-color: #fff;
-	border: 1px solid #b3cde4;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15);
+	-webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15);
+	border-top: 1px solid #cccccf;
+	border-bottom: 2px solid #e2e2e2;
 }
 
 .glass {
@@ -312,6 +313,14 @@ td.avatar_mini {
 
 .sky {
 	color: #69859d;
+}
+
+.white {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+.orange {
+	color: #ff9933;
 }
 
 .fade {
@@ -430,7 +439,9 @@ td.avatar_mini {
 	-webkit-border-radius: 3px;
 	padding: 3px;
 	font-size: 14px;
-	border: 1px solid #ccc;
+	border-top: 1px solid #828aa8;
+	border-bottom: 1px solid #828aa8;
+	border-left: 1px solid #828aa8;
 	width: 240px;
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
@@ -539,7 +550,7 @@ a.count {
 	text-decoration: none;
 }
 
-a.count_blue:visited, a.count_green:visited, a.count_orange:visited {
+a.count_blue:visited, a.count_green:visited, a.count_orange:visited, a.count_livid:visited {
 	line-height: 12px;
 	font-weight: bold;
 	color: white;
@@ -630,6 +641,32 @@ a.count_orange:hover {
 	text-decoration: none;
 }
 
+a.count_livid:link, a.count_livid:active {
+	line-height: 12px;
+	font-weight: bold;
+	color: white;
+	background-color: #aab0c6;
+	display: block;
+	padding: 2px 10px 2px 10px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	margin: 18px 12px 0px 0px;
+	text-decoration: none;
+}
+
+a.count_livid:hover {
+	line-height: 12px;
+	font-weight: bold;
+	color: white;
+	background-color: #969cb1;
+	display: block;
+	padding: 2px 10px 2px 10px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	margin: 18px 12px 0px 0px;
+	text-decoration: none;
+}
+
 .time td.city {
 	color: #667;
 	font-size: 16px;
@@ -708,6 +745,23 @@ a.tiny_label:link, a.tiny_label:visited, a.tiny_label:active {
 a.tiny_label:hover {
 	text-decoration: none;
 	background-color: #99a;
+}
+
+a.op:link, a.op:visited, a.op:active {
+	background-color: #dde;
+	font-size: 9px;
+	line-height: 9px;
+	display: inline-block;
+	padding: 2px 4px 2px 4px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	text-decoration: none;
+}
+
+a.op:hover {
+	text-decoration: none;
+	background-color: #667;
+	color: #fff;
 }
 
 .clickable {

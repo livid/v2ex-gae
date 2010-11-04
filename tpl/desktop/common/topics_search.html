@@ -6,9 +6,9 @@
 	    {% ifequal topic.replies 0 %}{% else %}
 	        <div class="fr">
 	            {% ifequal member.num topic.member_num %}
-	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_green">{{ topic.replies }}</a>
+	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_orange">{{ topic.replies }}</a>
 	            {% else %}
-	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_blue">{{ topic.replies }}</a>
+	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_livid">{{ topic.replies }}</a>
 	            {% endifequal %}
 	        </div>
 	    {% endifequal %}
