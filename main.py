@@ -690,6 +690,8 @@ class NodeHandler(webapp.RequestHandler):
         if node:
             template_values['canonical'] = 'http://' + site.domain + '/go/' + node.name
             if member:
+                favorited = member.hasFavorited(node)
+                template_values['favorited'] = favorited
                 recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
                 recent_nodes_ids = memcache.get('member::' + str(member.num) + '::recent_nodes_ids')
                 if recent_nodes and recent_nodes_ids:

@@ -45,6 +45,15 @@ class MyNodesHandler(webapp.RequestHandler):
             template_values['l10n'] = l10n
             template_values['page_title'] = site.title + u' › 我收藏的节点'
             template_values['rnd'] = random.randrange(1, 100)
+            if member.favorited_nodes > 0:
+                template_values['has_nodes'] = True
+                q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE member = :1 ORDER BY created DESC LIMIT 0,10", member)
+                template_values['column_1'] = q
+                if member.favorited_nodes > 10:
+                    q2 = db.GqlQuery("SELECT * FROM NodeBookmark WHERE member = :1 ORDER BY created DESC LIMIT 10,10", member)
+                    template_values['column_2'] = q2
+            else:
+                template_values['has_nodes'] = False
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'my_nodes.html')
             output = template.render(path, template_values)
             self.response.out.write(output)

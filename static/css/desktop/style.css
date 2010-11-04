@@ -22,7 +22,7 @@ body {
 
 h1 {
 	font-size: 22px;
-	line-height: 22px;
+	line-height: 25px;
 	font-weight: bold;
 	padding: 10px 0px 10px 0px;
 	margin: 0px;
@@ -30,7 +30,7 @@ h1 {
 
 h2 {
 	font-size: 18px;
-	line-height: 18px;
+	line-height: 20px;
 	font-weight: bold;
 	padding: 10px 0px 10px 0px;
 	margin: 0px;
@@ -95,7 +95,7 @@ a.dark:link, a.dark:visited, a.dark:active {
 
 a.dark:hover {
 	color: #385f8a;
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 /* IDs */
@@ -203,8 +203,8 @@ a.dark:hover {
 	background-color: #fff;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
-	-moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15);
-	-webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0px 1px 5px rgba(0, 0, 18, 0.4);
+	-webkit-box-shadow: 0px 1px 5px rgba(0, 0, 18, 0.4);
 	border-top: 1px solid #cccccf;
 	border-bottom: 2px solid #e2e2e2;
 }
@@ -774,4 +774,16 @@ a.op:hover {
 
 .topic_content .imgly {
 	max-width: 635px;
+}
+
+.howmany {
+	display: inline-block;
+	font-size: 14px;
+	line-height: 14px;
+	padding: 3px 5px 3px 5px;
+	background-color: #f5f5ff;
+	border: 1px solid #f0f0ff;
+	color: #99a;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 }

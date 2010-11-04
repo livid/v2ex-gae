@@ -47,6 +47,12 @@ indexes:
   - name: topics
     direction: desc
 
+- kind: NodeBookmark
+  properties:
+  - name: member
+  - name: created
+    direction: desc
+
 - kind: Note
   properties:
   - name: member

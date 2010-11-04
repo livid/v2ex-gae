@@ -135,6 +135,15 @@ handlers:
 - url: /webluker-verif.html
   script: misc.py
 
+- url: /favorite/(.*)
+  script: favorite.py
+
+- url: /unfavorite/(.*)
+  script: favorite.py
+
+- url: /my/(.*)
+  script: my.py
+
 - url: .*
   script: main.py
 

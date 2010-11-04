@@ -45,6 +45,26 @@ class Member(db.Model):
     last_signin = db.DateTimeProperty()
     blocked = db.TextProperty(required=False, default='')
     l10n = db.StringProperty(default='en')
+    favorited_nodes = db.IntegerProperty(required=True, default=0)
+    favorited_topics = db.IntegerProperty(required=True, default=0)
+    favorited_members = db.IntegerProperty(required=True, default=0)
+    
+    def hasFavorited(self, something):
+        if type(something).__name__ == 'Node':
+            n = 'r/n' + str(something.num) + '/m' + str(self.num)
+            r = memcache.get(n)
+            if r:
+                return r
+            else:
+                q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE node =:1 AND member = :2", something, self)
+                if q.count() > 0:
+                    memcache.set(n, True, 86400 * 14)
+                    return True
+                else:
+                    memcache.set(n, False, 86400 * 14)
+                    return False
+        else:
+            return False
     
 class Counter(db.Model):
     name = db.StringProperty(required=False, indexed=True)
@@ -193,3 +213,8 @@ class Page(db.Model):
     weight = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
+
+class NodeBookmark(db.Model):
+    node = db.ReferenceProperty(Node)
+    member = db.ReferenceProperty(Member)
+    created = db.DateTimeProperty(auto_now_add=True)

@@ -1,0 +1,55 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell"><span class="bigger"><a href="/">{{ site.title }}</a> {{ l10n.chevron }} 我收藏的节点</span></div>
+                <div class="inner">
+                    {% if has_nodes %}
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                            <td width="50%" align="left" valign="top">
+                                <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                                    {% for bookmark in column_1 %}
+                                    <tr>
+                                        <td width="50" align="right" valign="middle"><div class="howmany">{{ bookmark.node.topics }}</div></td>
+                                        <td width="auto" align="left"><h2><a href="/go/{{ bookmark.node.name }}">{{ bookmark.node.title }}</a></h2></td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                            <td width="50%" align="left" valign="top">
+                                <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                                    {% for bookmark in column_2 %}
+                                    <tr>
+                                        <td width="50" align="right" valign="middle"><div class="howmany">{{ bookmark.node.topics }}</div></td>
+                                        <td width="auto" align="left"><h2><a href="/go/{{ bookmark.node.name }}">{{ bookmark.node.title }}</a></h2></td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    {% else %}
+                    <div class="sep20"></div>
+                    <div align="center"><h2 class="snow">目前你还没有收藏任何节点</h2></div>
+                    <div class="sep20"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
