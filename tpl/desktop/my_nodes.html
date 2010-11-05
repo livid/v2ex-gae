@@ -22,7 +22,7 @@
                                     {% for bookmark in column_1 %}
                                     <tr>
                                         <td width="50" align="right" valign="middle"><div class="howmany">{{ bookmark.node.topics }}</div></td>
-                                        <td width="auto" align="left"><h2><a href="/go/{{ bookmark.node.name }}">{{ bookmark.node.title }}</a></h2></td>
+                                        <td width="auto" align="left"><h3><a href="/go/{{ bookmark.node.name }}">{{ bookmark.node.title }}</a></h3></td>
                                     </tr>
                                     {% endfor %}
                                 </table>
@@ -32,7 +32,7 @@
                                     {% for bookmark in column_2 %}
                                     <tr>
                                         <td width="50" align="right" valign="middle"><div class="howmany">{{ bookmark.node.topics }}</div></td>
-                                        <td width="auto" align="left"><h2><a href="/go/{{ bookmark.node.name }}">{{ bookmark.node.title }}</a></h2></td>
+                                        <td width="auto" align="left"><h3><a href="/go/{{ bookmark.node.name }}">{{ bookmark.node.title }}</a></h3></td>
                                     </tr>
                                     {% endfor %}
                                 </table>

@@ -36,6 +36,14 @@ h2 {
 	margin: 0px;
 }
 
+h3 {
+	font-size: 15px;
+	line-height: 18px;
+	font-weight: 500;
+	padding: 6px 0px 6px 0px;
+	margin: 0px;
+}
+
 form {
 	display: inline;
 	padding: none;

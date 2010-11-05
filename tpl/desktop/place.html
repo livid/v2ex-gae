@@ -35,7 +35,7 @@
                 	<td valign="top" class="avatar"><a href="/member/{{ message.member.username }}">{{ message.member|avatar:"normal" }}</a></td>
                 	<td style="padding-left: 12px" valign="top"><div class="fr"><span class="created">{{ message.created|timesince }} ago{% ifequal message.member.num member.num %} &nbsp; <a href="#;" onclick="if (confirm('确认删除？')) { location.href = '/remove/place_message/{{ message.key }}'; }" class="tiny_label">DELETE</a>{% endifequal %}</span></div><span class="fade" style="font-size: 10px;"><strong><a href="/member/{{ message.member.username|escape }}" class="dark">{{ message.member.username|escape }}</a></strong></span>
                 	    <div class="sep5"></div>
-                	    <span class="bigger" style="font-size: 16px">{{ message.content|escape|urlize }}</span>
+                	    <span class="bigger" style="font-size: 14px; line-height: 120%;">{{ message.content|escape|urlize }}</span>
                 	</td>
                 	</tr>
                 </table>
