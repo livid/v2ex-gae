@@ -389,6 +389,8 @@ class SettingsHandler(webapp.RequestHandler):
                 member.l10n = member_l10n
                 member.put()
                 memcache.delete('Member_' + str(member.num))
+                memcache.delete('Member::' + str(member.username))
+                memcache.delete('Member::' + str(member.username_lower))
                 self.redirect('/settings')
             else:
                 if browser['ios']:

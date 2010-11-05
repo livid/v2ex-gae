@@ -322,15 +322,15 @@ class TopicHandler(webapp.RequestHandler):
             taskqueue.add(url='/hit/topic/' + str(topic.key()))
             template_values['page_title'] = site.title + u' › ' + topic.title
             template_values['canonical'] = 'http://' + site.domain + '/t/' + str(topic.num)
+            if topic.content_rendered is None:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
+                output = template.render(path, {'topic' : topic})
+                topic = db.get(topic.key())
+                topic.content_rendered = output.decode('utf-8')
+                memcache.delete('Topic_' + str(topic.num))
+                topic.put()
         else:
             template_values['page_title'] = site.title + u' › 主题未找到'
-        if topic.content_rendered is None:
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
-            output = template.render(path, {'topic' : topic})
-            topic = db.get(topic.key())
-            topic.content_rendered = output.decode('utf-8')
-            memcache.delete('Topic_' + str(topic.num))
-            topic.put()
         template_values['topic'] = topic
         if member:
             if member.num == 1:
@@ -736,6 +736,7 @@ class TopicDeleteHandler(webapp.RequestHandler):
                             counter = q3[0]
                             counter.value = counter.value - replies_count
                             counter.put()
+                    memcache.delete('Topic_' + str(topic.num))
                     topic.delete()
                     q4 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.total')
                     if q4.count() == 1:
