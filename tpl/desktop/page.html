@@ -1,0 +1,21 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            {{ page.content_rendered }}
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

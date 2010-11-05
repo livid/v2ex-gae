@@ -210,7 +210,9 @@ class Page(db.Model):
     content = db.TextProperty(default='')
     content_rendered = db.TextProperty(default='')
     content_type = db.StringProperty(default='text/html')
-    weight = db.IntegerProperty(default=0)
+    weight = db.IntegerProperty(required=True, default=0)
+    mode = db.IntegerProperty(required=True, default=0)
+    hits = db.IntegerProperty(required=True, default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
 

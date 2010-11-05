@@ -66,7 +66,7 @@ ul li {
 }
 
 a:link, a:visited, a:active {
-	color: #838aa4;
+	color: #636a86;
 	text-decoration: none;
 }
 
@@ -769,6 +769,24 @@ a.op:link, a.op:visited, a.op:active {
 a.op:hover {
 	text-decoration: none;
 	background-color: #667;
+	color: #fff;
+}
+
+a.opo:link, a.opo:visited, a.opo:active {
+	background-color: #334;
+	color: #fff;
+	font-size: 9px;
+	line-height: 9px;
+	display: inline-block;
+	padding: 2px 4px 2px 4px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	text-decoration: none;
+}
+
+a.opo:hover {
+	text-decoration: none;
+	background-color: #ff7733;
 	color: #fff;
 }
 

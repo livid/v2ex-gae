@@ -874,8 +874,7 @@ class ReplyEditHandler(webapp.RequestHandler):
             else:
                 self.redirect('/')
         else:
-            self.redirect('/signin')
-        
+            self.redirect('/signin')       
 
 class TopicHitHandler(webapp.RequestHandler):
     def post(self, topic_key):
@@ -883,6 +882,13 @@ class TopicHitHandler(webapp.RequestHandler):
         if topic:
             topic.hits = topic.hits + 1
             topic.put()
+
+class PageHitHandler(webapp.RequestHandler):
+    def post(self, page_key):
+        page = db.get(db.Key(page_key))
+        if page:
+            page.hits = page.hits + 1
+            page.put()
 
 def main():
     application = webapp.WSGIApplication([
@@ -893,7 +899,8 @@ def main():
     ('/delete/topic/([0-9]+)', TopicDeleteHandler),
     ('/index/topic/([0-9]+)', TopicIndexHandler),
     ('/edit/reply/([0-9]+)', ReplyEditHandler),
-    ('/hit/topic/(.*)', TopicHitHandler)
+    ('/hit/topic/(.*)', TopicHitHandler),
+    ('/hit/page/(.*)', PageHitHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

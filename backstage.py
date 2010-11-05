@@ -263,6 +263,7 @@ class BackstageNewPageHandler(webapp.RequestHandler):
                     template_values['page_title'] = site.title + u' › ' + minisite.title + u' › 添加新页面'
                     template_values['page_content_type'] = 'text/html;charset=utf-8'
                     template_values['page_weight'] = 0
+                    template_values['page_mode'] = 0
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_page.html')
                     output = template.render(path, template_values)
                     self.response.out.write(output)
@@ -353,6 +354,13 @@ class BackstageNewPageHandler(webapp.RequestHandler):
                     template_values['page_content'] = page_content
                     template_values['page_content_error'] = page_content_error
                     template_values['page_content_error_message'] = page_content_error_messages[page_content_error]
+                    # Verification: mode
+                    page_mode = 0
+                    page_mode = self.request.get('mode').strip()
+                    if page_mode == '1':
+                        page_mode = 1
+                    else:
+                        page_mode = 0
                     # Verification: content_type
                     page_content_type = self.request.get('content_type').strip()
                     if (len(page_content_type) == 0):
@@ -400,6 +408,7 @@ class BackstageNewPageHandler(webapp.RequestHandler):
                         page.content_rendered = page_content
                         page.content_type = page_content_type
                         page.weight = page_weight
+                        page.mode = page_mode
                         page.minisite = minisite
                         page.put()
                         counter.put()
@@ -468,6 +477,7 @@ class BackstagePageHandler(webapp.RequestHandler):
                     template_values['page_t'] = page.title
                     template_values['page_content'] = page.content
                     template_values['page_content_type'] = page.content_type
+                    template_values['page_mode'] = page.mode
                     template_values['page_weight'] = page.weight
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_page.html')
                     output = template.render(path, template_values)
@@ -558,6 +568,13 @@ class BackstagePageHandler(webapp.RequestHandler):
                     template_values['page_content'] = page_content
                     template_values['page_content_error'] = page_content_error
                     template_values['page_content_error_message'] = page_content_error_messages[page_content_error]
+                    # Verification: mode
+                    page_mode = 0
+                    page_mode = self.request.get('mode').strip()
+                    if page_mode == '1':
+                        page_mode = 1
+                    else:
+                        page_mode = 0
                     # Verification: content_type
                     page_content_type = self.request.get('content_type').strip()
                     if (len(page_content_type) == 0):
@@ -586,6 +603,7 @@ class BackstagePageHandler(webapp.RequestHandler):
                         page.content = page_content
                         page.content_rendered = page_content
                         page.content_type = page_content_type
+                        page.mode = page_mode
                         page.weight = page_weight
                         page.put()
                         memcache.delete('Page_' + str(page.num))

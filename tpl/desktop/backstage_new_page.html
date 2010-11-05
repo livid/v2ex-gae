@@ -76,6 +76,22 @@
         			    </tr>
         			    <tr>
         			        <td width="80" align="right" valign="top">
+        			            嵌入模式
+        			        </td>
+        			        <td width="200" align="left">
+        			            <select name="mode">
+        			                {% ifequal page_mode 1 %}
+        			                <option value="1" selected="selected">嵌入式页面</option>
+        			                <option value="0">独立式页面</option>
+        			                {% else %}
+        			                <option value="1">嵌入式页面</option>
+        			                <option value="0" selected="selected">独立式页面</option>
+                                    {% endifequal %}
+        			            </select>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right" valign="top">
         			            <div class="sep5"></div>
         			            内容重量
         			        </td>

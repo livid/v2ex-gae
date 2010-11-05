@@ -50,7 +50,7 @@ handlers:
 - url: /delete/.*
   script: topic.py
 
-- url: /hit/topic/.*
+- url: /hit/.*
   script: topic.py
 
 - url: /index/.*

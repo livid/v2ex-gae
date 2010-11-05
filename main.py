@@ -15,6 +15,7 @@ import pickle
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
+from google.appengine.api.labs import taskqueue
 from google.appengine.api import mail
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
@@ -198,7 +199,7 @@ class HomeHandler(webapp.RequestHandler):
                         css_class = 'inner'
                     else:
                         css_class = 'cell'
-                    c = c + '<div class="' + css_class + '"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="snow"><strong>' + category + '</strong></span></td><td style="line-height: 200%; padding-left: 15px;">'
+                    c = c + '<div class="' + css_class + '"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="fade">' + category + '</span></td><td style="line-height: 200%; padding-left: 15px;">'
                     qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
                     for node in qx:
                         c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
@@ -849,28 +850,43 @@ class RouterHandler(webapp.RequestHandler):
                 minisite = GetKindByName('Minisite', minisite_name)
                 if minisite is not False:
                     page = memcache.get(path)
-                    if page:
+                    if page is None:
+                        q = db.GqlQuery("SELECT * FROM Page WHERE name = :1 AND minisite = :2", page_name, minisite)
+                        if q.count() == 1:
+                            page = q[0]
+                            memcache.set(path, page, 864000)
+                    if page.mode == 1:
+                        # Dynamic embedded page
+                        template_values = {}
+                        site = GetSite()
+                        template_values['site'] = site
+                        member = CheckAuth(self)
+                        if member:
+                            template_values['member'] = member
+                        l10n = GetMessages(self, member, site)
+                        template_values['l10n'] = l10n
+                        template_values['rnd'] = random.randrange(1, 100)
+                        template_values['page'] = page
+                        template_values['minisite'] = page.minisite
+                        template_values['page_title'] = site.title.decode('utf-8') + u' › ' + page.minisite.title.decode('utf-8') + u' › ' + page.title.decode('utf-8')
+                        taskqueue.add(url='/hit/page/' + str(page.key()))
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'page.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
+                    else:
+                        # Static standalone page
+                        taskqueue.add(url='/hit/page/' + str(page.key()))
                         expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
                         expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
                         self.response.headers.add_header("Expires", expires_str)
                         self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
                         self.response.headers['Content-Type'] = page.content_type
                         self.response.out.write(page.content)
-                    else:
-                        q = db.GqlQuery("SELECT * FROM Page WHERE name = :1 AND minisite = :2", page_name, minisite)
-                        if q.count() == 1:
-                            page = q[0]
-                            memcache.set(path, page, 864000)
-                            expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
-                            expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
-                            self.response.headers.add_header("Expires", expires_str)
-                            self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
-                            self.response.headers['Content-Type'] = page.content_type
-                            self.response.out.write(page.content)
         else:
             # Site
             page = memcache.get(path + '/index.html')
             if page:
+                taskqueue.add(url='/hit/page/' + str(page.key()))
                 expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
                 expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
                 self.response.headers.add_header("Expires", expires_str)

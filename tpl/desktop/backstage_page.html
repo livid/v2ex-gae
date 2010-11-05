@@ -23,14 +23,14 @@
         			<strong>请解决以下错误之后继续。</strong>
         			<div class="sep10"></div>
         			<ul>
-        				{% if page_title_error %}
-        				<li>{{ page_title_error_message }}</li>
-        				{% endif %}
         				{% if page_name_error %}
         				<li>{{ page_name_error_message }}</li>
         				{% endif %}
-        				{% if page_description_error %}
-        				<li>{{ page_description_error_message }}</li>
+        				{% if page_title_error %}
+        				<li>{{ page_title_error_message }}</li>
+        				{% endif %}
+                        {% if page_content_error %}
+        				<li>{{ page_content_error_message }}</li>
         				{% endif %}
         			</ul>
         			<div class="sep10"></div>
@@ -72,6 +72,22 @@
         			            <input type="text" class="sl" name="content_type" value="{{ page_content_type|escape }}" />
         			            <div class="sep5"></div>
         			            <span class="fade">默认是 text/html;charset=utf-8</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="80" align="right" valign="top">
+        			            嵌入模式
+        			        </td>
+        			        <td width="200" align="left">
+        			            <select name="mode">
+        			                {% ifequal page_mode 1 %}
+        			                <option value="1" selected="selected">嵌入式页面</option>
+        			                <option value="0">独立式页面</option>
+        			                {% else %}
+        			                <option value="1">嵌入式页面</option>
+        			                <option value="0" selected="selected">独立式页面</option>
+                                    {% endifequal %}
+        			            </select>
         			        </td>
         			    </tr>
         			    <tr>
