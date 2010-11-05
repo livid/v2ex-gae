@@ -144,6 +144,14 @@ handlers:
 - url: /my/(.*)
   script: my.py
 
+- url: /add/star/(.*)
+  script: queue.py
+  login: admin
+
+- url: /minus/star/(.*)
+  script: queue.py
+  login: admin
+
 - url: .*
   script: main.py
 

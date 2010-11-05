@@ -60,9 +60,34 @@ class MyNodesHandler(webapp.RequestHandler):
         else:
             self.redirect('/')
 
+class MyTopicsHandler(webapp.RequestHandler):
+    def get(self):
+        member = CheckAuth(self)
+        if member:
+            site = GetSite()
+            l10n = GetMessages(self, member, site)
+            template_values = {}
+            template_values['site'] = site
+            template_values['member'] = member
+            template_values['l10n'] = l10n
+            template_values['page_title'] = site.title + u' › 我收藏的主题'
+            template_values['rnd'] = random.randrange(1, 100)
+            if member.favorited_topics > 0:
+                template_values['has_topics'] = True
+                q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE member = :1 ORDER BY created DESC", member)
+                template_values['bookmarks'] = q
+            else:
+                template_values['has_topics'] = False
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'my_topics.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+        else:
+            self.redirect('/')
+
 def main():
     application = webapp.WSGIApplication([
-    ('/my/nodes', MyNodesHandler)
+    ('/my/nodes', MyNodesHandler),
+    ('/my/topics', MyTopicsHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.3.17'
+SYSTEM_VERSION = '2.3.18'
 
 import datetime
 import hashlib
@@ -64,7 +64,21 @@ class Member(db.Model):
                     memcache.set(n, False, 86400 * 14)
                     return False
         else:
-            return False
+            if type(something).__name__ == 'Topic':
+                n = 'r/t' + str(something.num) + '/m' + str(self.num)
+                r = memcache.get(n)
+                if r:
+                    return r
+                else:
+                    q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE topic =:1 AND member = :2", something, self)
+                    if q.count() > 0:
+                        memcache.set(n, True, 86400 * 14)
+                        return True
+                    else:
+                        memcache.set(n, False, 86400 * 14)
+                        return False
+            else:
+                return False
     
 class Counter(db.Model):
     name = db.StringProperty(required=False, indexed=True)
@@ -110,6 +124,7 @@ class Topic(db.Model):
     content_rendered = db.TextProperty(required=False)
     content_length = db.IntegerProperty(default=0)
     hits = db.IntegerProperty(default=0)
+    stars = db.IntegerProperty(required=True, default=0)
     replies = db.IntegerProperty(default=0)
     created_by = db.StringProperty(required=False, indexed=True)
     last_reply_by = db.StringProperty(required=False, indexed=True)
@@ -218,5 +233,10 @@ class Page(db.Model):
 
 class NodeBookmark(db.Model):
     node = db.ReferenceProperty(Node)
+    member = db.ReferenceProperty(Member)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+class TopicBookmark(db.Model):
+    topic = db.ReferenceProperty(Topic)
     member = db.ReferenceProperty(Member)
     created = db.DateTimeProperty(auto_now_add=True)

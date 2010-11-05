@@ -403,6 +403,11 @@ class TopicHandler(webapp.RequestHandler):
                         r = template.render(path, template_values)
                         memcache.set(r_tag, r, 86400)
             template_values['r'] = r
+            if topic and member:
+                if member.hasFavorited(topic):
+                    template_values['favorited'] = True
+                else:
+                    template_values['favorited'] = False
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'topic.html')
             else:

@@ -757,8 +757,8 @@ a.tiny_label:hover {
 
 a.op:link, a.op:visited, a.op:active {
 	background-color: #dde;
-	font-size: 9px;
-	line-height: 9px;
+	font-size: 10px;
+	line-height: 10px;
 	display: inline-block;
 	padding: 2px 4px 2px 4px;
 	-moz-border-radius: 2px;
@@ -775,8 +775,8 @@ a.op:hover {
 a.opo:link, a.opo:visited, a.opo:active {
 	background-color: #334;
 	color: #fff;
-	font-size: 9px;
-	line-height: 9px;
+	font-size: 10px;
+	line-height: 10px;
 	display: inline-block;
 	padding: 2px 4px 2px 4px;
 	-moz-border-radius: 2px;

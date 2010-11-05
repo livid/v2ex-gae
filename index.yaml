@@ -137,3 +137,9 @@ indexes:
   - name: node_num
   - name: last_touched
     direction: desc
+
+- kind: TopicBookmark
+  properties:
+  - name: member
+  - name: created
+    direction: desc
