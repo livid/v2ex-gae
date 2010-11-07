@@ -158,3 +158,6 @@ handlers:
 inbound_services:
 - mail
 - xmpp_message
+
+builtins:
+- datastore_admin: on
