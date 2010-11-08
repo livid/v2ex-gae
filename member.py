@@ -53,6 +53,8 @@ class MemberHandler(webapp.RequestHandler):
         one = False
         one = GetMemberByUsername(member_username)
         if one is not False:
+            if one.followers_count is None:
+                one.followers_count = 0
             template_values['one'] = one
             template_values['page_title'] = site.title + u' › ' + one.username
             template_values['canonical'] = 'http://' + site.domain + '/member/' + one.username

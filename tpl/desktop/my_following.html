@@ -24,6 +24,11 @@
                                 {% if has_following %}
                                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                 {% for bookmark in following %}
+                                    {% ifnotequal forloop.counter 1 %}
+                                    <tr>
+                                        <td colspan="2" style="padding: 10px 5px 10px 5px; height: 2px;"><div style="background-color: #f0f0f0; height: 2px;"></div></td>
+                                    </tr>
+                                    {% endifnotequal %}
                                     <tr>
                                         <td width="24" align="left" valign="top">{{ bookmark.one|avatar:"mini" }}</td>
                                         <td width="auto" align="left" valign="top" style="padding-left: 10px;"><a href="/member/{{ bookmark.one.username }}">{{ bookmark.one.username|escape }}</a>
