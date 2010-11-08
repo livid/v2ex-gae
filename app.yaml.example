@@ -141,6 +141,12 @@ handlers:
 - url: /unfavorite/(.*)
   script: favorite.py
 
+- url: /follow/(.*)
+  script: favorite.py
+
+- url: /unfollow/(.*)
+  script: favorite.py
+
 - url: /my/(.*)
   script: my.py
 
@@ -160,4 +166,4 @@ inbound_services:
 - xmpp_message
 
 builtins:
-- datastore_admin: on
+- datastore_admin: off

@@ -10,12 +10,13 @@
             {% include 'rightbar/user.html' %}
         </div>
         <div id="Content">
+            {% if message %}
             <div class="box">
-                {% if one.bio %}
-                <div class="cell">
-                {% else %}
-                <div class="inner">
-                {% endif %}
+                <div class="inner">{{ message }}</div>
+            </div>
+            <div class="sep20"></div>
+            {% endif %}
+            <div class="box">{% if one.bio %}<div class="cell">{% else %}<div class="inner">{% endif %}
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                         <td width="73" valign="top" align="center">{{ one|avatar:"large" }}
@@ -33,25 +34,37 @@
                             {% endif %}
                         </td>
                         <td width="10" valign="top"></td>
-                        <td width="auto" align="left" valign="top"><div class="sep5"></div><span class="bigger">{{ one.username }}</a></span>
+                        <td width="auto" align="left" valign="top">{% if show_follow %}<div class="fr"><div class="sep3"></div>{% if favorited %}<a href="/unfollow/{{ one.num }}" class="super inverse button">取消特别关注</a>{% else %}<a href="/follow/{{ one.num }}" class="super special button">加入特别关注</a>{% endif %}</div>{% endif %}<h2 style="padding: 0px; margin: 0px; font-size: 22px; line-height: 22px;">{{ one.username }}</h2>
                             {% if one.tagline %}
                             <div class="sep5"></div>
-                            <span class="fade">{{ one.tagline|escape }}</span>
+                            <span class="fade bigger">{{ one.tagline|escape }}</span>
                             {% endif %}
                             <div class="sep5"></div>
                             <span class="snow">{{ site.title }} 第 {{ one.num }} 号会员，加入于 {{ one.created|timezone:8|date:"Y-n-j G:i:s A" }}</span>
-                            {% if one.twitter %}
-                            <div class="sep5"></div>
-                            <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/twitter.png" align="absmiddle" /> &nbsp;<a href="http://twitter.com/{{ one.twitter }}">@{{ one.twitter }}</a></span>
-                            {% endif %}
-                            {% if one.website %}
-                            <div class="sep5"></div>
-                            <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website|escape }}" target="_blank" rel="nofollow external">{{ one.website|escape }}</a></span>
-                            {% endif %}
-                            {% if one.location %}
-                            <div class="sep5"></div>
-                            <span style="line-height: 16px;"><img src="/static/img/location.png" align="absmiddle" /> &nbsp;<a href="http://www.google.com/maps?q={{ one.location|escape }}" target="_blank" rel="nofollow external">{{ one.location|escape }}</a></span>
-                            {% endif %}
+                            <div class="sep10"></div>
+                            <table cellpadding="2" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td width="50%">{% if one.twitter %}
+                                    <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/twitter.png" align="absmiddle" /> &nbsp;<a href="http://twitter.com/{{ one.twitter }}">@{{ one.twitter }}</a></span>
+                                    {% endif %}
+                                    </td>
+                                    <td width="50%"><span style="line-height: 16px;"><img src="http://v2ex.com/static/img/heart.png" align="absmiddle" /> &nbsp;{{ one.followers_count }} followers</span></td>
+                                </tr>
+                                <tr>
+                                    <td width="50%">{% if one.website %}
+                                    <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/mobileme.png" align="absmiddle" /> &nbsp;<a href="{{ one.website|escape }}" target="_blank" rel="nofollow external">{{ one.website|escape }}</a></span>
+                                    {% endif %}
+                                    </td>
+                                    <td width="50%"></td>
+                                </tr>
+                                <tr>
+                                    <td width="50%">{% if one.location %}
+                                    <span style="line-height: 16px;"><img src="http://v2ex.com/static/img/location.png" align="absmiddle" /> &nbsp;<a href="http://www.google.com/maps?q={{ one.location|escape }}" target="_blank" rel="nofollow external">{{ one.location|escape }}</a></span>
+                                    {% endif %}</td>
+                                    <td width="50%"></td>
+                                </tr>
+                            </table>
+                            
                         </td>
                     </tr>
                 </table>

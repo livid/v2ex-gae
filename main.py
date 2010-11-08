@@ -864,7 +864,7 @@ class RouterHandler(webapp.RequestHandler):
                         template_values['rnd'] = random.randrange(1, 100)
                         template_values['page'] = page
                         template_values['minisite'] = page.minisite
-                        template_values['page_title'] = site.title.decode('utf-8') + u' › ' + page.minisite.title.decode('utf-8') + u' › ' + page.title.decode('utf-8')
+                        template_values['page_title'] = site.title + u' › ' + page.minisite.title.decode('utf-8') + u' › ' + page.title.decode('utf-8')
                         taskqueue.add(url='/hit/page/' + str(page.key()))
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'page.html')
                         output = template.render(path, template_values)

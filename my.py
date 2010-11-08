@@ -30,6 +30,7 @@ from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
+from v2ex.babel.ext.sessions import Session
 
 template.register_template_library('v2ex.templatetags.filters')
 
@@ -83,11 +84,41 @@ class MyTopicsHandler(webapp.RequestHandler):
             self.response.out.write(output)
         else:
             self.redirect('/')
+            
+class MyFollowingHandler(webapp.RequestHandler):
+    def get(self):
+        member = CheckAuth(self)
+        if member:
+            site = GetSite()
+            l10n = GetMessages(self, member, site)
+            template_values = {}
+            template_values['site'] = site
+            template_values['member'] = member
+            template_values['l10n'] = l10n
+            template_values['page_title'] = site.title + u' › 我的特别关注'
+            template_values['rnd'] = random.randrange(1, 100)
+            if member.favorited_members > 0:
+                template_values['has_following'] = True
+                q = db.GqlQuery("SELECT * FROM MemberBookmark WHERE member_num = :1 ORDER BY created DESC", member.num)
+                template_values['following'] = q
+                following = []
+                for bookmark in q:
+                    following.append(bookmark.one.num)
+                q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num IN :1 ORDER BY created DESC LIMIT 20", following)
+                template_values['latest'] = q2
+            else:
+                template_values['has_following'] = False
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'my_following.html')
+            output = template.render(path, template_values)
+            self.response.out.write(output)
+        else:
+            self.redirect('/')
 
 def main():
     application = webapp.WSGIApplication([
     ('/my/nodes', MyNodesHandler),
-    ('/my/topics', MyTopicsHandler)
+    ('/my/topics', MyTopicsHandler),
+    ('/my/following', MyFollowingHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

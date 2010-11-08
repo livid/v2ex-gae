@@ -20,7 +20,7 @@
             <tr>
                 <td width="33%" align="center"><a href="/my/nodes" class="dark" style="display: block;"><span class="bigger">{{ member.favorited_nodes }}</span><div class="sep3"></div><span class="fade">节点收藏</span></a></td>
                 <td width="34%" style="border-left: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;" align="center"><a href="/my/topics" class="dark" style="display: block;"><span class="bigger">{{ member.favorited_topics }}</span><div class="sep3"></div><span class="fade">主题收藏</span></a></td>
-                <td width="33%" align="center"></td>
+                <td width="33%" align="center"><a href="/my/following" class="dark" style="display: block;"><span class="bigger">{{ member.favorited_members }}</span><div class="sep3"></div><span class="fade">特别关注</span></a></td>
             </tr>
         </table>
         {% if member.twitter_oauth %}

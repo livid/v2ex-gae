@@ -15,6 +15,12 @@ indexes:
   - name: email
   - name: num
 
+- kind: MemberBookmark
+  properties:
+  - name: member_num
+  - name: created
+    direction: desc
+
 - kind: Node
   properties:
   - name: __key__

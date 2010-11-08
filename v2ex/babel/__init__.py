@@ -48,6 +48,7 @@ class Member(db.Model):
     favorited_nodes = db.IntegerProperty(required=True, default=0)
     favorited_topics = db.IntegerProperty(required=True, default=0)
     favorited_members = db.IntegerProperty(required=True, default=0)
+    followers_count = db.IntegerProperty(required=True, default=0)
     
     def hasFavorited(self, something):
         if type(something).__name__ == 'Node':
@@ -78,7 +79,21 @@ class Member(db.Model):
                         memcache.set(n, False, 86400 * 14)
                         return False
             else:
-                return False
+                if type(something).__name__ == 'Member':
+                    n = 'r/m' + str(something.num) + '/m' + str(self.num)
+                    r = memcache.get(n)
+                    if r:
+                        return r
+                    else:
+                        q = db.GqlQuery("SELECT * FROM MemberBookmark WHERE one =:1 AND member_num = :2", something, self.num)
+                        if q.count() > 0:
+                            memcache.set(n, True, 86400 * 14)
+                            return True
+                        else:
+                            memcache.set(n, False, 86400 * 14)
+                            return False
+                else:
+                    return False
     
 class Counter(db.Model):
     name = db.StringProperty(required=False, indexed=True)
@@ -232,11 +247,16 @@ class Page(db.Model):
     last_modified = db.DateTimeProperty(auto_now=True)
 
 class NodeBookmark(db.Model):
-    node = db.ReferenceProperty(Node)
-    member = db.ReferenceProperty(Member)
+    node = db.ReferenceProperty(Node, indexed=True)
+    member = db.ReferenceProperty(Member, indexed=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
 class TopicBookmark(db.Model):
-    topic = db.ReferenceProperty(Topic)
-    member = db.ReferenceProperty(Member)
+    topic = db.ReferenceProperty(Topic, indexed=True)
+    member = db.ReferenceProperty(Member, indexed=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+
+class MemberBookmark(db.Model):
+    one = db.ReferenceProperty(Member, indexed=True)
+    member_num = db.IntegerProperty(indexed=True)
     created = db.DateTimeProperty(auto_now_add=True)

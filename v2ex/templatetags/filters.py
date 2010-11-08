@@ -118,9 +118,9 @@ def avatar(value, arg):
         member_avatar_url = value.avatar_mini_url
         
     if member_avatar_url:
-        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
+        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" align="absmiddle" />'
     else:
-        return '<img src="' + default + '" border="0" alt="' + value.username + '" />'
+        return '<img src="' + default + '" border="0" alt="' + value.username + '" align="absmiddle" />'
 register.filter(avatar)
 
 # github gist script support

@@ -77,8 +77,11 @@ class MemberHandler(webapp.RequestHandler):
             if len(replies) > 0:
                 template_values['replies'] = replies
         template_values['show_block'] = False
+        template_values['show_follow'] = False
+        template_values['favorited'] = False
         if one and member:
             if one.num != member.num:
+                template_values['show_follow'] = True
                 template_values['show_block'] = True
                 try:
                     blocked = pickle.loads(member.blocked.encode('utf-8'))
@@ -88,6 +91,13 @@ class MemberHandler(webapp.RequestHandler):
                     template_values['one_is_blocked'] = True
                 else:
                     template_values['one_is_blocked'] = False
+                if member.hasFavorited(one):
+                    template_values['favorited'] = True
+                else:
+                    template_values['favorited'] = False
+        if 'message' in self.session:
+            template_values['message'] = self.session['message']
+            del self.session['message']
         if one is not False: 
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_home.html')
@@ -194,6 +204,7 @@ class SettingsHandler(webapp.RequestHandler):
             self.redirect('/signin')
         
     def post(self):
+        self.session = Session()
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -391,6 +402,7 @@ class SettingsHandler(webapp.RequestHandler):
                 memcache.delete('Member_' + str(member.num))
                 memcache.delete('Member::' + str(member.username))
                 memcache.delete('Member::' + str(member.username_lower))
+                self.session['message'] = '个人设置成功更新'
                 self.redirect('/settings')
             else:
                 if browser['ios']:

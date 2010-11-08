@@ -1,0 +1,52 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> {{ l10n.chevron }} 我的特别关注</span></div>
+                <div class="glass">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                            <td align="left" valign="top" width="auto">
+                                {% include 'common/topics_index.html' %}
+                            </td>
+                            <td align="left" valign="top" width="200" style="background-color: #f9f9f9; border-left: 1px solid #f0f0f0; font-size: 12px; padding: 10px;"><div class="fr"><strong class="snow">{{ member.favorited_members }}/30</strong></div><span class="fade">我的特别关注</span>
+                                <div class="sep10"></div>
+                                {% if has_following %}
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                {% for bookmark in following %}
+                                    <tr>
+                                        <td width="24" align="left" valign="top">{{ bookmark.one|avatar:"mini" }}</td>
+                                        <td width="auto" align="left" valign="top" style="padding-left: 10px;"><a href="/member/{{ bookmark.one.username }}">{{ bookmark.one.username|escape }}</a>
+                                            {% if bookmark.one.tagline %}
+                                            <div class="sep3"></div>
+                                            <small class="fade">{{ bookmark.one.tagline|escape }}</small>
+                                            {% endif %}
+                                            <div class="sep3"></div>
+                                            <small class="fade">{{ bookmark.one.followers_count }} followers</small>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
