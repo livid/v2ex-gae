@@ -44,9 +44,7 @@
                 <div class="inner">
                     <div class="content topic_content">{{ topic.content_rendered }}</div>
                 </div>
-                {% if member %}<div class="inner"><div class="fr" align="right">{% if topic.stars %}<span style="font-size: 10px; line-height: 10px; color: #99a;">已有 {{ topic.stars }} 人收藏此主题 &nbsp; </span>{% endif %}{% if favorited %}<a href="/unfavorite/topic/{{ topic.num }}" class="op">取消收藏</a>{% else %}<a href="/favorite/topic/{{ topic.num }}" class="op">加入收藏</a>{% endif %}</div>{% endif %}
-                &nbsp;
-                </div>
+                {% if member %}<div class="inner"><div class="fr" align="right">{% if topic.stars %}<span style="font-size: 10px; line-height: 10px; color: #99a;">已有 {{ topic.stars }} 人收藏此主题 &nbsp; </span>{% endif %}{% if favorited %}<a href="/unfavorite/topic/{{ topic.num }}" class="op">取消收藏</a>{% else %}<a href="/favorite/topic/{{ topic.num }}" class="op">加入收藏</a>{% endif %}</div> &nbsp; </div>{% endif %}
             </div>
             {% ifequal topic.replies 0 %}
             <div class="sep20"></div>
