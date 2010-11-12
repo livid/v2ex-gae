@@ -406,10 +406,12 @@ class BackstageNewPageHandler(webapp.RequestHandler):
                         page.name = page_name
                         page.title = page_t
                         page.content = page_content
-                        if page.mode == 1:
-                            from Cheetah.Template import Template as ct
-                            co = ct(page.content, searchList = [template_values])
-                            page.content_rendered = co
+                        if page_mode == 1:
+                            from django.template import Context, Template
+                            t = Template(page_content)
+                            c = Context({"site" : site, "minisite" : page.minisite, "page" : page})
+                            output = t.render(c)
+                            page.content_rendered = output
                         else:
                             page.content_rendered = page_content
                         page.content_type = page_content_type
@@ -529,7 +531,7 @@ class BackstagePageHandler(webapp.RequestHandler):
                             page_name_error = 2
                         else:
                             if (re.search('^[a-zA-Z0-9\-\_\.]+$', page_name)):
-                                q = db.GqlQuery('SELECT * FROM Page WHERE name = :1', page_name.lower())
+                                q = db.GqlQuery('SELECT * FROM Page WHERE name = :1 AND minisite = :2', page_name.lower(), page.minisite)
                                 if (q.count() > 0):
                                     if q[0].num != page.num:
                                         errors = errors + 1
