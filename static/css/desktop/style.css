@@ -39,7 +39,7 @@ h2 {
 h3 {
 	font-size: 15px;
 	line-height: 18px;
-	font-weight: 500;
+	font-weight: bold;
 	padding: 6px 0px 6px 0px;
 	margin: 0px;
 }
@@ -407,9 +407,9 @@ td.avatar_mini {
 .normal.button:hover { background-color: #fff; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; text-decoration: none; font-weight: bold; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.2); }
 .normal.button:active { background-color: #e2e2e2; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; text-decoration: none; font-weight: bold; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.2); }
 
-.special.button { background-color: #ffcc00; color: #005a06; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.6); text-decoration: none; font-weight: 600; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.6); border: 1px solid rgba(200, 150, 0, 0.8); }
-.special.button:hover { background-color: #ffdf00; color: #004905; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.7); text-decoration: none; text-decoration: none; font-weight: 600; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.5); border: 1px solid rgba(200, 150, 0, 1); }
-.special.button:active { background-color: #ffbb00; color: #004905; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.7); text-decoration: none; text-decoration: none; font-weight: 600; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.5); border: 1px solid rgba(200, 150, 0, 1); }
+.special.button { background-color: #ffcc00; color: #532b17; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.6); text-decoration: none; font-weight: 600; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.6); border: 1px solid rgba(200, 150, 0, 0.8); }
+.special.button:hover { background-color: #ffdf00; color: #402112; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.7); text-decoration: none; text-decoration: none; font-weight: 600; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.5); border: 1px solid rgba(200, 150, 0, 1); }
+.special.button:active { background-color: #ffbb00; color: #402112; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.7); text-decoration: none; text-decoration: none; font-weight: 600; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.5); border: 1px solid rgba(200, 150, 0, 1); }
 
 .inverse.button { background-color: #ccc; color: #999; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.6); text-decoration: none; font-weight: 600; -moz-box-shadow: 0px 1px 2px rgba(200, 200, 200, 0.8); border: 1px solid rgba(150, 150, 150, 0.8); }
 .inverse.button:hover { background-color: #999; color: #fff; text-shadow: 0px -1px 1px rgba(0, 0, 0, 0.5); text-decoration: none; text-decoration: none; font-weight: 600; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(200, 200, 200, 1); border: 1px solid rgba(150, 150, 150, 0.6); }

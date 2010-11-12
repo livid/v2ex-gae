@@ -7,6 +7,7 @@ import time
 import datetime
 import hashlib
 import string
+import StringIO
 import random
 
 from google.appengine.ext import webapp
@@ -405,7 +406,12 @@ class BackstageNewPageHandler(webapp.RequestHandler):
                         page.name = page_name
                         page.title = page_t
                         page.content = page_content
-                        page.content_rendered = page_content
+                        if page.mode == 1:
+                            from Cheetah.Template import Template as ct
+                            co = ct(page.content, searchList = [template_values])
+                            page.content_rendered = co
+                        else:
+                            page.content_rendered = page_content
                         page.content_type = page_content_type
                         page.weight = page_weight
                         page.mode = page_mode
@@ -601,7 +607,14 @@ class BackstagePageHandler(webapp.RequestHandler):
                         page.name = page_name
                         page.title = page_t
                         page.content = page_content
-                        page.content_rendered = page_content
+                        if page.mode == 1:
+                            from django.template import Context, Template
+                            t = Template(page_content)
+                            c = Context({"site" : site, "minisite" : page.minisite, "page" : page})
+                            output = t.render(c)
+                            page.content_rendered = output
+                        else:
+                            page.content_rendered = page_content
                         page.content_type = page_content_type
                         page.mode = page_mode
                         page.weight = page_weight

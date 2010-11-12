@@ -883,12 +883,31 @@ class RouterHandler(webapp.RequestHandler):
             page = memcache.get(path + '/index.html')
             if page:
                 taskqueue.add(url='/hit/page/' + str(page.key()))
-                expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
-                expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
-                self.response.headers.add_header("Expires", expires_str)
-                self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
-                self.response.headers['Content-Type'] = page.content_type
-                self.response.out.write(page.content)
+                if page.mode == 1:
+                    # Dynamic embedded page
+                    template_values = {}
+                    site = GetSite()
+                    template_values['site'] = site
+                    member = CheckAuth(self)
+                    if member:
+                        template_values['member'] = member
+                    l10n = GetMessages(self, member, site)
+                    template_values['l10n'] = l10n
+                    template_values['rnd'] = random.randrange(1, 100)
+                    template_values['page'] = page
+                    template_values['minisite'] = page.minisite
+                    template_values['page_title'] = site.title + u' › ' + page.minisite.title.decode('utf-8') + u' › ' + page.title.decode('utf-8')
+                    taskqueue.add(url='/hit/page/' + str(page.key()))
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'page.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+                else:
+                    expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
+                    expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+                    self.response.headers.add_header("Expires", expires_str)
+                    self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
+                    self.response.headers['Content-Type'] = page.content_type
+                    self.response.out.write(page.content)
 
 def main():
     application = webapp.WSGIApplication([
