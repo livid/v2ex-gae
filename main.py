@@ -479,6 +479,7 @@ class SignupHandler(webapp.RequestHandler):
             member.password = hashlib.sha1(member_password).hexdigest()
             member.email = member_email.lower()
             member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
+            member.l10n = site.l10n
             member.put()
             counter.put()
             counter2.put()
