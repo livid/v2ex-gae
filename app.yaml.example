@@ -158,6 +158,9 @@ handlers:
   script: queue.py
   login: admin
 
+- url: /sso/(.*)
+  script: sso.py
+
 - url: .*
   script: main.py
 

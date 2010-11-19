@@ -61,16 +61,19 @@ class SiteInfoHandler(webapp.RequestHandler):
 # /api/nodes/all.json
 class NodesAllHandler(webapp.RequestHandler):
     def get(self):
-        site = GetSite()
-        template_values = {}
-        template_values['site'] = site
-        nodes = memcache.get('api_nodes_all')
-        if nodes is None:
-            nodes = db.GqlQuery("SELECT * FROM Node")
-            memcache.set('api_nodes_all', nodes, 3600)
-        template_values['nodes'] = nodes
-        path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'nodes_all.json')
-        output = template.render(path, template_values)
+        output = memcache.get('api_nodes_all')
+        if output is None:
+            site = GetSite()
+            template_values = {}
+            template_values['site'] = site
+            nodes = memcache.get('api_nodes_all')
+            if nodes is None:
+                nodes = db.GqlQuery("SELECT * FROM Node")
+                memcache.set('api_nodes_all', nodes, 3600)
+            template_values['nodes'] = nodes
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'nodes_all.json')
+            output = template.render(path, template_values)
+            memcache.set('api_nodes_all', output, 86400)
         self.response.headers['Content-type'] = 'application/json'
         self.response.out.write(output)
 
@@ -230,7 +233,7 @@ class TopicsCreateHandler(webapp.RequestHandler):
             self.response.headers['WWW-Authenticate'] = 'Basic realm="' + site.domain + '"'
             self.response.out.write(output)
 
-# Users
+# Members
 # /api/members/show.json
 class MembersShowHandler(webapp.RequestHandler):
     def get(self):

@@ -49,6 +49,10 @@ class SSOV0Handler(webapp.RequestHandler):
                         member.avatar_mini_url = 'http://' + site.domain + member.avatar_mini_url
                         member.avatar_normal_url = 'http://' +  site.domain + member.avatar_normal_url
                         member.avatar_large_url = 'http://' + site.domain + member.avatar_large_url
+                else:
+                    member.avatar_mini_url = 'http://' + site.domain + '/static/img/avatar_mini.png'
+                    member.avatar_normal_url = 'http://' + site.domain + '/static/img/avatar_normal.png'
+                    member.avatar_large_url = 'http://' + site.domain + '/static/img/avatar_large.png'
                 self.response.out.write('{"ok" : 1, "num" : ' + str(member.num) + ', "username" : "' + member.username + '", "username_lower" : "' + member.username_lower + '", "email" : "' + member.email + '", "avatar_mini_url" : "' + member.avatar_mini_url + '", "avatar_normal_url" : "' + member.avatar_normal_url + '", "avatar_large_url" : "' + member.avatar_large_url + '", "created" : ' + str(time.mktime(member.created.timetuple())) + ', "last_modified" : ' + str(time.mktime(member.last_modified.timetuple())) + '}')
             else:
                 self.response.out.write(failed)
