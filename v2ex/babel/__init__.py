@@ -49,6 +49,7 @@ class Member(db.Model):
     favorited_topics = db.IntegerProperty(required=True, default=0)
     favorited_members = db.IntegerProperty(required=True, default=0)
     followers_count = db.IntegerProperty(required=True, default=0)
+    level = db.IntegerProperty(required=True, default=1000)
     
     def hasFavorited(self, something):
         if type(something).__name__ == 'Node':
@@ -222,6 +223,9 @@ class Site(db.Model):
     l10n = db.StringProperty(default='en')
     use_topic_types = db.BooleanProperty(default=False)
     topic_types = db.TextProperty(default='')
+    topic_view_level = db.IntegerProperty(required=True, default=-1)
+    topic_create_level = db.IntegerProperty(required=True, default=-1)
+    topic_reply_level = db.IntegerProperty(required=True, default=-1)
     
 class Minisite(db.Model):
     num = db.IntegerProperty(required=False, indexed=True)

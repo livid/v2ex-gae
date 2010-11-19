@@ -6,7 +6,7 @@
         <div id="Sidebar">   
         </div>
         <div id="Rightbar">
-            {% include 'rightbar/user.html' %}
+            {% include 'rightbar/backstage_site_permissions.html' %}
         </div>
         <div id="Content">
             {% if message %}
@@ -101,6 +101,30 @@
         			        </td>
         			        <td width="200" align="left">
         			            {{ s }}
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="100" align="right">
+        			            主题打开权限
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="topic_view_level" value="{{ site_topic_view_level|escape }}" maxlength="40" />
+        			        </td>
+        			    </tr>
+                        <tr>
+        			        <td width="100" align="right">
+        			            主题创建权限
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="topic_create_level" value="{{ site_topic_create_level|escape }}" maxlength="40" />
+        			        </td>
+        			    </tr>
+                        <tr>
+        			        <td width="100" align="right">
+        			            主题回复权限
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="topic_reply_level" value="{{ site_topic_reply_level|escape }}" maxlength="40" />
         			        </td>
         			    </tr>
         			    <tr>

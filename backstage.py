@@ -1422,6 +1422,18 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     template_values['site_analytics'] = site.analytics
                 else:
                     template_values['site_analytics'] = ''
+                if site.topic_view_level is not None:
+                    template_values['site_topic_view_level'] = site.topic_view_level
+                else:
+                    template_values['site_topic_view_level'] = -1
+                if site.topic_create_level is not None:
+                    template_values['site_topic_create_level'] = site.topic_create_level
+                else:
+                    template_values['site_topic_create_level'] = 1000
+                if site.topic_reply_level is not None:
+                    template_values['site_topic_reply_level'] = site.topic_reply_level
+                else:
+                    template_values['site_topic_reply_level'] = 1000
                 s = GetLanguageSelect(site.l10n)
                 template_values['s'] = s
                 template_values['member'] = member
@@ -1557,6 +1569,33 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 template_values['site_home_categories'] = site_home_categories
                 template_values['site_home_categories_error'] = site_home_categories_error
                 template_values['site_home_categories_error_message'] = site_home_categories_error_messages[site_home_categories_error]
+                # Verification: topic_view_level (default=-1)
+                site_topic_view_level = self.request.get('topic_view_level')
+                try:
+                    site_topic_view_level = int(site_topic_view_level)
+                    if site_topic_view_level < -1:
+                        site_topic_view_level = -1
+                except:
+                    site_topic_view_level = -1
+                template_values['site_topic_view_level'] = site_topic_view_level
+                # Verification: topic_create_level (default=1000)
+                site_topic_create_level = self.request.get('topic_create_level')
+                try:
+                    site_topic_create_level = int(site_topic_create_level)
+                    if site_topic_create_level < -1:
+                        site_topic_create_level = 1000
+                except:
+                    site_topic_create_level = 1000
+                template_values['site_topic_create_level'] = site_topic_create_level
+                # Verification: topic_reply_level (default=1000)
+                site_topic_reply_level = self.request.get('topic_reply_level')
+                try:
+                    site_topic_reply_level = int(site_topic_reply_level)
+                    if site_topic_reply_level < -1:
+                        site_topic_reply_level = 1000
+                except:
+                    site_topic_reply_level = 1000
+                template_values['site_topic_reply_level'] = site_topic_reply_level
                 template_values['errors'] = errors
                 if errors == 0:
                     site.title = site_title
@@ -1568,6 +1607,9 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     if site_analytics != '':
                         site.analytics = site_analytics
                     site.l10n = site_l10n
+                    site.topic_view_level = site_topic_view_level
+                    site.topic_create_level = site_topic_create_level
+                    site.topic_reply_level = site_topic_reply_level
                     site.put()
                     memcache.delete('index_categories')
                     template_values['message'] = l10n.site_settings_updated;
