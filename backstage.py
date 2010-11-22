@@ -1434,6 +1434,10 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     template_values['site_topic_reply_level'] = site.topic_reply_level
                 else:
                     template_values['site_topic_reply_level'] = 1000
+                if site.meta is not None:
+                    template_values['site_meta'] = site.meta
+                else:
+                    template_values['site_meta'] = ''
                 s = GetLanguageSelect(site.l10n)
                 template_values['s'] = s
                 template_values['member'] = member
@@ -1596,6 +1600,9 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 except:
                     site_topic_reply_level = 1000
                 template_values['site_topic_reply_level'] = site_topic_reply_level
+                # Verification: meta
+                site_meta = self.request.get('meta')
+                template_values['site_meta'] = site_meta
                 template_values['errors'] = errors
                 if errors == 0:
                     site.title = site_title
@@ -1610,6 +1617,7 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     site.topic_view_level = site_topic_view_level
                     site.topic_create_level = site_topic_create_level
                     site.topic_reply_level = site_topic_reply_level
+                    site.meta = site_meta
                     site.put()
                     memcache.delete('index_categories')
                     template_values['message'] = l10n.site_settings_updated;
