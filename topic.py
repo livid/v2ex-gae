@@ -794,6 +794,7 @@ class ReplyEditHandler(webapp.RequestHandler):
     def get(self, reply_num):
         template_values = {}
         site = GetSite()
+        template_values['site'] = site
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
@@ -823,6 +824,7 @@ class ReplyEditHandler(webapp.RequestHandler):
     def post(self, reply_num):
         template_values = {}
         site = GetSite()
+        template_values['site'] = site
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
