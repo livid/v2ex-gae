@@ -1104,9 +1104,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
                 if (q.count() == 1):
-                    template_values['node'] = q[0]
-                    template_values['node_name'] = q[0].name
-                    template_values['node_title'] = q[0].title
+                    node = q[0]
+                    template_values['node'] = node
+                    template_values['node_name'] = node.name
+                    template_values['node_title'] = node.title
                     template_values['node_title_alternative'] = q[0].title_alternative
                     if q[0].category is None:
                         template_values['node_category'] = ''
@@ -1127,11 +1128,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     template_values['node_topics'] = q[0].topics
                 else:
                     template_values['node'] = False
-                q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", q[0].section_num)
-                if (q2.count() == 1):
-                    template_values['section'] = q2[0]
-                else:
-                    template_values['section'] = False
+                section = GetKindByNum('Section', node.section_num)
+                template_values['section'] = section
+                if section is not False:
+                    template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + section.title + u' › ' + node.title
                 if browser['ios']:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_node.html')
                 else:
