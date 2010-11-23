@@ -36,7 +36,8 @@ existing_member = '已注册用户请 <a href="/signin">登入</a>'
 
 username_empty = '请输入用户名'
 username_too_long = '用户名长度不能超过 32 个字符'
-username_invalid = '用户名只能使用 a-z, A-Z 及 _'
+username_too_short = '用户名长度至少 3 个字符'
+username_invalid = '用户名只能使用 0-9, a-z, A-Z 及 _'
 username_taken = '抱歉，这个用户名已经被注册了'
 
 # Messages on /signout
