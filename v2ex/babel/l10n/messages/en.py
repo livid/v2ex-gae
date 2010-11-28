@@ -36,7 +36,8 @@ existing_member = 'Existing member please <a href="/signin">sign in</a>'
 
 username_empty = 'Please input your username'
 username_too_long = 'Username should not be longer than 32 characters'
-username_invalid = 'Username can only use a-z, A-Z and underscore'
+username_too_short = 'Username should have at least 3 characters'
+username_invalid = 'Username can only use 0-9, a-z, A-Z and underscore'
 username_taken = 'Sorry, this username is taken by other'
 
 # Messages on /signout

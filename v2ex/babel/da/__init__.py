@@ -127,6 +127,8 @@ def GetSite():
             site = q[0]
             if site.l10n is None:
                 site.l10n = 'en'
+            if site.meta is None:
+                site.meta = ''
             memcache.set('site', site, 86400)
             return site
         else:
@@ -137,6 +139,7 @@ def GetSite():
             site.slogan = 'way to explore'
             site.l10n = 'en'
             site.description = ''
+            site.meta = ''
             site.put()
             memcache.set('site', site, 86400)
             return site

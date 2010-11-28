@@ -363,6 +363,7 @@ class SignupHandler(webapp.RequestHandler):
         member_username_error_messages = ['',
             l10n.username_empty,
             l10n.username_too_long,
+            l10n.username_too_short,
             l10n.username_invalid,
             l10n.username_taken]
         member_username = self.request.get('username').strip()
@@ -374,14 +375,18 @@ class SignupHandler(webapp.RequestHandler):
                 errors = errors + 1
                 member_username_error = 2
             else:
-                if (re.search('^[a-zA-Z0-9\_]+$', member_username)):
-                    q = db.GqlQuery('SELECT __key__ FROM Member WHERE username_lower = :1', member_username.lower())
-                    if (q.count() > 0):
-                        errors = errors + 1
-                        member_username_error = 4
-                else:
+                if (len(member_username) < 3):
                     errors = errors + 1
                     member_username_error = 3
+                else:
+                    if (re.search('^[a-zA-Z0-9\_]+$', member_username)):
+                        q = db.GqlQuery('SELECT __key__ FROM Member WHERE username_lower = :1', member_username.lower())
+                        if (q.count() > 0):
+                            errors = errors + 1
+                            member_username_error = 5
+                    else:
+                        errors = errors + 1
+                        member_username_error = 4
         template_values['member_username'] = member_username
         template_values['member_username_error'] = member_username_error
         template_values['member_username_error_message'] = member_username_error_messages[member_username_error]

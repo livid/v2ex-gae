@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.4.0-RC1'
+SYSTEM_VERSION = '2.4.1'
 
 import datetime
 import hashlib
@@ -221,13 +221,13 @@ class Site(db.Model):
     analytics = db.StringProperty(required=False, indexed=False)
     home_categories = db.TextProperty(required=False, indexed=False)
     meta = db.TextProperty(required=False, default='')
-    theme = db.StringProperty(default='default')
+    theme = db.StringProperty(required=False, default='default')
     l10n = db.StringProperty(default='en')
     use_topic_types = db.BooleanProperty(default=False)
     topic_types = db.TextProperty(default='')
     topic_view_level = db.IntegerProperty(required=True, default=-1)
-    topic_create_level = db.IntegerProperty(required=True, default=-1)
-    topic_reply_level = db.IntegerProperty(required=True, default=-1)
+    topic_create_level = db.IntegerProperty(required=True, default=1000)
+    topic_reply_level = db.IntegerProperty(required=True, default=1000)
     
 class Minisite(db.Model):
     num = db.IntegerProperty(required=False, indexed=True)
