@@ -111,15 +111,14 @@ a.dark:hover {
 #Top {
 	height: 40px;
 	background-color: #222;
-	background: -moz-linear-gradient(center top , #444, #111) repeat scroll 0 0 transparent; 
-	background: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111)); 
+	background: -moz-linear-gradient(center top , #777, #555) repeat scroll 0 0 transparent; 
+	background: -webkit-gradient(linear, left top, left bottom, from(#777), to(#555)); 
 }
 
 #TopMain {
-	width: 960px;
 	height: 40px;
 	text-align: center;
-	margin: 0px auto 0px auto;
+	margin: 0px 10px 0px 0px;
 }
 
 #Logo {
@@ -129,7 +128,7 @@ a.dark:hover {
 	cursor: pointer;
 	float: left;
 	margin-top: 11px;
-	margin-left: 15px;
+	margin-left: 30px;
 }
 
 #Search {
@@ -165,11 +164,9 @@ a.dark:hover {
 
 #Wrapper {
 	background-color: #fff;
-	background-image: url("/static/img/bg.png");
 }
 
 #Main {
-	width: 960px;
 	margin: 0px auto 0px auto;
 	padding: 12px 0px 30px 0px;
 }
@@ -188,7 +185,8 @@ a.dark:hover {
 
 #Content {
 	margin: 0px 282px 0px 0px;
-	padding: 10px;
+	padding: 10px 10px 10px 20px;
+	border-right: 1px solid #ccc;
 }
 
 #Bottom {
@@ -196,11 +194,11 @@ a.dark:hover {
 }
 
 #BottomMain {
-	margin: 0px auto 0px auto;
-	width: 920px;
+	margin: 0px 20px 0px 20px;
 	padding: 20px 0px 20px 0px;
 	font-size: 12px;
 	color: #e2e2e2;
+	border-top: 2px solid #f0f0f0;
 }
 
 /* CLASSes */
@@ -209,7 +207,6 @@ a.dark:hover {
 	background-color: #fff;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	border: 2px solid rgba(0, 0, 0, 0.15);
 }
 
 .glass {
