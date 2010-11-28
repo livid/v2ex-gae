@@ -142,6 +142,7 @@ site_description = 'Description'
 site_home_categories = 'Home Categories'
 one_category_per_line = 'One featured category per line'
 site_settings_updated = 'Site settings updated successfully'
+site_theme = 'Theme'
 
 # Messages on /backstage/topic
 

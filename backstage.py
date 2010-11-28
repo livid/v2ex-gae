@@ -1438,10 +1438,16 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     template_values['site_meta'] = site.meta
                 else:
                     template_values['site_meta'] = ''
+                if site.theme is not None:
+                    template_values['site_theme'] = site.theme
+                else:
+                    template_values['site_theme'] = 'default'
                 s = GetLanguageSelect(site.l10n)
                 template_values['s'] = s
                 template_values['member'] = member
                 template_values['system_version'] = SYSTEM_VERSION
+                themes = os.listdir(os.path.join(os.path.dirname(__file__), 'tpl', 'themes'))
+                template_values['themes'] = themes
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_site.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
@@ -1603,7 +1609,18 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 # Verification: meta
                 site_meta = self.request.get('meta')
                 template_values['site_meta'] = site_meta
+                # Verification: theme
+                site_theme = self.request.get('theme')
+                themes = os.listdir(os.path.join(os.path.dirname(__file__), 'tpl', 'themes'))
+                template_values['themes'] = themes
+                if site_theme in themes:
+                    template_values['site_theme'] = site_theme
+                else:
+                    site_theme = 'default'
+                    template_values['site_theme'] = site_theme
+
                 template_values['errors'] = errors
+                
                 if errors == 0:
                     site.title = site_title
                     site.slogan = site_slogan
@@ -1618,6 +1635,7 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     site.topic_create_level = site_topic_create_level
                     site.topic_reply_level = site_topic_reply_level
                     site.meta = site_meta
+                    site.theme = site_theme
                     site.put()
                     memcache.delete('index_categories')
                     template_values['message'] = l10n.site_settings_updated;

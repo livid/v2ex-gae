@@ -142,6 +142,7 @@ site_description = '站点描述'
 site_home_categories = '主页分类'
 one_category_per_line = '每行一个'
 site_settings_updated = '站点设置成功更新'
+site_theme = '站点皮肤主题'
 
 # Messages on /backstage/topic
 

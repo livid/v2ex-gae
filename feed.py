@@ -41,6 +41,7 @@ class FeedHomeHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'feed', 'index.xml')
             output = template.render(path, template_values)
             memcache.set('feed_index', output, 600)
+        self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
         self.response.out.write(output)
 
 def main():
