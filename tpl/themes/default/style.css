@@ -207,9 +207,9 @@ a.dark:hover {
 
 .box {
 	background-color: #fff;
-	border: 1px solid #e2e2e2;
-	border-bottom: 2px solid #e0e0e0;
-	-moz-border-radius: 4px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 2px solid rgba(0, 0, 0, 0.15);
 }
 
 .glass {
