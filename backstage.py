@@ -1188,6 +1188,8 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     template_values['section'] = q2[0]
                 else:
                     template_values['section'] = False
+                if section is not False:
+                    template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + section.title + u' › ' + node.title
                 errors = 0
                 # Verification: name
                 node_name_error = 0
