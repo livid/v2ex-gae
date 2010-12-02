@@ -158,6 +158,9 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_twitter'] = member.twitter
             if (member.location == None):
                 member.location = ''
+            if member.psn is None:
+                member.psn = ''
+            template_values['member_psn'] = member.psn
             template_values['member_location'] = member.location
             if (member.tagline == None):
                 member.tagline = ''
@@ -210,6 +213,7 @@ class SettingsHandler(webapp.RequestHandler):
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
+        template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
         errors = 0
         member = CheckAuth(self)
@@ -325,6 +329,29 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_twitter'] = member_twitter
             template_values['member_twitter_error'] = member_twitter_error
             template_values['member_twitter_error_message'] = member_twitter_error_messages[member_twitter_error]
+            # Verification: psn
+            member_psn_error = 0
+            member_psn_error_messages = ['',
+                u'PSN ID 长度不能超过 20 个字符',
+                u'PSN ID 不符合规则'
+            ]
+            member_psn = self.request.get('psn').strip()
+            if (len(member_psn) == 0):
+                member_psn = ''
+            else:
+                if (len(member_psn) > 20):
+                    errors = errors + 1
+                    member_psn_error = 1
+                else:
+                    p = re.compile('^[a-zA-Z0-9\-]+$')
+                    if (p.search(member_psn)):
+                        errors = errors
+                    else:
+                        errors = errors + 1
+                        member_psn_error = 2
+            template_values['member_psn'] = member_psn
+            template_values['member_psn_error'] = member_psn_error
+            template_values['member_psn_error_message'] = member_psn_error_messages[member_psn_error]
             # Verification: location
             member_location_error = 0
             member_location_error_messages = ['',
@@ -394,6 +421,7 @@ class SettingsHandler(webapp.RequestHandler):
                 member.email = member_email.lower()
                 member.website = member_website
                 member.twitter = member_twitter
+                member.psn = member_psn
                 member.location = member_location
                 member.tagline = member_tagline
                 if member.twitter_oauth == 1:

@@ -17,13 +17,13 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><div class="fr" align="right"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong>{% if member %}<div class="sep3"></div>{% if favorited %}<a href="/unfavorite/node/{{ node.name }}">取消收藏</a>{% else %}<a href="/favorite/node/{{ node.name }}">加入收藏</a>{% endif %}{% endif %}</span></div>
+                <div class="cell"><div class="fr" align="right"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong>{% if member %} &nbsp;<span class="snow">•</span>&nbsp; {% if favorited %}<a href="/unfavorite/node/{{ node.name }}">取消收藏</a>{% else %}<a href="/favorite/node/{{ node.name }}">加入收藏</a>{% endif %}{% endif %}</span></div>
                 <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
                 {% if node.header %}
                 <div class="sep10"></div>
                 <span class="header">{{ node.header|linebreaksbr }}</span>
                 {% endif %}
-                {% if member %}
+                {% if can_create %}
                 <div class="sep10"></div>
                 <div class="sep5"></div>
                 <a href="/new/{{ node.name }}" class="super normal button">{{ l10n.create_new_topic }}</a>
@@ -73,7 +73,7 @@
                     {% endif %}
                 </div>
             </div>
-            {% if member %}
+            {% if can_create %}
             <div class="sep20"></div>
             <div class="box">
                 <div class="cell">快速发贴</div>

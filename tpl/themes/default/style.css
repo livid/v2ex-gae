@@ -210,6 +210,7 @@ a.dark:hover {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border: 2px solid rgba(0, 0, 0, 0.15);
+	border-bottom: 2px solid #ccc;
 }
 
 .glass {

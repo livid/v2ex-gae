@@ -120,9 +120,9 @@ recent_participated_topics = 'Recent Participated Topics'
 # Messages on /backstage
 
 site_settings = 'Site Settings'
-site_settings_explained = 'Site name, slogan, description and other details.'
+site_settings_explained = 'Site name, slogan, description and other details. Who can create topic and who can reply.'
 topic_settings = 'Topic Settings'
-topic_settings_explained = 'Configure topic types and who can post, who can reply.'
+topic_settings_explained = 'Configure topic types.'
 sections = 'Sections'
 add_new_section = 'Add New Section'
 minisites = 'Minisites'

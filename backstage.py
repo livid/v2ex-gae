@@ -84,6 +84,8 @@ class BackstageHomeHandler(webapp.RequestHandler):
                 template_values['latest_members'] = q2
                 q3 = db.GqlQuery("SELECT * FROM Minisite ORDER BY created DESC")
                 template_values['minisites'] = q3
+                q4 = db.GqlQuery("SELECT * FROM Node ORDER BY last_modified DESC LIMIT 8")
+                template_values['latest_nodes'] = q4
                 if browser['ios']:
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_home.html')
                 else:
@@ -1740,6 +1742,167 @@ class BackstageRemoveMemcacheHandler(webapp.RequestHandler):
                     memcache.delete(mc)
         self.redirect('/backstage')
 
+
+class BackstageMemberHandler(webapp.RequestHandler):
+    def get(self, member_username):
+        template_values = {}
+        site = GetSite()
+        member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.num == 1:
+                member_username_lower = member_username.lower()
+                q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1", member_username_lower)
+                if (q.count() == 1):
+                    one = q[0]
+                    template_values['one'] = one
+                    errors = 0
+                    template_values['one_username'] = one.username
+                    template_values['one_email'] = one.email
+                    template_values['one_avatar_large_url'] = one.avatar_large_url
+                    template_values['one_avatar_normal_url'] = one.avatar_normal_url
+                    template_values['one_avatar_mini_url'] = one.avatar_mini_url
+                    template_values['one_bio'] = one.bio
+                    template_values['one_level'] = one.level
+                    template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + one.username
+                    template_values['site'] = site
+                    template_values['member'] = member
+                    template_values['system_version'] = SYSTEM_VERSION
+                    template_values['latest_members'] = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 5")
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_member.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+                else:
+                    self.redirect('/backstage')
+                
+        else:
+            self.redirect('/')
+            
+
+    def post(self, member_username):
+        template_values = {}
+        site = GetSite()
+        member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.num == 1:
+                member_username_lower = member_username.lower()
+                q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1", member_username_lower)
+                if (q.count() == 1):
+                    one = q[0]
+                    template_values['one'] = one
+                    errors = 0
+                    # Verification: username
+                    one_username_error = 0
+                    one_username_error_messages = ['',
+                        l10n.username_empty,
+                        l10n.username_too_long,
+                        l10n.username_too_short,
+                        l10n.username_invalid,
+                        l10n.username_taken]
+                    one_username = self.request.get('username').strip()
+                    if (len(one_username) == 0):
+                        errors = errors + 1
+                        one_username_error = 1
+                    else:
+                        if (len(one_username) > 32):
+                            errors = errors + 1
+                            one_username_error = 2
+                        else:
+                            if (len(one_username) < 3):
+                                errors = errors + 1
+                                one_username_error = 3
+                            else:
+                                if (re.search('^[a-zA-Z0-9\_]+$', one_username)):
+                                    q = db.GqlQuery('SELECT * FROM Member WHERE username_lower = :1 AND num != :2', one_username.lower(), one.num)
+                                    if (q.count() > 0):
+                                        errors = errors + 1
+                                        one_username_error = 5
+                                else:
+                                    errors = errors + 1
+                                    one_username_error = 4
+                    template_values['one_username'] = one_username
+                    template_values['one_username_error'] = one_username_error
+                    template_values['one_username_error_message'] = one_username_error_messages[one_username_error]
+                    # Verification: email
+                    one_email_error = 0
+                    one_email_error_messages = ['',
+                        u'请输入电子邮件地址',
+                        u'电子邮件地址长度不能超过 32 个字符',
+                        u'输入的电子邮件地址不符合规则',
+                        u'这个电子邮件地址已经有人注册过了']
+                    one_email = self.request.get('email').strip()
+                    if (len(one_email) == 0):
+                        errors = errors + 1
+                        one_email_error = 1
+                    else:
+                        if (len(one_email) > 32):
+                            errors = errors + 1
+                            one_email_error = 2
+                        else:
+                            p = re.compile(r"(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE)
+                            if (p.search(one_email)):
+                                q = db.GqlQuery('SELECT * FROM Member WHERE email = :1 AND num != :2', one_email.lower(), one.num)
+                                if (q.count() > 0):
+                                    errors = errors + 1
+                                    one_email_error = 4
+                            else:
+                                errors = errors + 1
+                                one_email_error = 3
+                    template_values['one_email'] = one_email.lower()
+                    template_values['one_email_error'] = one_email_error
+                    template_values['one_email_error_message'] = one_email_error_messages[one_email_error]
+                    # Verification: avatar
+                    one_avatar_large_url = self.request.get('avatar_large_url')
+                    template_values['one_avatar_large_url'] = one_avatar_large_url
+                    one_avatar_normal_url = self.request.get('avatar_normal_url')
+                    template_values['one_avatar_normal_url'] = one_avatar_normal_url
+                    one_avatar_mini_url = self.request.get('avatar_mini_url')
+                    template_values['one_avatar_mini_url'] = one_avatar_mini_url
+                    # Verification: bio
+                    one_bio = self.request.get('bio')
+                    template_values['one_bio'] = one_bio
+                    # Verification: level
+                    one_level = self.request.get('level')
+                    try:
+                        one_level = int(one_level)
+                    except:
+                        if one.num == 1:
+                            one_level = 0
+                        else:
+                            one_level = 1000
+                    template_values['one_level'] = one_level
+                    if errors == 0:
+                        one.username = one_username
+                        one.username_lower = one_username.lower()
+                        one.email = one_email
+                        one.avatar_large_url = one_avatar_large_url
+                        one.avatar_normal_url = one_avatar_normal_url
+                        one.avatar_mini_url = one_avatar_mini_url
+                        one.bio = one_bio
+                        one.level = one_level
+                        one.put()
+                        memcache.delete('Member_' + str(one.num))
+                        memcache.delete('Member::' + one_username.lower())
+                        self.redirect('/backstage')
+                    else:
+                        template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + one.username
+                        template_values['site'] = site
+                        template_values['member'] = member
+                        template_values['system_version'] = SYSTEM_VERSION
+                        template_values['latest_members'] = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 5")
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_member.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
+                else:
+                    self.redirect('/backstage')
+
+        else:
+            self.redirect('/')
+
+
 def main():
     application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
@@ -1760,7 +1923,8 @@ def main():
     ('/backstage/move/topic/(.*)', BackstageMoveTopicHandler),
     ('/backstage/site', BackstageSiteHandler),
     ('/backstage/topic', BackstageTopicHandler),
-    ('/backstage/remove/mc', BackstageRemoveMemcacheHandler)
+    ('/backstage/remove/mc', BackstageRemoveMemcacheHandler),
+    ('/backstage/member/(.*)', BackstageMemberHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

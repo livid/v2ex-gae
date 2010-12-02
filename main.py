@@ -677,6 +677,15 @@ class NodeHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         if member:
             template_values['member'] = member
+        can_create = False
+        if site.topic_create_level > 999:
+            if member:
+                can_create = True
+        else:
+            if member:
+                if member.level <= site.topic_create_level:
+                    can_create = True
+        template_values['can_create'] = can_create
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n    
         node = GetKindByName('Node', node_name)

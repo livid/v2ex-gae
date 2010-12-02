@@ -59,6 +59,14 @@ class NewTopicHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic.decode('utf-8')
+        can_create = False
+        if site.topic_create_level > 999:
+            if member:
+                can_create = True
+        else:
+            if member:
+                if member.level <= site.topic_create_level:
+                    can_create = True
         if (member):
             template_values['member'] = member
             node = GetKindByName('Node', node_name)
@@ -81,16 +89,19 @@ class NewTopicHandler(webapp.RequestHandler):
                 template_values['tt'] = tt
             else:
                 template_values['tt'] = ''
-            if browser['ios']:
-                if node:
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
+            if can_create:
+                if browser['ios']:
+                    if node:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'node_not_found.html')
                 else:
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'node_not_found.html')
+                    if node:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'new_topic.html')
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'node_not_found.html')
             else:
-                if node:
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'new_topic.html')
-                else:
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'node_not_found.html')
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'access_denied.html')
             output = template.render(path, template_values)
             self.response.out.write(output)
         else:
@@ -106,160 +117,173 @@ class NewTopicHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         template_values['page_title'] = site.title + u' › ' + l10n.create_new_topic.decode('utf-8')
+        can_create = False
+        if site.topic_create_level > 999:
+            if member:
+                can_create = True
+        else:
+            if member:
+                if member.level <= site.topic_create_level:
+                    can_create = True
         if (member):
             template_values['member'] = member
-            q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
-            node = False
-            if (q.count() == 1):
-                node = q[0]
-            template_values['node'] = node
-            section = False
-            if node:
-                q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                if (q2.count() == 1):
-                    section = q2[0]
-            template_values['section'] = section
-            errors = 0
-            # Verification: title
-            topic_title_error = 0
-            topic_title_error_messages = ['',
-                u'请输入主题标题',
-                u'主题标题长度不能超过 120 个字符'
-                ]
-            topic_title = self.request.get('title').strip()
-            if (len(topic_title) == 0):
-                errors = errors + 1
-                topic_title_error = 1
-            else:
-                if (len(topic_title) > 120):
-                    errors = errors + 1
-                    topic_title_error = 2
-            template_values['topic_title'] = topic_title
-            template_values['topic_title_error'] = topic_title_error
-            template_values['topic_title_error_message'] = topic_title_error_messages[topic_title_error]
-            # Verification: content
-            topic_content_error = 0
-            topic_content_error_messages = ['',
-                u'请输入主题内容',
-                u'主题内容长度不能超过 2000 个字符'
-            ]
-            topic_content = self.request.get('content').strip()
-            if (len(topic_content) == 0):
-                errors = errors + 1
-                topic_content_error = 1
-            else:
-                if (len(topic_content) > 2000):
-                    errors = errors + 1
-                    topic_content_error = 2
-            template_values['topic_content'] = topic_content
-            template_values['topic_content_error'] = topic_content_error
-            template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
-            # Verification: type
-            if site.use_topic_types:
-                types = site.topic_types.split("\n")
-                if len(types) > 0:
-                    topic_type = self.request.get('type').strip()
-                    try:
-                        topic_type = int(topic_type)
-                        if topic_type < 0:
-                            topic_type = 0
-                        if topic_type > len(types):
-                            topic_type = 0
-                        if topic_type > 0:
-                            detail = types[topic_type - 1].split(':')
-                            topic_type_label = detail[0]
-                            topic_type_color = detail[1]
-                    except:
-                        topic_type = 0
-                else:
-                    topic_type = 0
-                options = '<option value="0">&nbsp;&nbsp;&nbsp;&nbsp;</option>'
-                i = 0
-                for a_type in types:
-                    i = i + 1
-                    detail = a_type.split(':')
-                    if topic_type == i:
-                        options = options + '<option value="' + str(i) + '" selected="selected">' + detail[0] + '</option>'
-                    else:
-                        options = options + '<option value="' + str(i) + '">' + detail[0] + '</option>'
-                tt = '<div class="sep5"></div><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td width="60" align="right">Topic Type</td><td width="auto" align="left"><select name="type">' + options + '</select></td></tr></table>'
-                template_values['tt'] = tt
-            else:
-                template_values['tt'] = ''
-            template_values['errors'] = errors
-            if (errors == 0):
-                topic = Topic(parent=node)
-                q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.max')
+            if can_create:
+                q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
+                node = False
                 if (q.count() == 1):
-                    counter = q[0]
-                    counter.value = counter.value + 1
+                    node = q[0]
+                template_values['node'] = node
+                section = False
+                if node:
+                    q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
+                    if (q2.count() == 1):
+                        section = q2[0]
+                template_values['section'] = section
+                errors = 0
+                # Verification: title
+                topic_title_error = 0
+                topic_title_error_messages = ['',
+                    u'请输入主题标题',
+                    u'主题标题长度不能超过 120 个字符'
+                    ]
+                topic_title = self.request.get('title').strip()
+                if (len(topic_title) == 0):
+                    errors = errors + 1
+                    topic_title_error = 1
                 else:
-                    counter = Counter()
-                    counter.name = 'topic.max'
-                    counter.value = 1
-                q2 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.total')
-                if (q2.count() == 1):
-                    counter2 = q2[0]
-                    counter2.value = counter2.value + 1
+                    if (len(topic_title) > 120):
+                        errors = errors + 1
+                        topic_title_error = 2
+                template_values['topic_title'] = topic_title
+                template_values['topic_title_error'] = topic_title_error
+                template_values['topic_title_error_message'] = topic_title_error_messages[topic_title_error]
+                # Verification: content
+                topic_content_error = 0
+                topic_content_error_messages = ['',
+                    u'请输入主题内容',
+                    u'主题内容长度不能超过 2000 个字符'
+                ]
+                topic_content = self.request.get('content').strip()
+                if (len(topic_content) == 0):
+                    errors = errors + 1
+                    topic_content_error = 1
                 else:
-                    counter2 = Counter()
-                    counter2.name = 'topic.total'
-                    counter2.value = 1
-                topic.num = counter.value
-                topic.title = topic_title
-                topic.content = topic_content
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
-                output = template.render(path, {'topic' : topic})
-                topic.content_rendered = output.decode('utf-8')
-                topic.node = node
-                topic.node_num = node.num
-                topic.node_name = node.name
-                topic.node_title = node.title
-                topic.created_by = member.username
-                topic.member = member
-                topic.member_num = member.num
-                topic.last_touched = datetime.datetime.now()
-                ua = self.request.headers['User-Agent']
-                if (re.findall('Mozilla\/5.0 \(iPhone;', ua)):
-                    topic.source = 'iPhone'
-                if (re.findall('Mozilla\/5.0 \(iPod;', ua)):
-                    topic.source = 'iPod'
-                if (re.findall('Mozilla\/5.0 \(iPad;', ua)):
-                    topic.source = 'iPad'
-                if (re.findall('Android', ua)):
-                    topic.source = 'Android'
-                if (re.findall('Mozilla\/5.0 \(PLAYSTATION 3;', ua)):
-                    topic.source = 'PS3'
+                    if (len(topic_content) > 2000):
+                        errors = errors + 1
+                        topic_content_error = 2
+                template_values['topic_content'] = topic_content
+                template_values['topic_content_error'] = topic_content_error
+                template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
+                # Verification: type
                 if site.use_topic_types:
-                    if topic_type > 0:
-                        topic.type = topic_type_label
-                        topic.type_color = topic_type_color          
-                node.topics = node.topics + 1
-                node.put()
-                topic.put()
-                counter.put()
-                counter2.put()
-                memcache.delete('feed_index')
-                memcache.delete('Node_' + str(topic.node_num))
-                memcache.delete('Node::' + str(node.name))
-                memcache.delete('home_rendered')
-                memcache.delete('home_rendered_mobile')
-                taskqueue.add(url='/index/topic/' + str(topic.num))
-                # Twitter Sync
-                if member.twitter_oauth == 1 and member.twitter_sync == 1:
-                    access_token = OAuthToken.from_string(member.twitter_oauth_string)
-                    twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
-                    status = topic.title + ' #' + topic.node.name + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
-                    try:
-                        twitter.PostUpdate(status.encode('utf-8'))
-                    except:
-                        logging.error("Failed to sync to Twitter for Topic #" + str(topic.num))
-                self.redirect('/t/' + str(topic.num) + '#reply0')
-            else:    
-                if browser['ios']:
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
+                    types = site.topic_types.split("\n")
+                    if len(types) > 0:
+                        topic_type = self.request.get('type').strip()
+                        try:
+                            topic_type = int(topic_type)
+                            if topic_type < 0:
+                                topic_type = 0
+                            if topic_type > len(types):
+                                topic_type = 0
+                            if topic_type > 0:
+                                detail = types[topic_type - 1].split(':')
+                                topic_type_label = detail[0]
+                                topic_type_color = detail[1]
+                        except:
+                            topic_type = 0
+                    else:
+                        topic_type = 0
+                    options = '<option value="0">&nbsp;&nbsp;&nbsp;&nbsp;</option>'
+                    i = 0
+                    for a_type in types:
+                        i = i + 1
+                        detail = a_type.split(':')
+                        if topic_type == i:
+                            options = options + '<option value="' + str(i) + '" selected="selected">' + detail[0] + '</option>'
+                        else:
+                            options = options + '<option value="' + str(i) + '">' + detail[0] + '</option>'
+                    tt = '<div class="sep5"></div><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td width="60" align="right">Topic Type</td><td width="auto" align="left"><select name="type">' + options + '</select></td></tr></table>'
+                    template_values['tt'] = tt
                 else:
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'new_topic.html')
+                    template_values['tt'] = ''
+                template_values['errors'] = errors
+                if (errors == 0):
+                    topic = Topic(parent=node)
+                    q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.max')
+                    if (q.count() == 1):
+                        counter = q[0]
+                        counter.value = counter.value + 1
+                    else:
+                        counter = Counter()
+                        counter.name = 'topic.max'
+                        counter.value = 1
+                    q2 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'topic.total')
+                    if (q2.count() == 1):
+                        counter2 = q2[0]
+                        counter2.value = counter2.value + 1
+                    else:
+                        counter2 = Counter()
+                        counter2.name = 'topic.total'
+                        counter2.value = 1
+                    topic.num = counter.value
+                    topic.title = topic_title
+                    topic.content = topic_content
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
+                    output = template.render(path, {'topic' : topic})
+                    topic.content_rendered = output.decode('utf-8')
+                    topic.node = node
+                    topic.node_num = node.num
+                    topic.node_name = node.name
+                    topic.node_title = node.title
+                    topic.created_by = member.username
+                    topic.member = member
+                    topic.member_num = member.num
+                    topic.last_touched = datetime.datetime.now()
+                    ua = self.request.headers['User-Agent']
+                    if (re.findall('Mozilla\/5.0 \(iPhone;', ua)):
+                        topic.source = 'iPhone'
+                    if (re.findall('Mozilla\/5.0 \(iPod;', ua)):
+                        topic.source = 'iPod'
+                    if (re.findall('Mozilla\/5.0 \(iPad;', ua)):
+                        topic.source = 'iPad'
+                    if (re.findall('Android', ua)):
+                        topic.source = 'Android'
+                    if (re.findall('Mozilla\/5.0 \(PLAYSTATION 3;', ua)):
+                        topic.source = 'PS3'
+                    if site.use_topic_types:
+                        if topic_type > 0:
+                            topic.type = topic_type_label
+                            topic.type_color = topic_type_color          
+                    node.topics = node.topics + 1
+                    node.put()
+                    topic.put()
+                    counter.put()
+                    counter2.put()
+                    memcache.delete('feed_index')
+                    memcache.delete('Node_' + str(topic.node_num))
+                    memcache.delete('Node::' + str(node.name))
+                    memcache.delete('home_rendered')
+                    memcache.delete('home_rendered_mobile')
+                    taskqueue.add(url='/index/topic/' + str(topic.num))
+                    # Twitter Sync
+                    if member.twitter_oauth == 1 and member.twitter_sync == 1:
+                        access_token = OAuthToken.from_string(member.twitter_oauth_string)
+                        twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
+                        status = topic.title + ' #' + topic.node.name + ' http://' + self.request.headers['Host'] + '/t/' + str(topic.num)
+                        try:
+                            twitter.PostUpdate(status.encode('utf-8'))
+                        except:
+                            logging.error("Failed to sync to Twitter for Topic #" + str(topic.num))
+                    self.redirect('/t/' + str(topic.num) + '#reply0')
+                else:    
+                    if browser['ios']:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'new_topic.html')
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'new_topic.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'access_denied.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
         else:

@@ -15,6 +15,11 @@ indexes:
   - name: email
   - name: num
 
+- kind: Member
+  properties:
+  - name: username_lower
+  - name: num
+
 - kind: MemberBookmark
   properties:
   - name: member_num

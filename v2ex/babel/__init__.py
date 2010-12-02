@@ -17,6 +17,7 @@ class Member(db.Model):
     email = db.StringProperty(required=False, indexed=True)
     email_verified = db.IntegerProperty(required=False, indexed=True, default=0)
     website = db.StringProperty(required=False, default='')
+    psn = db.StringProperty(required=False)
     twitter = db.StringProperty(required=False, default='')
     twitter_oauth = db.IntegerProperty(required=False, default=0)
     twitter_oauth_key = db.StringProperty(required=False)

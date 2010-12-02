@@ -120,9 +120,9 @@ recent_participated_topics = '最近参与主题'
 # Messages on /backstage
 
 site_settings = '站点设置'
-site_settings_explained = '站点名，标语，描述及其他更多细节。'
+site_settings_explained = '站点名，标语，描述及谁可以发贴，谁可以回帖。'
 topic_settings = '主题设置'
-topic_settings_explained = '配置主题类型及谁可以创建主题，谁可以回复。'
+topic_settings_explained = '配置主题类型。'
 sections = '区域'
 add_new_section = '添加新区域'
 minisites = '迷你站'
