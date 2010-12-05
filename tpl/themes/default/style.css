@@ -817,3 +817,44 @@ a.opo:hover {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 }
+
+/* PAGE */
+
+.page_current {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 14px;
+	padding: 2px 5px 2px 5px;
+	background-color: #f0f0f0;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin: 0px 2px 0px 2px;
+}
+
+.page_normal:link, .page_normal:visited, .page_normal:active {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 14px;
+	padding: 2px 5px 2px 5px;
+	background-color: #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin: 0px 2px 0px 2px;
+	text-decoration: none;
+}
+
+.page_normal:hover {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 14px;
+	padding: 2px 5px 2px 5px;
+	background-color: #ff9933;
+	color: #fff;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin: 0px 2px 0px 2px;
+	text-decoration: none;
+}

@@ -1,0 +1,21 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div class="sep10"></div>
+        <div class="box">
+            <div class="cell">
+                <span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">{{ l10n.backstage }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 浏览所有会员</span>
+            </div>
+            <div class="cell" align="center">{% for one in members %}<div style="display: inline-block; margin: 5px; border: 1px solid #e2e2e2; padding: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; width: 205px;"><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td align="left" valign="top"><a href="/backstage/member/{{ one.username }}">{{ one|avatar:"normal" }}</a></td><td align="left" valign="top"><span class="snow">{{ one.num }}</span> &nbsp; <strong><a href="/backstage/member/{{ one.username }}">{{ one.username }}</a></strong><div class="sep5"></div>{{ one.email }}{% if one.tagline %}<div class="sep5"></div><span class="fade">{{ one.tagline|escape }}</span>{% else %}<div class="sep5"></div>&nbsp;{% endif %}</td></table></div>{% endfor %}</div>
+            <div class="inner" align="center">
+                {% for p in ps %}{% ifequal p page_current %}<span class="page_current">{{ p }}</span>{% else %}<a href="/backstage/members?p={{ p }}" class="page_normal">{{ p }}</a>{% endifequal %}{% endfor %}
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

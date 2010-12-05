@@ -635,6 +635,21 @@ class TopicEditHandler(webapp.RequestHandler):
                         section = q3[0]
                     template_values['node'] = node
                     template_values['section'] = section
+                    if site.use_topic_types:
+                        types = site.topic_types.split("\n")
+                        options = '<option value="0">&nbsp;&nbsp;&nbsp;&nbsp;</option>'
+                        i = 0
+                        for a_type in types:
+                            i = i + 1
+                            detail = a_type.split(':')
+                            if detail[0] == topic.type:
+                                options = options + '<option value="' + str(i) + '" selected="selected">' + detail[0] + '</option>'
+                            else:
+                                options = options + '<option value="' + str(i) + '">' + detail[0] + '</option>'
+                        tt = '<div class="sep5"></div><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td width="60" align="right">Topic Type</td><td width="auto" align="left"><select name="type">' + options + '</select></td></tr></table>'
+                        template_values['tt'] = tt
+                    else:
+                        template_values['tt'] = ''
                     q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
                     template_values['replies'] = q4
                     if browser['ios']:
@@ -714,6 +729,38 @@ class TopicEditHandler(webapp.RequestHandler):
                     template_values['topic_content'] = topic_content
                     template_values['topic_content_error'] = topic_content_error
                     template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
+                    # Verification: type
+                    if site.use_topic_types:
+                        types = site.topic_types.split("\n")
+                        if len(types) > 0:
+                            topic_type = self.request.get('type').strip()
+                            try:
+                                topic_type = int(topic_type)
+                                if topic_type < 0:
+                                    topic_type = 0
+                                if topic_type > len(types):
+                                    topic_type = 0
+                                if topic_type > 0:
+                                    detail = types[topic_type - 1].split(':')
+                                    topic_type_label = detail[0]
+                                    topic_type_color = detail[1]
+                            except:
+                                topic_type = 0
+                        else:
+                            topic_type = 0
+                        options = '<option value="0">&nbsp;&nbsp;&nbsp;&nbsp;</option>'
+                        i = 0
+                        for a_type in types:
+                            i = i + 1
+                            detail = a_type.split(':')
+                            if topic_type == i:
+                                options = options + '<option value="' + str(i) + '" selected="selected">' + detail[0] + '</option>'
+                            else:
+                                options = options + '<option value="' + str(i) + '">' + detail[0] + '</option>'
+                        tt = '<div class="sep5"></div><table cellpadding="5" cellspacing="0" border="0" width="100%"><tr><td width="60" align="right">Topic Type</td><td width="auto" align="left"><select name="type">' + options + '</select></td></tr></table>'
+                        template_values['tt'] = tt
+                    else:
+                        template_values['tt'] = ''
                     template_values['errors'] = errors
                     if (errors == 0):
                         topic.title = topic_title
@@ -722,8 +769,18 @@ class TopicEditHandler(webapp.RequestHandler):
                         output = template.render(path, {'topic' : topic})
                         topic.content_rendered = output.decode('utf-8')
                         topic.last_touched = datetime.datetime.now()
+                        if site.use_topic_types:
+                            if topic_type > 0:
+                                topic.type = topic_type_label
+                                topic.type_color = topic_type_color
+                            else:
+                                topic.type = ''
+                                topic.type_color = ''        
                         topic.put()
                         memcache.delete('Topic_' + str(topic.num))
+                        memcache.delete('home_rendered')
+                        memcache.delete('home_rendered_mobile')
+                        taskqueue.add(url='/index/topic/' + str(topic.num))
                         self.redirect('/t/' + str(topic.num))
                     else:
                         if browser['ios']:

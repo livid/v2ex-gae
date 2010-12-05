@@ -9,6 +9,7 @@ import hashlib
 import string
 import StringIO
 import random
+import math
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -1902,6 +1903,60 @@ class BackstageMemberHandler(webapp.RequestHandler):
         else:
             self.redirect('/')
 
+class BackstageMembersHandler(webapp.RequestHandler):
+    def get(self):
+        template_values = {}
+        site = GetSite()
+        template_values['site'] = site
+        member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.num == 1:
+                template_values['member'] = member
+                template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › 浏览所有会员'
+                member_total = memcache.get('member_total')
+                if member_total is None:
+                    q3 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'member.total'")
+                    if (q3.count() > 0):
+                        member_total = q3[0].value
+                    else:
+                        member_total = 0
+                    memcache.set('member_total', member_total, 600)
+                template_values['member_total'] = member_total
+                page_size = 60
+                pages = 1
+                if member_total > page_size:
+                    if (member_total % page_size) > 0:
+                        pages = int(math.floor(member_total / page_size)) + 1
+                    else:
+                        pages = int(math.floor(member_total / page_size))
+                try:
+                    page_current = int(self.request.get('p'))
+                    if page_current < 1:
+                        page_current = 1
+                    if page_current > pages:
+                        page_current = pages
+                except:
+                    page_current = 1
+                page_start = (page_current - 1) * page_size
+                template_values['pages'] = pages
+                template_values['page_current'] = page_current
+                i = 1
+                ps = []
+                while i <= pages:
+                    ps.append(i)
+                    i = i + 1
+                template_values['ps'] = ps
+                q = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT " + str(page_start )+ "," + str(page_size))
+                template_values['members'] = q
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_members.html')
+                output = template.render(path, template_values)
+                self.response.out.write(output)
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
 
 def main():
     application = webapp.WSGIApplication([
@@ -1924,7 +1979,8 @@ def main():
     ('/backstage/site', BackstageSiteHandler),
     ('/backstage/topic', BackstageTopicHandler),
     ('/backstage/remove/mc', BackstageRemoveMemcacheHandler),
-    ('/backstage/member/(.*)', BackstageMemberHandler)
+    ('/backstage/member/(.*)', BackstageMemberHandler),
+    ('/backstage/members', BackstageMembersHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
