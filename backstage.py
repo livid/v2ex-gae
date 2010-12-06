@@ -1081,6 +1081,8 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
                     node.title_alternative = node_title_alternative
                     node.put()
                     counter.put()
+                    memcache.delete('index_categories')
+                    memcache.delete('home_nodes_new')
                     self.redirect('/backstage/section/' + section.name)
                 else:    
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_new_node.html')
@@ -1279,6 +1281,8 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     node.put()
                     memcache.delete('Node_' + str(node.num))
                     memcache.delete('Node::' + node.name)
+                    memcache.delete('index_categories')
+                    memcache.delete('home_nodes_new')
                     self.redirect('/backstage/node/' + node.name)
                 else:    
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_node.html')
