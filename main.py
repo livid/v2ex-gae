@@ -485,6 +485,10 @@ class SignupHandler(webapp.RequestHandler):
             member.email = member_email.lower()
             member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
             member.l10n = site.l10n
+            if member.num == 1:
+                member.level = 0
+            else:
+                member.level = 1000
             member.put()
             counter.put()
             counter2.put()

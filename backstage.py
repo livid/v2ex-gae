@@ -78,7 +78,7 @@ class BackstageHomeHandler(webapp.RequestHandler):
             memcache.set('reply_total', reply_total, 600)
         template_values['reply_total'] = reply_total
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 q = db.GqlQuery("SELECT * FROM Section ORDER BY nodes DESC")
                 template_values['sections'] = q
                 q2 = db.GqlQuery("SELECT * FROM Member ORDER BY created DESC LIMIT 5")
@@ -110,7 +110,7 @@ class BackstageNewMinisiteHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):    
+            if (member.level == 0):    
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_new_minisite.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
@@ -130,7 +130,7 @@ class BackstageNewMinisiteHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 errors = 0
                 # Verification: name
                 minisite_name_error = 0
@@ -232,7 +232,7 @@ class BackstageMinisiteHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 minisite = GetKindByName('Minisite', minisite_name)
                 if minisite is not False:
                     template_values['minisite'] = minisite
@@ -260,7 +260,7 @@ class BackstageNewPageHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 minisite = GetKindByName('Minisite', minisite_name)
                 if minisite is not False:
                     template_values['minisite'] = minisite
@@ -288,7 +288,7 @@ class BackstageNewPageHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 minisite = GetKindByName('Minisite', minisite_name)
                 if minisite is False:
                     self.redirect('/backstage')
@@ -442,7 +442,7 @@ class BackstageRemoveMinisiteHandler(webapp.RequestHandler):
     def get(self, minisite_key):
         member = CheckAuth(self)
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 minisite = db.get(db.Key(minisite_key))
                 if minisite:
                     # Delete all contents
@@ -477,7 +477,7 @@ class BackstagePageHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 page = db.get(db.Key(page_key))
                 if page:
                     minisite = page.minisite
@@ -510,7 +510,7 @@ class BackstagePageHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 page = db.get(db.Key(page_key))
                 if page:
                     minisite = page.minisite
@@ -643,7 +643,7 @@ class BackstageRemovePageHandler(webapp.RequestHandler):
     def get(self, page_key):
         member = CheckAuth(self)
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 page = db.get(db.Key(page_key))
                 if page:
                     memcache.delete('Page_' + str(page.num))
@@ -670,7 +670,7 @@ class BackstageNewSectionHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):    
+            if (member.level == 0):    
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_new_section.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
@@ -689,7 +689,7 @@ class BackstageNewSectionHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 errors = 0
                 # Verification: name
                 section_name_error = 0
@@ -791,7 +791,7 @@ class BackstageSectionHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Section WHERE name = :1", section_name)
                 section = False
@@ -842,7 +842,7 @@ class BackstageSectionHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['member'] = member
                 section = GetKindByName('Section', section_name)
                 if section is not False:
@@ -968,7 +968,7 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 template_values['member'] = CheckAuth(self)
                 q = db.GqlQuery("SELECT * FROM Section WHERE name = :1", section_name)
                 if (q.count() == 1):
@@ -992,7 +992,7 @@ class BackstageNewNodeHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):        
+            if (member.level == 0):        
                 template_values['member'] = member
                 section = False
                 q = db.GqlQuery("SELECT * FROM Section WHERE name = :1", section_name)
@@ -1105,7 +1105,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
                 if (q.count() == 1):
@@ -1158,7 +1158,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):        
+            if (member.level == 0):        
                 template_values['member'] = member
                 node = False
                 q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
@@ -1190,6 +1190,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
                 section = False
                 q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", q[0].section_num)
                 if (q2.count() == 1):
+                    section = q2[0]
                     template_values['section'] = q2[0]
                 else:
                     template_values['section'] = False
@@ -1283,7 +1284,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     memcache.delete('Node::' + node.name)
                     memcache.delete('index_categories')
                     memcache.delete('home_nodes_new')
-                    self.redirect('/backstage/node/' + node.name)
+                    self.redirect('/backstage/section/' + section.name)
                 else:    
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'backstage_node.html')
                     output = template.render(path, template_values)
@@ -1298,7 +1299,7 @@ class BackstageRemoveReplyHandler(webapp.RequestHandler):
     def get(self, reply_key):
         member = CheckAuth(self)
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 reply = db.get(db.Key(reply_key))
                 if reply:
                     topic = reply.topic
@@ -1330,7 +1331,7 @@ class BackstageTidyReplyHandler(webapp.RequestHandler):
     def get(self, reply_num):
         member = CheckAuth(self)
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
                 if (q.count() == 1):
                     reply = q[0]
@@ -1367,7 +1368,7 @@ class BackstageTidyTopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
         member = CheckAuth(self)
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
                 if (q.count() == 1):
                     topic = q[0]
@@ -1391,7 +1392,7 @@ class BackstageDeactivateUserHandler(webapp.RequestHandler):
     def get(self, key):
         member = CheckAuth(self)
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 one = db.get(db.Key(key))
                 if one:
                     if one.num != 1:
@@ -1416,7 +1417,7 @@ class BackstageSiteHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['page_title'] = site.title + u' › 站点设置'
                 template_values['site'] = site
                 template_values['site_title'] = site.title
@@ -1470,7 +1471,7 @@ class BackstageSiteHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['page_title'] = site.title + u' › 站点设置'
                 template_values['site'] = site
                 template_values['member'] = member
@@ -1664,7 +1665,7 @@ class BackstageTopicHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + l10n.topic_settings.decode('utf-8')
                 template_values['site'] = site
                 template_values['site_use_topic_types'] = site.use_topic_types
@@ -1692,7 +1693,7 @@ class BackstageTopicHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + l10n.topic_settings.decode('utf-8')
                 template_values['site'] = site
                 template_values['site_use_topic_types'] = site.use_topic_types
@@ -1741,7 +1742,7 @@ class BackstageRemoveMemcacheHandler(webapp.RequestHandler):
     def post(self):
         member = CheckAuth(self)
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 mc = self.request.get('mc')
                 if mc is not None:
                     memcache.delete(mc)
@@ -1756,7 +1757,7 @@ class BackstageMemberHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 member_username_lower = member_username.lower()
                 q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1", member_username_lower)
                 if (q.count() == 1):
@@ -1792,7 +1793,7 @@ class BackstageMemberHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 member_username_lower = member_username.lower()
                 q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1", member_username_lower)
                 if (q.count() == 1):
@@ -1916,7 +1917,7 @@ class BackstageMembersHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['member'] = member
                 template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › 浏览所有会员'
                 member_total = memcache.get('member_total')

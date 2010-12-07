@@ -14,7 +14,7 @@
                 <li><a href="/notes" class="white">{{ l10n.notes }}</a></li>
                 <li><a href="/place/{{ member.ip }}" class="white">{{ l10n.nearby }}</a></li>
                 <li><a href="/settings" class="white">{{ l10n.settings }}</a></li>
-                {% ifequal member.num 1 %}
+                {% ifequal member.level 0 %}
                 <li><a href="/backstage" class="white">{{ l10n.backstage }}</a></li>
                 {% endifequal %}
                 <li><a href="/signout" class="white">{{ l10n.signout }}</a></li>

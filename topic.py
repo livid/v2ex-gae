@@ -322,7 +322,7 @@ class TopicHandler(webapp.RequestHandler):
                 blocked = []
             if (len(blocked) > 0):
                 template_values['blocked'] = ','.join(map(str, blocked))
-            if member.num == 1:
+            if member.level == 0:
                 template_values['is_admin'] = 1
             else:
                 template_values['is_admin'] = 0
@@ -357,7 +357,7 @@ class TopicHandler(webapp.RequestHandler):
             template_values['page_title'] = site.title + u' › 主题未找到'
         template_values['topic'] = topic
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['can_edit'] = True
             else:
                 template_values['can_edit'] = False
@@ -611,7 +611,7 @@ class TopicEditHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 template_values['member'] = member
                 topic = False
                 q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
@@ -675,7 +675,7 @@ class TopicEditHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
-            if (member.num == 1):
+            if (member.level == 0):
                 template_values['member'] = member
                 topic = False
                 q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
@@ -803,7 +803,7 @@ class TopicDeleteHandler(webapp.RequestHandler):
         site = GetSite()
         member = CheckAuth(self)
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
                 if q.count() == 1:
                     topic = q[0]
@@ -880,7 +880,7 @@ class ReplyEditHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['page_title'] = site.title + u' › 编辑回复'
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
@@ -910,7 +910,7 @@ class ReplyEditHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:
-            if member.num == 1:
+            if member.level == 0:
                 template_values['page_title'] = site.title + u' › 编辑回复'
                 template_values['member'] = member
                 q = db.GqlQuery("SELECT * FROM Reply WHERE num = :1", int(reply_num))
