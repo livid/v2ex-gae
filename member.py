@@ -343,7 +343,7 @@ class SettingsHandler(webapp.RequestHandler):
                     errors = errors + 1
                     member_psn_error = 1
                 else:
-                    p = re.compile('^[a-zA-Z0-9\-]+$')
+                    p = re.compile('^[a-zA-Z0-9\-\_]+$')
                     if (p.search(member_psn)):
                         errors = errors
                     else:

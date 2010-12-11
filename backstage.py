@@ -1766,10 +1766,22 @@ class BackstageMemberHandler(webapp.RequestHandler):
                     errors = 0
                     template_values['one_username'] = one.username
                     template_values['one_email'] = one.email
-                    template_values['one_avatar_large_url'] = one.avatar_large_url
-                    template_values['one_avatar_normal_url'] = one.avatar_normal_url
-                    template_values['one_avatar_mini_url'] = one.avatar_mini_url
-                    template_values['one_bio'] = one.bio
+                    if one.avatar_large_url is None:
+                        template_values['one_avatar_large_url'] = ''
+                    else:
+                        template_values['one_avatar_large_url'] = one.avatar_large_url
+                    if one.avatar_normal_url is None:
+                        template_values['one_avatar_normal_url'] = ''
+                    else:
+                        template_values['one_avatar_normal_url'] = one.avatar_normal_url
+                    if one.avatar_mini_url is None:
+                        template_values['one_avatar_mini_url'] = ''
+                    else:
+                        template_values['one_avatar_mini_url'] = one.avatar_mini_url
+                    if one.bio is None:
+                        template_values['one_bio'] = ''
+                    else:
+                        template_values['one_bio'] = one.bio
                     template_values['one_level'] = one.level
                     template_values['page_title'] = site.title + u' › ' + l10n.backstage.decode('utf-8') + u' › ' + one.username
                     template_values['site'] = site

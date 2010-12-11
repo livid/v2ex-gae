@@ -624,6 +624,7 @@ class TopicEditHandler(webapp.RequestHandler):
                         topic.hits = topic.hits - 1
                 template_values['topic'] = topic
                 if (topic):
+                    template_values['page_title'] = site.title + u' › ' + topic.title + u' › 编辑'
                     template_values['topic_title'] = topic.title
                     template_values['topic_content'] = topic.content
                     node = False
@@ -683,6 +684,7 @@ class TopicEditHandler(webapp.RequestHandler):
                     topic = q[0]
                     template_values['topic'] = topic
                 if (topic):
+                    template_values['page_title'] = site.title + u' › ' + topic.title + u' › 编辑'
                     q2 = db.GqlQuery("SELECT * FROM Node WHERE num = :1", topic.node_num)
                     node = False
                     if (q2.count() == 1):

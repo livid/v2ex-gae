@@ -15,7 +15,7 @@
             <div class="sep20"></div>
             {% endif %}
             <div class="box">
-                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">后台</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage/section/{{ section.name }}">{{ section.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span></div>
+                <div class="cell"><div class="fr"><a href="/go/{{ node.name }}">返回节点</a></div><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage">后台</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/backstage/section/{{ section.name }}">{{ section.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span></div>
                 <div class="inner">
                     <form action="/backstage/node/{{ node.name }}" method="post">
                     {% if errors %}
