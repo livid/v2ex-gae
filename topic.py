@@ -11,6 +11,7 @@ import string
 import random
 import pickle
 import zlib
+import math
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -47,6 +48,8 @@ from config import twitter_consumer_secret as CONSUMER_SECRET
 template.register_template_library('v2ex.templatetags.filters')
 
 import config
+
+TOPIC_PAGE_SIZE = 100
 
 class NewTopicHandler(webapp.RequestHandler):
     def get(self, node_name):
@@ -369,6 +372,32 @@ class TopicHandler(webapp.RequestHandler):
                 section = GetKindByNum('Section', node.section_num)
             template_values['node'] = node
             template_values['section'] = section
+            
+            page_size = TOPIC_PAGE_SIZE
+            pages = 1
+            if topic.replies > page_size:
+                if (topic.replies % page_size) > 0:
+                    pages = int(math.floor(topic.replies / page_size)) + 1
+                else:
+                    pages = int(math.floor(topic.replies / page_size))
+            try:
+                page_current = int(self.request.get('p'))
+                if page_current < 1:
+                    page_current = 1
+                if page_current > pages:
+                    page_current = pages
+            except:
+                page_current = pages
+            page_start = (page_current - 1) * page_size
+            template_values['pages'] = pages
+            template_values['page_current'] = page_current
+            i = 1
+            ps = []
+            while i <= pages:
+                ps.append(i)
+                i = i + 1
+            template_values['ps'] = ps
+            
             replies = False
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_replies_mobile.html')
@@ -376,16 +405,16 @@ class TopicHandler(webapp.RequestHandler):
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_replies.html')
             if filter_mode:
                 if browser['ios']:
-                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered'
+                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_' + str(page_current)
                 else:
-                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_mobile'
+                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_mobile_' + str(page_current)
                 r = memcache.get(r_tag)
                 if r is None:
-                    replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed')
+                    replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed_' + str(page_current))
                     if replies is None:
-                        q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC", topic.num, topic.member.num)
+                        q5 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 AND member_num = :2 ORDER BY created ASC LIMIT " + str(page_start) + "," + str(page_size), topic.num, topic.member.num)
                         replies = q5
-                        memcache.set('topic_' + str(topic.num) + '_replies_filtered_compressed', GetPacked(replies), 7200)
+                        memcache.set('topic_' + str(topic.num) + '_replies_filtered_compressed_' + str(page_current), GetPacked(replies), 7200)
                     else:
                         replies = GetUnpacked(replies)
                     template_values['replies'] = replies
@@ -394,16 +423,16 @@ class TopicHandler(webapp.RequestHandler):
             else:    
                 if reply_reversed:
                     if browser['ios']:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered'
+                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_' + str(page_current)
                     else:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_mobile'
+                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_mobile_' + str(page_current)
                     r = memcache.get(r_tag)
                     if r is None:
-                        replies = memcache.get('topic_' + str(topic.num) + '_replies_desc_compressed')
+                        replies = memcache.get('topic_' + str(topic.num) + '_replies_desc_compressed_' + str(page_current))
                         if replies is None:
-                            q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC", topic.num)
+                            q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created DESC LIMIT " + str(page_start) + "," + str(page_size), topic.num)
                             replies = q4
-                            memcache.set('topic_' + str(topic.num) + '_replies_desc_compressed', GetPacked(q4), 86400)
+                            memcache.set('topic_' + str(topic.num) + '_replies_desc_compressed_' + str(page_current), GetPacked(q4), 86400)
                         else:
                             replies = GetUnpacked(replies)
                         template_values['replies'] = replies
@@ -411,16 +440,16 @@ class TopicHandler(webapp.RequestHandler):
                         memcache.set(r_tag, r, 86400)
                 else:
                     if browser['ios']:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered'
+                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_' + str(page_current)
                     else:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_mobile'
+                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_mobile_' + str(page_current)
                     r = memcache.get(r_tag)
                     if r is None:
-                        replies = memcache.get('topic_' + str(topic.num) + '_replies_asc_compressed')
+                        replies = memcache.get('topic_' + str(topic.num) + '_replies_asc_compressed_' + str(page_current))
                         if replies is None:
-                            q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC", topic.num)
+                            q4 = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC LIMIT " + str(page_start) + "," + str(page_size), topic.num)
                             replies = q4
-                            memcache.set('topic_' + str(topic.num) + '_replies_asc_compressed', GetPacked(q4), 86400)
+                            memcache.set('topic_' + str(topic.num) + '_replies_asc_compressed_' + str(page_current), GetPacked(q4), 86400)
                         else:
                             replies = GetUnpacked(replies)
                         template_values['replies'] = replies
@@ -545,25 +574,38 @@ class TopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
+                
+                page_size = TOPIC_PAGE_SIZE
+                pages = 1
+                if topic.replies > page_size:
+                    if (topic.replies % page_size) > 0:
+                        pages = int(math.floor(topic.replies / page_size)) + 1
+                    else:
+                        pages = int(math.floor(topic.replies / page_size))
+                
                 memcache.set('Topic_' + str(topic.num), topic, 86400)
-                memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed')
-                memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed')
-                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed')
-                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered')
-                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered')
-                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered')
-                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile')
-                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
-                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile_' + str(pages))
                 memcache.delete('member::' + str(member.num) + '::participated')
                 memcache.delete('home_rendered')
                 memcache.delete('home_rendered_mobile')
-                taskqueue.add(url='/index/topic/' + str(topic.num))
+                if topic.replies < 50:
+                    taskqueue.add(url='/index/topic/' + str(topic.num))
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
                     access_token = OAuthToken.from_string(member.twitter_oauth_string)
                     twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
-                    link = 'http://' + self.request.headers['Host'] + '/t/' + str(topic.num) + '#r' + str(reply.num)
+                    if topic.replies > page_size:
+                        link = 'http://' + self.request.headers['Host'] + '/t/' + str(topic.num) + '?p=' + str(pages) + '#r' + str(topic.replies)
+                    else:
+                        link = 'http://' + self.request.headers['Host'] + '/t/' + str(topic.num) + '#r' + str(topic.replies)
                     link_length = len(link)
                     reply_content_length = len(reply.content)
                     available = 140 - link_length - 1
@@ -577,7 +619,7 @@ class TopicHandler(webapp.RequestHandler):
                         twitter.PostUpdate(status.encode('utf-8'))
                     except:
                         logging.error("Failed to sync to Twitter for Reply #" + str(reply.num))
-                self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
+                self.redirect('/t/' + str(topic.num) + '?p=' + str(pages) + '#reply' + str(topic.replies))
             else:
                 node = False
                 section = False
@@ -782,7 +824,8 @@ class TopicEditHandler(webapp.RequestHandler):
                         memcache.delete('Topic_' + str(topic.num))
                         memcache.delete('home_rendered')
                         memcache.delete('home_rendered_mobile')
-                        taskqueue.add(url='/index/topic/' + str(topic.num))
+                        if topic.replies < 50:
+                            taskqueue.add(url='/index/topic/' + str(topic.num))
                         self.redirect('/t/' + str(topic.num))
                     else:
                         if browser['ios']:

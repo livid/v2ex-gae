@@ -88,6 +88,9 @@
                 setTimeout("a()", 100);
                 </script>
                 {% endif %}
+                <div class="inner" align="center">
+                    {% for p in ps %}{% ifequal p page_current %}<span class="page_current">{{ p }}</span>{% else %}<a href="/t/{{ topic.num }}?p={{ p }}" class="page_normal">{{ p }}</a>{% endifequal %}{% endfor %}
+                </div>
             </div>
             {% endifequal %}
             {% if member %}
