@@ -391,13 +391,15 @@ class TopicHandler(webapp.RequestHandler):
             page_start = (page_current - 1) * page_size
             template_values['pages'] = pages
             template_values['page_current'] = page_current
+            
+            template_values['ps'] = False
             i = 1
             ps = []
             while i <= pages:
                 ps.append(i)
                 i = i + 1
-            template_values['ps'] = ps
-            
+            if len(ps) > 1:
+                template_values['ps'] = ps
             replies = False
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_replies_mobile.html')

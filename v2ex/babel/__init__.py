@@ -222,6 +222,7 @@ class Site(db.Model):
     analytics = db.StringProperty(required=False, indexed=False)
     home_categories = db.TextProperty(required=False, indexed=False)
     meta = db.TextProperty(required=False, default='')
+    home_top = db.TextProperty(required=False, default='')
     theme = db.StringProperty(required=False, default='default')
     l10n = db.StringProperty(default='en')
     use_topic_types = db.BooleanProperty(default=False)

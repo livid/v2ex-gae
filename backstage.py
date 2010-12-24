@@ -1448,6 +1448,10 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     template_values['site_meta'] = site.meta
                 else:
                     template_values['site_meta'] = ''
+                if site.home_top is not None:
+                    template_values['site_home_top'] = site.home_top
+                else:
+                    template_values['site_home_top'] = ''
                 if site.theme is not None:
                     template_values['site_theme'] = site.theme
                 else:
@@ -1619,6 +1623,9 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 # Verification: meta
                 site_meta = self.request.get('meta')
                 template_values['site_meta'] = site_meta
+                # Verification: home_top
+                site_home_top = self.request.get('home_top')
+                template_values['site_home_top'] = site_home_top
                 # Verification: theme
                 site_theme = self.request.get('theme')
                 themes = os.listdir(os.path.join(os.path.dirname(__file__), 'tpl', 'themes'))
@@ -1645,6 +1652,7 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     site.topic_create_level = site_topic_create_level
                     site.topic_reply_level = site_topic_reply_level
                     site.meta = site_meta
+                    site.home_top = site_home_top
                     site.theme = site_theme
                     site.put()
                     memcache.delete('index_categories')

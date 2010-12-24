@@ -109,13 +109,13 @@ def avatar(value, arg):
         return '<img src="' + default + '" border="0" />'
     if arg == 'large':
         number_size = 73
-        member_avatar_url = "/avatar/" + str(value.num) + "/large"
+        member_avatar_url = value.avatar_large_url
     elif arg == 'normal':
         number_size = 48
-        member_avatar_url = "/avatar/" + str(value.num) + "/normal"
+        member_avatar_url = value.avatar_normal_url
     elif arg == 'mini':
         number_size = 24
-        member_avatar_url = "/avatar/" + str(value.num) + "/mini"
+        member_avatar_url = value.avatar_mini_url
         
     if value.avatar_mini_url:
         return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
