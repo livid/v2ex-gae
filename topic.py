@@ -621,7 +621,10 @@ class TopicHandler(webapp.RequestHandler):
                         twitter.PostUpdate(status.encode('utf-8'))
                     except:
                         logging.error("Failed to sync to Twitter for Reply #" + str(reply.num))
-                self.redirect('/t/' + str(topic.num) + '?p=' + str(pages) + '#reply' + str(topic.replies))
+                if pages > 1:
+                    self.redirect('/t/' + str(topic.num) + '?p=' + str(pages) + '#reply' + str(topic.replies))
+                else:
+                    self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
             else:
                 node = False
                 section = False

@@ -1407,7 +1407,87 @@ class BackstageDeactivateUserHandler(webapp.RequestHandler):
 
 class BackstageMoveTopicHandler(webapp.RequestHandler):
     def get(self, key):
+        template_values = {}
+        site = GetSite()
         member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.level == 0:
+                template_values['page_title'] = site.title + u' › 移动主题'
+                template_values['site'] = site
+                topic = db.get(db.Key(key))
+                if topic is not None:
+                    node = topic.node
+                    template_values['topic'] = topic
+                    template_values['node'] = node
+                    template_values['system_version'] = SYSTEM_VERSION
+                    themes = os.listdir(os.path.join(os.path.dirname(__file__), 'tpl', 'themes'))
+                    template_values['themes'] = themes
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_move_topic.html')
+                    output = template.render(path, template_values)
+                    self.response.out.write(output)
+                else:
+                    self.redirect('/')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+    
+    def post(self, key):
+        template_values = {}
+        site = GetSite()
+        member = CheckAuth(self)
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        if member:
+            if member.level == 0:
+                template_values['page_title'] = site.title + u' › 移动主题'
+                template_values['site'] = site
+                topic = db.get(db.Key(key))
+                if topic is not None:
+                    errors = 0
+                    node = topic.node
+                    template_values['topic'] = topic
+                    template_values['node'] = node
+                    template_values['system_version'] = SYSTEM_VERSION
+                    destination = self.request.get('destination')
+                    if destination is not None:
+                        node_new = GetKindByName('Node', destination)
+                        if node_new is not False:
+                            node_new = db.get(node_new.key())
+                            node_old = topic.node
+                            node_old.topics = node_old.topics - 1
+                            node_old.put()
+                            node_new.topics = node_new.topics + 1
+                            node_new.put()
+                            topic.node = node_new
+                            topic.node_num = node_new.num
+                            topic.node_name = node_new.name
+                            topic.node_title = node_new.title
+                            topic.put()
+                            memcache.delete('Topic_' + str(topic.num))
+                            memcache.delete('Node_' + str(node_old.num))
+                            memcache.delete('Node_' + str(node_new.num))
+                            memcache.delete('Node::' + str(node_old.name))
+                            memcache.delete('Node::' + str(node_new.name))
+                            self.redirect('/t/' + str(topic.num))
+                        else:
+                            errors = errors + 1
+                    else:
+                        errors = errors + 1
+                    if errors > 0:
+                        themes = os.listdir(os.path.join(os.path.dirname(__file__), 'tpl', 'themes'))
+                        template_values['themes'] = themes
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'backstage_move_topic.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
+                else:
+                    self.redirect('/')
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
         
 class BackstageSiteHandler(webapp.RequestHandler):
     def get(self):

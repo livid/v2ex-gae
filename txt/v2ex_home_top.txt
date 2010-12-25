@@ -1,0 +1,67 @@
+<div class="cell" align="left"><div class="fr"><span class="fade" style="font-size: 110%;">创意 <span class="snow">&nbsp;•&nbsp;</span> 商业 <span class="snow">&nbsp;•&nbsp;</span> 技术 <span class="snow">&nbsp;•&nbsp;</span> 生活</span></div>
+    <span class="bigger">Welcome to <strong>V2EX</strong></span>
+    <div class="sep10"></div>
+    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="33%" align="left" valign="top">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/city.gif" align="left" style="margin: 0px 10px 10px 0px;" />城市 &nbsp;<a href="/go/beijing" target="_blank">北京</a> • <a href="/go/shanghai">上海</a> • <a href="/go/guangzhou">广州</a> • <a href="/go/hangzhou">杭州</a> • <a href="/go/shenzhen">深圳</a> • <a href="/go/kunming">昆明</a></span></td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/chat.gif" align="left" style="margin: 0px 10px 20px 0px;" />Share &nbsp;<a href="/go/iphone">分享发现</a> • <a href="/go/idev" target="_blank">iDev</a></span><div class="sep5"></div><span class="chevron">›</span> <a href="/new/share">分享我今天的新发现</a><div class="sep5"></div>
+                    <span class="chevron">›</span> <a href="/go/ask">我有问题求助</a>
+                    <div class="sep5"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/iphone.gif" align="left" style="margin: 0px 10px 10px 0px;" />iOS &nbsp;<a href="/go/iphone">iPhone</a> • <a href="/go/idev" target="_blank">iDev</a></span><div class="sep5"></div><span class="chevron">›</span> <a href="/new/idev">开始一个新的技术讨论</a></td>
+                </tr>
+            </table>
+        </td>
+        <td width="34%" align="left" valign="top">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/fair.gif" align="left" style="margin: 0px 10px 30px 0px;" />生活 &nbsp;<a href="/go/exchange" target="_blank">物物交换</a> • <a href="/go/all4all">跳蚤市场</a></span>
+                    <div class="sep5"></div>
+                    <span class="chevron">›</span> <a href="/new/exchange">我有东西想交换</a>
+                    <div class="sep5"></div>
+                    <span class="chevron">›</span> <a href="/new/all4all">我有东西想出售或求购</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/coffee.gif" align="left" style="margin: 0px 10px 10px 0px;" />After Dark &nbsp;<a href="/go/afterdark">午夜俱乐部</a>
+                    <div class="sep5"></div>
+                    白天和夜晚的我，是不同的</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/pricetag.gif" align="left" style="margin: 0px 10px 10px 0px;" />Brands &nbsp;<a href="/go/uniqlo" target="_blank">UNIQLO</a> • <a href="/go/muji">MUJI</a> • <a href="/go/lamy">Lamy</a></span></td>
+                </tr>
+            </table>
+        </td>
+        <td width="33%" align="left" valign="top">
+            <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/play.gif" align="left" style="margin: 0px 10px 10px 0px;" /><a href="/go/games" target="_blank">电子游戏</a> • <a href="/go/all4all">iGames</a> • <a href="/go/ps3">PS3</a> • <a href="/go/bfbc2">BFBC2</a> • <a href="/go/gamedevstory">Game D Story</a></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/random.gif" align="left" style="margin: 0px 10px 10px 0px;" /><a href="/go/afterdark">随想</a> • <a href="/go/autistic">自言自语</a>
+                    <div class="sep5"></div>
+                    偶尔无聊一下是为了大部分时候不无聊
+                    </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top"><span class="snow"><img src="http://static.v2ex.com/mono/cloud.gif" align="left" style="margin: 0px 10px 10px 0px;" /><a href="/go/babel">Project Babel</a> • <a href="/go/gae">GAE</a>
+                    <div class="sep5"></div> 
+                    V2EX 的云计算后台，运行在 Google App Engine 上             
+                    </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </table>
+</div>
