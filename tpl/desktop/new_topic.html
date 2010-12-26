@@ -6,7 +6,11 @@
         <div id="Sidebar">   
         </div>
         <div id="Rightbar">
-            {% include 'rightbar/user.html' %}
+            {% if node.sidebar %}
+            <div class="box"><div class="inner">{{ node.sidebar }}</div></div>
+            <div class="sep20"></div>
+            {% endif %}
+            {% include 'rightbar/new_topic_tips.html' %}
         </div>
         <div id="Content">
             <div class="box">
