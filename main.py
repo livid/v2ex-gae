@@ -493,6 +493,7 @@ class SignupHandler(webapp.RequestHandler):
             counter.put()
             counter2.put()
             self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
+            memcache.delete('member_total')
             self.redirect('/')
         else:
             if browser['ios']:
