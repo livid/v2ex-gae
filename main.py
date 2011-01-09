@@ -53,9 +53,12 @@ class HomeHandler(webapp.RequestHandler):
         pass
         
     def get(self):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         host = self.request.headers['Host']
         if host == 'beta.v2ex.com':
-            self.redirect('http://v2ex.appspot.com/')
+            self.redirect('http://www.v2ex.com/')
             return
         site = GetSite()
         browser = detect(self.request)
@@ -124,8 +127,13 @@ class HomeHandler(webapp.RequestHandler):
                     template_values['latest'] = latest
                 else:
                     q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
-                    memcache.set('q_latest_16', q2, 600)
-                    latest = q2
+                    topics = []
+                    ignored = ['newbie', 'in', 'flamewar', 'pointless']
+                    for topic in q2:
+                        if topic.node.name not in ignored:
+                            topics.append(topic)
+                    memcache.set('q_latest_16', topics, 600)
+                    latest = topics
                     template_values['latest'] = latest
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'home_mobile.html')
                 home_rendered = template.render(path, template_values)
@@ -139,8 +147,13 @@ class HomeHandler(webapp.RequestHandler):
                     template_values['latest'] = latest
                 else:
                     q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
-                    memcache.set('q_latest_16', q2, 600)
-                    latest = q2
+                    topics = []
+                    ignored = ['newbie', 'in', 'flamewar', 'pointless']
+                    for topic in q2:
+                        if topic.node.name not in ignored:
+                            topics.append(topic)
+                    memcache.set('q_latest_16', topics, 600)
+                    latest = topics
                     template_values['latest'] = latest
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'home.html')
                 home_rendered = template.render(path, template_values)
@@ -269,6 +282,9 @@ class UAHandler(webapp.RequestHandler):
         
 class SigninHandler(webapp.RequestHandler):
     def get(self):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         browser = detect(self.request)
@@ -288,6 +304,9 @@ class SigninHandler(webapp.RequestHandler):
         self.response.out.write(output)
  
     def post(self):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         browser = detect(self.request)
@@ -325,6 +344,9 @@ class SigninHandler(webapp.RequestHandler):
         
 class SignupHandler(webapp.RequestHandler):
     def get(self):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         chtml = captcha.displayhtml(
@@ -348,6 +370,9 @@ class SignupHandler(webapp.RequestHandler):
         self.response.out.write(output)
         
     def post(self):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         browser = detect(self.request)
@@ -672,6 +697,9 @@ class PasswordResetHandler(GenericHandler):
 
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
         self.session = Session()

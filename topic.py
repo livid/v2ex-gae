@@ -53,6 +53,9 @@ TOPIC_PAGE_SIZE = 100
 
 class NewTopicHandler(webapp.RequestHandler):
     def get(self, node_name):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -111,6 +114,46 @@ class NewTopicHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
     def post(self, node_name):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
+        ### BEGIN: CAN CONTINUE
+        can_continue = True
+        if ('Host' in self.request.headers):
+            if (self.request.headers['Host'] not in ['www.v2ex.com', 'v2ex.appspot.com', 'fast.v2ex.com', 'beta.v2ex.com', 'localhost:10000']):
+                can_continue = False
+        else:
+            can_continue = False
+        if ('User-Agent' in self.request.headers):
+            if ('Mozilla' not in self.request.headers['User-Agent']):
+                can_continue = False
+        else:
+            can_continue = False
+        if ('Cookie' in self.request.headers):
+            if ('utm' not in self.request.headers['Cookie']):
+                can_continue = False
+        else:
+            can_continue = False
+        if ('Referer' in self.request.headers):
+            has_v2ex = False
+            if ('http://localhost:10000' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://www.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://v2ex.appspot.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if has_v2ex is False:
+                can_continue = False
+        else:
+            can_continue = False
+        if ('Content-Type' in self.request.headers):
+            if self.request.headers['Content-Type'] != 'application/x-www-form-urlencoded':
+                can_continue = False
+        else:
+            can_continue = False
+        if can_continue is False:
+            return self.redirect('http://www.v2ex.com/')
+        ### END: CAN CONTINUE
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -265,6 +308,7 @@ class NewTopicHandler(webapp.RequestHandler):
                     memcache.delete('feed_index')
                     memcache.delete('Node_' + str(topic.node_num))
                     memcache.delete('Node::' + str(node.name))
+                    memcache.delete('q_latest_16')
                     memcache.delete('home_rendered')
                     memcache.delete('home_rendered_mobile')
                     taskqueue.add(url='/index/topic/' + str(topic.num))
@@ -294,6 +338,9 @@ class NewTopicHandler(webapp.RequestHandler):
 
 class TopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
+        if 'User-Agent' in self.request.headers:
+            if 'MSIE' in self.request.headers['User-Agent']:
+                return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -407,9 +454,9 @@ class TopicHandler(webapp.RequestHandler):
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_replies.html')
             if filter_mode:
                 if browser['ios']:
-                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_' + str(page_current)
+                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_ios_' + str(page_current)
                 else:
-                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_mobile_' + str(page_current)
+                    r_tag = 'topic_' + str(topic.num) + '_replies_filtered_rendered_desktop_' + str(page_current)
                 r = memcache.get(r_tag)
                 if r is None:
                     replies = memcache.get('topic_' + str(topic.num) + '_replies_filtered_compressed_' + str(page_current))
@@ -425,9 +472,9 @@ class TopicHandler(webapp.RequestHandler):
             else:    
                 if reply_reversed:
                     if browser['ios']:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_' + str(page_current)
+                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_ios_' + str(page_current)
                     else:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_mobile_' + str(page_current)
+                        r_tag = 'topic_' + str(topic.num) + '_replies_desc_rendered_desktop_' + str(page_current)
                     r = memcache.get(r_tag)
                     if r is None:
                         replies = memcache.get('topic_' + str(topic.num) + '_replies_desc_compressed_' + str(page_current))
@@ -442,9 +489,9 @@ class TopicHandler(webapp.RequestHandler):
                         memcache.set(r_tag, r, 86400)
                 else:
                     if browser['ios']:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_' + str(page_current)
+                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_ios_' + str(page_current)
                     else:
-                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_mobile_' + str(page_current)
+                        r_tag = 'topic_' + str(topic.num) + '_replies_asc_rendered_desktop_' + str(page_current)
                     r = memcache.get(r_tag)
                     if r is None:
                         replies = memcache.get('topic_' + str(topic.num) + '_replies_asc_compressed_' + str(page_current))
@@ -476,6 +523,43 @@ class TopicHandler(webapp.RequestHandler):
         self.response.out.write(output)
         
     def post(self, topic_num):
+        ### BEGIN: CAN CONTINUE
+        can_continue = True
+        if ('Host' in self.request.headers):
+            if (self.request.headers['Host'] not in ['www.v2ex.com', 'v2ex.appspot.com', 'fast.v2ex.com', 'beta.v2ex.com', 'localhost:10000']):
+                can_continue = False
+        else:
+            can_continue = False
+        if ('User-Agent' in self.request.headers):
+            if ('Mozilla' not in self.request.headers['User-Agent']):
+                can_continue = False
+        else:
+            can_continue = False
+        if ('Cookie' in self.request.headers):
+            if ('utm' not in self.request.headers['Cookie']):
+                can_continue = False
+        else:
+            can_continue = False
+        if ('Referer' in self.request.headers):
+            has_v2ex = False
+            if ('http://localhost:10000' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://www.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://v2ex.appspot.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if has_v2ex is False:
+                can_continue = False
+        else:
+            can_continue = False
+        if ('Content-Type' in self.request.headers):
+            if self.request.headers['Content-Type'] != 'application/x-www-form-urlencoded':
+                can_continue = False
+        else:
+            can_continue = False
+        if can_continue is False:
+            return self.redirect('http://www.v2ex.com/')
+        ### END: CAN CONTINUE
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -589,13 +673,16 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed_' + str(pages))
                 memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed_' + str(pages))
                 memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed_' + str(pages))
-                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_' + str(pages))
-                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_' + str(pages))
-                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_' + str(pages))
-                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile_' + str(pages))
-                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile_' + str(pages))
-                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile_' + str(pages))
+                
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_desktop_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_desktop_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_desktop_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_ios_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_ios_' + str(pages))
+                memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_ios_' + str(pages))
+                
                 memcache.delete('member::' + str(member.num) + '::participated')
+                memcache.delete('q_latest_16')
                 memcache.delete('home_rendered')
                 memcache.delete('home_rendered_mobile')
                 if topic.replies < 50:
@@ -827,6 +914,7 @@ class TopicEditHandler(webapp.RequestHandler):
                                 topic.type_color = ''        
                         topic.put()
                         memcache.delete('Topic_' + str(topic.num))
+                        memcache.delete('q_latest_16')
                         memcache.delete('home_rendered')
                         memcache.delete('home_rendered_mobile')
                         if topic.replies < 50:
@@ -996,12 +1084,15 @@ class ReplyEditHandler(webapp.RequestHandler):
                         memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed')
                         memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed')
                         memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
-                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
+                        
+                        pages = 1
+                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_desktop_' + str(pages))
+                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_desktop_' + str(pages))
+                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_desktop_' + str(pages))
+                        memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_ios_' + str(pages))
+                        memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_ios_' + str(pages))
+                        memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_ios_' + str(pages))
+                        
                         self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
                     else:
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'edit_reply.html')

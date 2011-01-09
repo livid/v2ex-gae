@@ -45,6 +45,21 @@
                     <div class="content topic_content">{{ topic.content_rendered }}</div>
                 </div>
                 {% if member %}<div class="inner"><div class="fr" align="right">{% if topic.stars %}<span style="font-size: 10px; line-height: 10px; color: #99a;">已有 {{ topic.stars }} 人收藏此主题 &nbsp; </span>{% endif %}{% if favorited %}<a href="/unfavorite/topic/{{ topic.num }}" class="op">取消收藏</a>{% else %}<a href="/favorite/topic/{{ topic.num }}" class="op">加入收藏</a>{% endif %}</div> &nbsp; </div>{% endif %}
+                {% ifequal topic.explicit 1 %}
+                <div class="inner">
+                    <script type="text/javascript"><!--
+                    google_ad_client = "pub-9823529788289591";
+                    /* 468x60, V2EX Explicit */
+                    google_ad_slot = "8427270623";
+                    google_ad_width = 468;
+                    google_ad_height = 60;
+                    //-->
+                    </script>
+                    <script type="text/javascript"
+                    src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                    </script>
+                </div>
+                {% endifequal %}
             </div>
             {% ifequal topic.replies 0 %}
             <div class="sep20"></div>
@@ -121,15 +136,27 @@
                 <span class="fade">{{ l10n.add_a_reply_now }}</span>
                 {% endif %}
                 </div>
-                <div class="inner">
+                <div class="cell">
                     <textarea class="mll" name="content" id="reply_content"  onkeyup="c();"></textarea>
                     <div class="sep10"></div>
                     <div class="fr fade" id="e"></div>
                     <input type="submit" class="super normal button" value="{{ l10n.send }}" />
                 </div></form>
-            </div>
-            <div class="sep20"></div>
-            <div class="box">
+                {% ifequal topic.explicit 1 %}
+                <div class="inner">
+                    <script type="text/javascript"><!--
+                    google_ad_client = "pub-9823529788289591";
+                    /* 468x60, V2EX Explicit */
+                    google_ad_slot = "8427270623";
+                    google_ad_width = 468;
+                    google_ad_height = 60;
+                    //-->
+                    </script>
+                    <script type="text/javascript"
+                    src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                    </script>
+                </div>
+                {% endifequal %}
                 <div class="inner"><span class="fade" style="line-height: 200%;">{{ l10n.no_pointless }}<div class="sep10"></div>{{ l10n.better_to_block }}</span></div>
             </div>
             {% endif %}

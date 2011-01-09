@@ -148,6 +148,7 @@ class Topic(db.Model):
     source = db.StringProperty(required=False, indexed=True)
     type = db.StringProperty(required=False, indexed=True)
     type_color = db.StringProperty(required=False)
+    explicit = db.IntegerProperty(required=True, default=0)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
     last_touched = db.DateTimeProperty()

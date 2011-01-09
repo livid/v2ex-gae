@@ -1309,16 +1309,17 @@ class BackstageRemoveReplyHandler(webapp.RequestHandler):
                     if (topic.replies == 0):
                         topic.last_reply_by = None
                     topic.put()
+                    pages = 1
                     memcache.delete('Topic_' + str(topic.num))
                     memcache.delete('topic_' + str(topic.num) + '_replies_desc_compressed')
                     memcache.delete('topic_' + str(topic.num) + '_replies_asc_compressed')
                     memcache.delete('topic_' + str(topic.num) + '_replies_filtered_compressed')
-                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered')
-                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered')
-                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered')
-                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_mobile')
-                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_mobile')
-                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_mobile')
+                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_desktop_' + str(pages))
+                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_desktop_' + str(pages))
+                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_desktop_' + str(pages))
+                    memcache.delete('topic_' + str(topic.num) + '_replies_desc_rendered_ios_' + str(pages))
+                    memcache.delete('topic_' + str(topic.num) + '_replies_asc_rendered_ios_' + str(pages))
+                    memcache.delete('topic_' + str(topic.num) + '_replies_filtered_rendered_ios_' + str(pages))
                     self.redirect('/t/' + str(topic.num))
                 else:
                     self.redirect('/')
