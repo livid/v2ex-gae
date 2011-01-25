@@ -145,6 +145,18 @@ indexes:
 
 - kind: Topic
   properties:
+  - name: node
+  - name: created
+    direction: desc
+
+- kind: Topic
+  properties:
+  - name: node_name
+  - name: created
+    direction: desc
+
+- kind: Topic
+  properties:
   - name: node_num
   - name: last_touched
     direction: desc

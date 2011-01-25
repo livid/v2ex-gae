@@ -54,7 +54,7 @@ TOPIC_PAGE_SIZE = 100
 class NewTopicHandler(webapp.RequestHandler):
     def get(self, node_name):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
@@ -115,7 +115,7 @@ class NewTopicHandler(webapp.RequestHandler):
 
     def post(self, node_name):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         ### BEGIN: CAN CONTINUE
         can_continue = True
@@ -124,15 +124,9 @@ class NewTopicHandler(webapp.RequestHandler):
                 can_continue = False
         else:
             can_continue = False
-        if ('User-Agent' in self.request.headers):
-            if ('Mozilla' not in self.request.headers['User-Agent']):
-                can_continue = False
-        else:
+        if ('User-Agent' not in self.request.headers):
             can_continue = False
-        if ('Cookie' in self.request.headers):
-            if ('utm' not in self.request.headers['Cookie']):
-                can_continue = False
-        else:
+        if ('Cookie' not in self.request.headers):
             can_continue = False
         if ('Referer' in self.request.headers):
             has_v2ex = False
@@ -339,7 +333,7 @@ class NewTopicHandler(webapp.RequestHandler):
 class TopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
@@ -467,6 +461,7 @@ class TopicHandler(webapp.RequestHandler):
                     else:
                         replies = GetUnpacked(replies)
                     template_values['replies'] = replies
+                    template_values['replies_count'] = replies.count()
                     r = template.render(path, template_values)
                     memcache.set(r_tag, r, 86400)
             else:    
@@ -485,6 +480,7 @@ class TopicHandler(webapp.RequestHandler):
                         else:
                             replies = GetUnpacked(replies)
                         template_values['replies'] = replies
+                        template_values['replies_count'] = replies.count()
                         r = template.render(path, template_values)
                         memcache.set(r_tag, r, 86400)
                 else:
@@ -502,6 +498,7 @@ class TopicHandler(webapp.RequestHandler):
                         else:
                             replies = GetUnpacked(replies)
                         template_values['replies'] = replies
+                        template_values['replies_count'] = replies.count()
                         r = template.render(path, template_values)
                         memcache.set(r_tag, r, 86400)
             template_values['r'] = r
@@ -530,15 +527,9 @@ class TopicHandler(webapp.RequestHandler):
                 can_continue = False
         else:
             can_continue = False
-        if ('User-Agent' in self.request.headers):
-            if ('Mozilla' not in self.request.headers['User-Agent']):
-                can_continue = False
-        else:
+        if ('User-Agent' not in self.request.headers):
             can_continue = False
-        if ('Cookie' in self.request.headers):
-            if ('utm' not in self.request.headers['Cookie']):
-                can_continue = False
-        else:
+        if ('Cookie' not in self.request.headers):
             can_continue = False
         if ('Referer' in self.request.headers):
             has_v2ex = False

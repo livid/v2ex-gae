@@ -11,6 +11,7 @@ import urllib
 import string
 import random
 import pickle
+import math
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
@@ -38,7 +39,7 @@ from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
 
-from v2ex.babel.handlers import GenericHandler
+from v2ex.babel.handlers import BaseHandler
 
 from django.utils import simplejson as json
 
@@ -54,7 +55,7 @@ class HomeHandler(webapp.RequestHandler):
         
     def get(self):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         host = self.request.headers['Host']
         if host == 'beta.v2ex.com':
@@ -119,6 +120,7 @@ class HomeHandler(webapp.RequestHandler):
                         s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
                 memcache.set('home_sections_neue', s, 600)
             template_values['s'] = s
+        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491']
         if browser['ios']:
             home_rendered = memcache.get('home_rendered_mobile')
             if home_rendered is None:
@@ -128,7 +130,6 @@ class HomeHandler(webapp.RequestHandler):
                 else:
                     q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
                     topics = []
-                    ignored = ['newbie', 'in', 'flamewar', 'pointless']
                     for topic in q2:
                         if topic.node.name not in ignored:
                             topics.append(topic)
@@ -148,7 +149,6 @@ class HomeHandler(webapp.RequestHandler):
                 else:
                     q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
                     topics = []
-                    ignored = ['newbie', 'in', 'flamewar', 'pointless']
                     for topic in q2:
                         if topic.node.name not in ignored:
                             topics.append(topic)
@@ -248,9 +248,14 @@ class RecentHandler(webapp.RequestHandler):
             template_values['latest'] = latest
         else:
             q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16,50")
-            memcache.set('q_recent_50', q2, 80)
-            template_values['latest'] = q2
-            template_values['latest_total'] = q2.count()
+            topics = []
+            ignored = ['newbie', 'in', 'flamewar', 'pointless']
+            for topic in q2:
+                if topic.node.name not in ignored:
+                    topics.append(topic)
+            memcache.set('q_recent_50', topics, 80)
+            template_values['latest'] = topics
+            template_values['latest_total'] = len(topics)
         if browser['ios']:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'recent.html')
         else:
@@ -283,7 +288,7 @@ class UAHandler(webapp.RequestHandler):
 class SigninHandler(webapp.RequestHandler):
     def get(self):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
@@ -305,7 +310,7 @@ class SigninHandler(webapp.RequestHandler):
  
     def post(self):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
@@ -345,7 +350,7 @@ class SigninHandler(webapp.RequestHandler):
 class SignupHandler(webapp.RequestHandler):
     def get(self):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
@@ -371,7 +376,7 @@ class SignupHandler(webapp.RequestHandler):
         
     def post(self):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
@@ -623,7 +628,7 @@ class ForgotHandler(webapp.RequestHandler):
             output = template.render(path, template_values)
             self.response.out.write(output)
 
-class PasswordResetHandler(GenericHandler):
+class PasswordResetHandler(BaseHandler):
     def get(self, token):
         site = GetSite()
         template_values = {}
@@ -698,7 +703,7 @@ class PasswordResetHandler(GenericHandler):
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
         if 'User-Agent' in self.request.headers:
-            if 'MSIE' in self.request.headers['User-Agent']:
+            if 'MSIE 6.0' in self.request.headers['User-Agent']:
                 return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
@@ -738,6 +743,8 @@ class NodeHandler(webapp.RequestHandler):
         has_previous = False
         previous = 1
         if node:
+            template_values['feed_link'] = '/feed/' + node.name + '.xml'
+            template_values['feed_title'] = site.title + u' › ' + node.title
             template_values['canonical'] = 'http://' + site.domain + '/go/' + node.name
             if member:
                 favorited = member.hasFavorited(node)
@@ -962,6 +969,82 @@ class RouterHandler(webapp.RequestHandler):
                     self.response.headers['Content-Type'] = page.content_type
                     self.response.out.write(page.content)
 
+class ChangesHandler(webapp.RequestHandler):
+    def get(self):
+        site = GetSite()
+        browser = detect(self.request)
+        template_values = {}
+        template_values['site'] = site
+        template_values['rnd'] = random.randrange(1, 100)
+        template_values['system_version'] = SYSTEM_VERSION
+        template_values['page_title'] = site.title + u' › 全站最新更改记录'
+        member = CheckAuth(self)
+        template_values['member'] = member
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n
+        
+        topic_total = memcache.get('topic_total')
+        if topic_total is None:
+            q2 = db.GqlQuery("SELECT * FROM Counter WHERE name = 'topic.total'")
+            if (q2.count() > 0):
+                topic_total = q2[0].value
+            else:
+                topic_total = 0
+            memcache.set('topic_total', topic_total, 600)
+        template_values['topic_total'] = topic_total
+        
+        page_size = 60
+        pages = 1
+        if topic_total > page_size:
+            if (topic_total % page_size) > 0:
+                pages = int(math.floor(topic_total / page_size)) + 1
+            else:
+                pages = int(math.floor(topic_total / page_size))
+        try:
+            page_current = int(self.request.get('p'))
+            if page_current < 1:
+                page_current = 1
+            if page_current > pages:
+                page_current = pages
+        except:
+            page_current = 1
+        page_start = (page_current - 1) * page_size
+        template_values['pages'] = pages
+        template_values['page_current'] = page_current
+        i = 1
+        ps = []
+        while i <= pages:
+            ps.append(i)
+            i = i + 1
+        template_values['ps'] = ps
+        
+        latest = memcache.get('q_changes_' + str(page_current))
+        if (latest):
+            template_values['latest'] = latest
+        else:
+            q1 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT " + str(page_start) + "," + str(page_size))
+            topics = []
+            for topic in q1:
+                topics.append(topic)
+            memcache.set('q_changes_' + str(page_current), topics, 120)
+            template_values['latest'] = topics
+            template_values['latest_total'] = len(topics)
+        if browser['ios']:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'changes.html')
+        else:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'changes.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
+class NotificationsHandler(webapp.RequestHandler):
+    def get(self):
+        if browser['ios']:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notifications.html')
+        else:
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notifications.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
 def main():
     application = webapp.WSGIApplication([
     ('/', HomeHandler),
@@ -976,6 +1059,8 @@ def main():
     ('/n/([a-zA-Z0-9]+).json', NodeApiHandler),
     ('/q/(.*)', SearchHandler),
     ('/_dispatcher', DispatcherHandler),
+    ('/changes', ChangesHandler),
+    ('/notifications', NotificationsHandler),
     ('/(.*)', RouterHandler)
     ],
                                          debug=True)

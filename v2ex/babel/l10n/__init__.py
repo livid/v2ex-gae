@@ -11,8 +11,6 @@ import logging
 # Step 3: Fallback to site.l10n
 
 def GetMessages(handler, member=False, site=False):
-    logging.info(handler.request.headers)
-    logging.info(site.l10n)
     if member is not False:
         if member.l10n == 'en':
             from v2ex.babel.l10n.messages import en as messages

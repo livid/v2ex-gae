@@ -269,3 +269,10 @@ class MemberBookmark(db.Model):
     one = db.ReferenceProperty(Member, indexed=True)
     member_num = db.IntegerProperty(indexed=True)
     created = db.DateTimeProperty(auto_now_add=True)
+
+# Notification type: 1 => mention, 2 => reply, 3 => start following
+class Notification(db.Model):
+    member = db.ReferenceProperty(Member, indexed=True)
+    type = db.IntegerProperty(indexed=True)
+    content = db.TextProperty()
+    created = db.DateTimeProperty(auto_now_add=True)

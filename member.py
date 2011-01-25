@@ -543,6 +543,8 @@ class SettingsAvatarHandler(webapp.RequestHandler):
         if (member):
             timestamp = str(int(time.time()))
             avatar = self.request.get('avatar')
+            if avatar is None:
+                return self.redirect('/settings/avatar')
             avatar_73 = images.resize(avatar, 73, 73)
             avatar_48 = images.resize(avatar, 48, 48)
             avatar_24 = images.resize(avatar, 24, 24)
