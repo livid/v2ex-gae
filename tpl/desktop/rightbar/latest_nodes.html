@@ -1,5 +1,5 @@
 <div class="box">
-    <div class="cell">
+    <div class="cell"><div class="fr"><a href="/changes">全站最新更改记录</a></div>
         <span class="fade">{{ l10n.new_nodes }}</span>
     </div>
     <div class="inner" style="line-height: 200%;">{% for node in nodes_new %}<a href="/go/{{ node.name }}" class="item_node">{{ node.title|escape }}</a>{% endfor %}</div>

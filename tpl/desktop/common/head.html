@@ -7,7 +7,11 @@
 	<title>{{ page_title|escape }}</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/css/{{ site.theme }}.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
+	{% if feed_link %}
+	<link rel="alternate" type="application/atom+xml" href="{{ feed_link }}" title="{{ feed_title }}" />
+	{% else %}
 	<link rel="alternate" type="application/atom+xml" href="/index.xml" />
+    {% endif %}
 	{% if canonical %}<link rel="canonical" href="{{ canonical }}" />{% endif %}
 	<script src="http://www.v2ex.com/static/js/jquery.js" type="text/javascript"></script>
 	{% if site.analytics %}

@@ -1,0 +1,30 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">
+            
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            <div class="box" id="topics_index">
+                <div class="cell">
+                    <span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 全站最新更改记录</span>
+                </div>
+                {% include 'common/topics_index.html' %}
+                <div class="inner" align="center">
+                    {% for p in ps %}{% ifequal p page_current %}<span class="page_current">{{ p }}</span>{% else %}<a href="/changes?p={{ p }}" class="page_normal">{{ p }}</a>{% endifequal %}{% endfor %}
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

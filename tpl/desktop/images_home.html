@@ -7,32 +7,25 @@
         </div>
         <div id="Rightbar">
             {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
         </div>
         <div id="Content">
+            {% if message %}
+            <div class="box">
+                <div class="inner">{{ message }}</div>
+            </div>
+            <div class="sep20"></div>
+            {% endif %}
             <div class="box">
                 <div class="cell">
                     <span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 图片上传</span>
                 </div>
-                <div class="inner">
+                <div class="inner"><form method="post" action="/images/upload" enctype="multipart/form-data"><input type="file" name="image" /> &nbsp; <input type="submit" value="上传" class="super normal button" />
+                    <div class="sep5"></div>
+                    <span class="fade">图片最大尺寸 1M，支持 PNG / GIF / JPG。上传前请确认已经阅读过 <a href="/images/upload/rules">上传规则</a>，点击上传按钮即表示完全同意此规则。</span></form>
                 </div>
-                <div class="grid">
-                    <table cellpadding="5" cellspacing="0" border="1" width="100%" class="grid">
-                        <tr>
-                            <td width="25%" class="left"></td>
-                            <td width="25%"></td>
-                            <td width="25%"></td>
-                            <td width="25%"></td>
-                        </tr>
-                        <tr>
-                            <td width="25%" class="left"></td>
-                            <td width="25%"></td>
-                            <td width="25%"></td>
-                            <td width="25%"></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="inner">
-                </div>
+                <div class="inner">{% for image in images %}<a href="/d/{{ image.id }}" class="slot"><img src="{{ image.preview }}" /></a>{% endfor %}</div>
             </div>
         </div>
     <div class="c"></div>

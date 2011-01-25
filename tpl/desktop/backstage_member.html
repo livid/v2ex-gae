@@ -37,6 +37,22 @@
                     <table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
         			        <td width="100" align="right">
+        			            ID
+        			        </td>
+        			        <td width="200" align="left">
+        			            {{ one.num }}
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="100" align="right">
+        			            Joined
+        			        </td>
+        			        <td width="200" align="left">
+        			            {{ one.created|timezone:8 }}
+        			        </td>
+        			    </tr>
+                        <tr>
+        			        <td width="100" align="right">
         			            {{ l10n.username }}
         			        </td>
         			        <td width="200" align="left">

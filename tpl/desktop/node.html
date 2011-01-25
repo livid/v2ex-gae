@@ -76,8 +76,7 @@
             {% if can_create %}
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell">快速发贴</div>
-                <div class="cell">
+                <div class="inner">
                     <form action="/new/{{ node.name }}" method="post">
                     <input type="text" name="title" value="" class="sll" />
                     <div class="sep10"></div>
@@ -86,7 +85,6 @@
                     <input type="submit" value="{{ l10n.create }}" class="super normal button" />
                     </form>
                 </div>
-                <div class="inner"><span class="fade">在每次创建一个新主题前，考虑一下这个主题能为别人带来什么价值。</span></div>
             </div>
             {% endif %}
         </div>

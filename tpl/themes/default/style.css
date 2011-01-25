@@ -216,6 +216,7 @@ a.dark:hover {
 	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 
 	background-color: #fff;
+	border: 2px solid #fff;
 }
 
 .glass {
@@ -862,4 +863,43 @@ a.opo:hover {
 	-webkit-border-radius: 3px;
 	margin: 0px 2px 0px 2px;
 	text-decoration: none;
+}
+
+.afterdark {
+	padding: 10px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background-color: #333;
+    color: #cc9;
+    font-family: "Panic Sans";
+    font-size: 16px;
+    line-height: 180%;
+	width: 616px;
+	height: 500px;
+}
+
+a.slot:link, a.slot:visited, a.slot:active {
+	display: block;
+	margin: 10px 10px 10px 10px;
+	border: 2px solid #f0f0f0;
+	display: inline-block;
+	padding: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	font-size: 12px;
+	background-color: none;
+	color: transparent;
+}
+
+a.slot:hover {
+	display: block;
+	margin: 10px 10px 10px 10px;
+	border: 2px solid #99c;
+	display: inline-block;
+	padding: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	font-size: 12px;
+	background-color: none;
+	color: transparent;
 }

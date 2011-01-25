@@ -15,7 +15,7 @@
                 <div class="cell"><span class="fade"><a href="/notes">记事本</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/notes/{{ note.num }}">{{ note.title|escape }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 编辑</span></div>
                 <div class="inner">
                     <form method="post" action="/notes/{{ note.num }}/edit">
-                        <textarea class="mll tall" id="focus" name="content">{{ note.content|escape }}</textarea>
+                        <textarea class="mll tall afterdark" id="focus" name="content">{{ note.content|escape }}</textarea>
                         <div class="sep10"></div>
                         <input type="submit" value="保存" class="super normal button" />
                     </form>
