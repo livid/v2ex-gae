@@ -53,9 +53,6 @@ TOPIC_PAGE_SIZE = 100
 
 class NewTopicHandler(webapp.RequestHandler):
     def get(self, node_name):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -114,9 +111,6 @@ class NewTopicHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
     def post(self, node_name):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         ### BEGIN: CAN CONTINUE
         can_continue = True
         if ('Host' in self.request.headers):
@@ -135,6 +129,10 @@ class NewTopicHandler(webapp.RequestHandler):
             if ('http://www.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('http://v2ex.appspot.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('https://www.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('https://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if has_v2ex is False:
                 can_continue = False
@@ -200,17 +198,14 @@ class NewTopicHandler(webapp.RequestHandler):
                 # Verification: content
                 topic_content_error = 0
                 topic_content_error_messages = ['',
-                    u'请输入主题内容',
                     u'主题内容长度不能超过 2000 个字符'
                 ]
                 topic_content = self.request.get('content').strip()
-                if (len(topic_content) == 0):
-                    errors = errors + 1
-                    topic_content_error = 1
-                else:
-                    if (len(topic_content) > 2000):
+                topic_content_length = len(topic_content)
+                if (topic_content_length > 0):
+                    if (topic_content_length > 2000):
                         errors = errors + 1
-                        topic_content_error = 2
+                        topic_content_error = 1
                 template_values['topic_content'] = topic_content
                 template_values['topic_content_error'] = topic_content_error
                 template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
@@ -268,6 +263,11 @@ class NewTopicHandler(webapp.RequestHandler):
                     topic.num = counter.value
                     topic.title = topic_title
                     topic.content = topic_content
+                    if len(topic_content) > 0:
+                        topic.has_content = True
+                        topic.content_length = topic_content_length
+                    else:
+                        topic.has_content = False
                     path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
                     output = template.render(path, {'topic' : topic})
                     topic.content_rendered = output.decode('utf-8')
@@ -305,7 +305,10 @@ class NewTopicHandler(webapp.RequestHandler):
                     memcache.delete('q_latest_16')
                     memcache.delete('home_rendered')
                     memcache.delete('home_rendered_mobile')
-                    taskqueue.add(url='/index/topic/' + str(topic.num))
+                    try:
+                        taskqueue.add(url='/index/topic/' + str(topic.num))
+                    except:
+                        pass
                     # Twitter Sync
                     if member.twitter_oauth == 1 and member.twitter_sync == 1:
                         access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -332,9 +335,6 @@ class NewTopicHandler(webapp.RequestHandler):
 
 class TopicHandler(webapp.RequestHandler):
     def get(self, topic_num):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -387,7 +387,10 @@ class TopicHandler(webapp.RequestHandler):
                 topic = q[0]
                 memcache.set('Topic_' + str(topic_num), topic, 86400)
         if topic:
-            taskqueue.add(url='/hit/topic/' + str(topic.key()))
+            try:
+                taskqueue.add(url='/hit/topic/' + str(topic.key()))
+            except:
+                pass
             template_values['page_title'] = site.title + u' › ' + topic.title
             template_values['canonical'] = 'http://' + site.domain + '/t/' + str(topic.num)
             if topic.content_rendered is None:
@@ -400,11 +403,19 @@ class TopicHandler(webapp.RequestHandler):
         else:
             template_values['page_title'] = site.title + u' › 主题未找到'
         template_values['topic'] = topic
+        can_edit = False
+        can_move = False
         if member:
             if member.level == 0:
-                template_values['can_edit'] = True
-            else:
-                template_values['can_edit'] = False
+                can_edit = True
+                can_move = True
+            if topic.member_num == member.num:
+                now = datetime.datetime.now()
+                if (now - topic.created).seconds < 300:
+                    can_edit = True
+                    can_move = True
+        template_values['can_edit'] = can_edit
+        template_values['can_move'] = can_move
         if (topic):
             node = False
             section = False
@@ -538,6 +549,10 @@ class TopicHandler(webapp.RequestHandler):
             if ('http://www.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('http://v2ex.appspot.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('https://www.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('https://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if has_v2ex is False:
                 can_continue = False
@@ -677,7 +692,10 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.delete('home_rendered')
                 memcache.delete('home_rendered_mobile')
                 if topic.replies < 50:
-                    taskqueue.add(url='/index/topic/' + str(topic.num))
+                    try:
+                        taskqueue.add(url='/index/topic/' + str(topic.num))
+                    except:
+                        pass
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
                     access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -735,19 +753,25 @@ class TopicEditHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        topic = False
+        q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
+        if (q.count() == 1):
+            topic = q[0]
+            template_values['topic'] = topic
+        can_edit = False
+        ttl = 0
+        if member:
+            if member.level == 0:
+                can_edit = True
+            if topic.member_num == member.num:
+                now = datetime.datetime.now()
+                if (now - topic.created).seconds < 300:
+                    can_edit = True
+                    ttl = 300 - (now - topic.created).seconds
+                    template_values['ttl'] = ttl
         if (member):
-            if (member.level == 0):
+            if (can_edit):
                 template_values['member'] = member
-                topic = False
-                q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
-                if (q.count() == 1):
-                    topic = q[0]
-                    try:
-                        topic.hits = topic.hits + 1
-                        topic.put()
-                    except:
-                        topic.hits = topic.hits - 1
-                template_values['topic'] = topic
                 if (topic):
                     template_values['page_title'] = site.title + u' › ' + topic.title + u' › 编辑'
                     template_values['topic_title'] = topic.title
@@ -800,14 +824,25 @@ class TopicEditHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
-        if (member):
-            if (member.level == 0):
+        topic = False
+        q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
+        if (q.count() == 1):
+            topic = q[0]
+            template_values['topic'] = topic
+        can_edit = False
+        ttl = 0
+        if member:
+            if member.level == 0:
+                can_edit = True
+            if topic.member_num == member.num:
+                now = datetime.datetime.now()
+                if (now - topic.created).seconds < 300:
+                    can_edit = True
+                    ttl = 300 - (now - topic.created).seconds
+                    template_values['ttl'] = ttl
+        if member:
+            if can_edit:
                 template_values['member'] = member
-                topic = False
-                q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
-                if (q.count() == 1):
-                    topic = q[0]
-                    template_values['topic'] = topic
                 if (topic):
                     template_values['page_title'] = site.title + u' › ' + topic.title + u' › 编辑'
                     q2 = db.GqlQuery("SELECT * FROM Node WHERE num = :1", topic.node_num)
@@ -842,17 +877,13 @@ class TopicEditHandler(webapp.RequestHandler):
                     # Verification: content
                     topic_content_error = 0
                     topic_content_error_messages = ['',
-                        u'请输入主题内容',
                         u'主题内容长度不能超过 5000 个字符'
                     ]
                     topic_content = self.request.get('content').strip()
-                    if (len(topic_content) == 0):
+                    topic_content_length = len(topic_content)
+                    if (topic_content_length > 5000):
                         errors = errors + 1
                         topic_content_error = 1
-                    else:
-                        if (len(topic_content) > 5000):
-                            errors = errors + 1
-                            topic_content_error = 2
                     template_values['topic_content'] = topic_content
                     template_values['topic_content_error'] = topic_content_error
                     template_values['topic_content_error_message'] = topic_content_error_messages[topic_content_error]
@@ -892,6 +923,11 @@ class TopicEditHandler(webapp.RequestHandler):
                     if (errors == 0):
                         topic.title = topic_title
                         topic.content = topic_content
+                        if topic_content_length > 0:
+                            topic.has_content = True
+                            topic.content_length = topic_content_length
+                        else:
+                            topic.has_content = False
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
                         output = template.render(path, {'topic' : topic})
                         topic.content_rendered = output.decode('utf-8')
@@ -909,8 +945,11 @@ class TopicEditHandler(webapp.RequestHandler):
                         memcache.delete('home_rendered')
                         memcache.delete('home_rendered_mobile')
                         if topic.replies < 50:
-                            taskqueue.add(url='/index/topic/' + str(topic.num))
-                        self.redirect('/t/' + str(topic.num))
+                            try:
+                                taskqueue.add(url='/index/topic/' + str(topic.num))
+                            except:
+                                pass
+                        self.redirect('/t/' + str(topic.num) + '#reply' + str(topic.replies))
                     else:
                         if browser['ios']:
                             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'edit_topic.html')

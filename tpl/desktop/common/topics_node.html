@@ -13,9 +13,9 @@
 	        </div>
 	    {% endifequal %}
 	    <div class="sep3"></div>
-		<span class="bigger" style="font-size: 16px; line-height: 130%">{% if site.use_topic_types %}{% if topic.type %}<span style="display: inline-block; background-color: {{ topic.type_color }}; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; color: #fff; padding: 0px 8px 0px 8px; font-size: 13px;">{{ topic.type }}</span> &nbsp;{% endif %}{% endif %}<a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a></span>
+		<span class="bigger" style="font-size: 16px; line-height: 130%;">{% if site.use_topic_types %}{% if topic.type %}<span style="display: inline-block; background-color: {{ topic.type_color }}; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; color: #fff; padding: 0px 8px 0px 8px; font-size: 13px;">{{ topic.type }}</span> &nbsp;{% endif %}{% endif %}<a href="/t/{{ topic.num }}#reply{{ topic.replies }}">{{ topic.title|escape }}</a></span>
 		<div class="sep5"></div>
-        <span class="created">{% if topic.node_name %}<strong><a href="/go/{{ topic.node_name }}" class="node">{{ topic.node_title|escape }}</a></strong> &nbsp;•&nbsp; {% endif %}<strong><a href="/member/{{ topic.created_by|escape }}" class="dark">{{ topic.created_by|escape }}</a></strong>{% if topic.content_length%} &nbsp;•&nbsp; {{ topic.content_length }} 个字符{% endif %} &nbsp;•&nbsp; {{ topic.hits }} 次点击 &nbsp;•&nbsp; {{ topic.last_touched|timesince }} ago{% if topic.last_reply_by %} replied by <a href="/member/{{ topic.last_reply_by }}" class="dark">{{ topic.last_reply_by }}</a>{% endif %}</span>
+        <span class="created"><strong><a href="/member/{{ topic.created_by|escape }}" class="dark">{{ topic.created_by|escape }}</a></strong>{% if topic.content_length%} &nbsp;•&nbsp; {{ topic.content_length }} 个字符{% endif %} &nbsp;•&nbsp; {{ topic.hits }} 次点击 &nbsp;•&nbsp; {{ topic.last_touched|timesince }} ago{% if topic.last_reply_by %} replied by <a href="/member/{{ topic.last_reply_by }}" class="dark">{{ topic.last_reply_by }}</a>{% endif %}</span>
 	</td>
 	</tr>
 </table>

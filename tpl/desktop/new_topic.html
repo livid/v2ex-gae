@@ -32,7 +32,7 @@
         			</ul>
         			<div class="sep10"></div>
                     {% endif %}
-                    <input type="text" name="title" value="{{ topic_title|escape }}" class="sll" />
+                    <textarea name="title" maxlength="120" class="mll">{{ topic_title|escape }}</textarea>
                     <div class="sep10"></div>
                     <textarea name="content" class="mll tall">{{ topic_content|escape }}</textarea>
                     {{ tt }}

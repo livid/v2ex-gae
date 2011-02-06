@@ -104,6 +104,9 @@ handlers:
 - url: /time/?
   script: misc.py
 
+- url: /(md5|sha1)/?
+  script: misc.py
+
 - url: /mapreduce(/.*)?
   script: mapreduce/main.py
   login: admin
@@ -137,9 +140,6 @@ handlers:
 
 - url: /unblock/(.*)
   script: member.py
-
-- url: /webluker-verif.html
-  script: misc.py
 
 - url: /favorite/(.*)
   script: favorite.py

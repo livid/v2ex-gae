@@ -1130,6 +1130,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                         template_values['node_sidebar'] = ''
                     else:
                         template_values['node_sidebar'] = q[0].sidebar
+                    if q[0].sidebar_ads is None:
+                        template_values['node_sidebar_ads'] = ''
+                    else:
+                        template_values['node_sidebar_ads'] = q[0].sidebar_ads
                     template_values['node_topics'] = q[0].topics
                 else:
                     template_values['node'] = False
@@ -1184,6 +1188,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                         template_values['node_sidebar'] = ''
                     else:
                         template_values['node_sidebar'] = q[0].sidebar
+                    if q[0].sidebar_ads is None:
+                        template_values['node_sidebar_ads'] = ''
+                    else:
+                        template_values['node_sidebar_ads'] = q[0].sidebar_ads
                     template_values['node_topics'] = q[0].topics
                 else:
                     template_values['node'] = False
@@ -1270,6 +1278,9 @@ class BackstageNodeHandler(webapp.RequestHandler):
                 # Verification: node_sidebar
                 node_sidebar = self.request.get('sidebar').strip()
                 template_values['node_sidebar'] = node_sidebar
+                # Verification: node_sidebar_ads
+                node_sidebar_ads = self.request.get('sidebar_ads').strip()
+                template_values['node_sidebar_ads'] = node_sidebar_ads
                 template_values['errors'] = errors
                 if (errors == 0):
                     node.name = node_name
@@ -1279,6 +1290,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     node.header = node_header
                     node.footer = node_footer
                     node.sidebar = node_sidebar
+                    node.sidebar_ads = node_sidebar_ads
                     node.put()
                     memcache.delete('Node_' + str(node.num))
                     memcache.delete('Node::' + node.name)
@@ -1413,11 +1425,25 @@ class BackstageMoveTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        topic = db.get(db.Key(key))
+        can_move = False
+        ttl = 0
         if member:
             if member.level == 0:
+                can_move = True
+            if topic:
+                if topic.member_num == member.num:
+                    now = datetime.datetime.now()
+                    ttl = 300 - int((now - topic.created).seconds)
+                    if ttl > 0:
+                        can_move = True
+                        template_values['ttl'] = ttl
+        template_values['can_move'] = can_move
+        if member:
+            template_values['member'] = member
+            if can_move:
                 template_values['page_title'] = site.title + u' › 移动主题'
                 template_values['site'] = site
-                topic = db.get(db.Key(key))
                 if topic is not None:
                     node = topic.node
                     template_values['topic'] = topic
@@ -1441,11 +1467,25 @@ class BackstageMoveTopicHandler(webapp.RequestHandler):
         member = CheckAuth(self)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
+        topic = db.get(db.Key(key))
+        can_move = False
+        ttl = 0
         if member:
             if member.level == 0:
+                can_move = True
+            if topic:
+                if topic.member_num == member.num:
+                    now = datetime.datetime.now()
+                    ttl = 300 - int((now - topic.created).seconds)
+                    if ttl > 0:
+                        can_move = True
+                        template_values['ttl'] = ttl
+        template_values['can_move'] = can_move
+        if member:
+            template_values['member'] = member
+            if can_move:
                 template_values['page_title'] = site.title + u' › 移动主题'
                 template_values['site'] = site
-                topic = db.get(db.Key(key))
                 if topic is not None:
                     errors = 0
                     node = topic.node

@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.4.2'
+SYSTEM_VERSION = '2.4.3'
 
 import datetime
 import hashlib
@@ -123,6 +123,7 @@ class Node(db.Model):
     header = db.TextProperty(required=False)
     footer = db.TextProperty(required=False)
     sidebar = db.TextProperty(required=False)
+    sidebar_ads = db.TextProperty(required=False)
     category = db.StringProperty(required=False, indexed=True)
     topics = db.IntegerProperty(default=0)
     created = db.DateTimeProperty(auto_now_add=True)
@@ -139,7 +140,8 @@ class Topic(db.Model):
     title = db.StringProperty(required=False, indexed=True)
     content = db.TextProperty(required=False)
     content_rendered = db.TextProperty(required=False)
-    content_length = db.IntegerProperty(default=0)
+    content_length = db.IntegerProperty(required=True, default=0)
+    has_content = db.BooleanProperty(required=True, default=True)
     hits = db.IntegerProperty(default=0)
     stars = db.IntegerProperty(required=True, default=0)
     replies = db.IntegerProperty(default=0)

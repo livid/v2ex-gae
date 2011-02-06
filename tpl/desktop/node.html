@@ -12,7 +12,11 @@
             <div class="box"><div class="inner">{{ node.sidebar }}</div></div>
             <div class="sep20"></div>
             {% endif %}
+            {% if node.sidebar_ads %}
+            <div class="box"><div class="inner">{{ node.sidebar_ads }}</div></div>
+            {% else %}
             {% include 'rightbar/ads.html' %}
+            {% endif %}
             {% include 'rightbar/recent_nodes.html' %}
         </div>
         <div id="Content">
@@ -30,17 +34,7 @@
                 <div class="sep5"></div>
                 {% endif %}
                 </div>
-                <div class="cell">
-                    <table cellpadding="5" cellspacing="0" border="0" width="100%" class="topics">
-                        <tr>
-                            <th align="right" width="50">{{ l10n.header_replies }}</td>
-                            <th align="left" width="auto">{{ l10n.header_subject }}</td>
-                            <th align="left" width="80">{{ l10n.header_author }}</td>
-                            <th align="left" width="110">{{ l10n.header_last_replied }}</td>
-                        </tr>
-                        {% include 'common/topics.html' %}
-                    </table>
-                </div>
+                {% include 'common/topics_node.html' %}
                 <div class="inner">
                     {% if pagination %}
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">

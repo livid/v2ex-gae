@@ -30,20 +30,24 @@
             <div class="box"><div class="inner">{{ node.sidebar }}</div></div>
             <div class="sep20"></div>
             {% endif %}
+            {% if topic.node.sidebar_ads %}
+            <div class="box"><div class="inner">{{ topic.node.sidebar_ads }}</div></div>
+            {% else %}
             {% include 'rightbar/ads.html' %}
+            {% endif %}
             {% include 'rightbar/recent_nodes.html' %}
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell" style="min-height: 73px;">
+                {% if topic.has_content %}<div class="cell" style="min-height: 73px;">{% else %}<div class="inner" style="min-height: 73px;">{% endif %}
                     <div class="fr snow"><a href="/member/{{ topic.member.username }}">{{ topic.member|avatar:"large" }}</a></div>
                     <span class="bigger"><a href="/">{{ site.title }}</a> {{ l10n.chevron }} <a href="/go/{{ node.name}}">{{ node.title|escape }}</a></span>
                     <h1>{{ topic.title|escape }}</h1>
-                    <small class="fade">{% if site.use_topic_types %}{% if topic.type %}<span style="display: inline-block; background-color: {{ topic.type_color }}; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; color: #fff; padding: 0px 8px 0px 8px; font-size: 11px;">{{ topic.type }}</span> &nbsp;{% endif %}{% endif %}By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.level 0 %} &nbsp; <a href="#;" onclick="if (confirm('{{ l10n.sure_to_delete }} #{{ topic.num }} - {{ topic.title|escape }}')) { location = '/delete/topic/{{ topic.num }}'; }" class="op">DELETE</a> <a href="/backstage/tidy/topic/{{ topic.num }}" class="op">TIDY</a> <a href="/backstage/move/topic/{{ topic.key }}" class="op">MOVE</a>{% endifequal %}{% if can_edit %} <a href="/edit/topic/{{ topic.num }}" class="op">EDIT</a>{% endif %}</small>
-                </div>
+                    <small class="fade">{% if site.use_topic_types %}{% if topic.type %}<span style="display: inline-block; background-color: {{ topic.type_color }}; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; color: #fff; padding: 0px 8px 0px 8px; font-size: 11px;">{{ topic.type }}</span> &nbsp;{% endif %}{% endif %}By <a href="/member/{{ topic.member.username }}" class="dark">{{ topic.created_by }}</a>{% if topic.source %} via {{ topic.source }}{% endif %} at {{ topic.created|timesince }} ago, {{ topic.hits }} hits{% ifequal member.level 0 %} &nbsp; <a href="#;" onclick="if (confirm('{{ l10n.sure_to_delete }} #{{ topic.num }} - {{ topic.title|escape }}')) { location = '/delete/topic/{{ topic.num }}'; }" class="op">DELETE</a> <a href="/backstage/tidy/topic/{{ topic.num }}" class="op">TIDY</a>{% endifequal %}{% if can_move %} <a href="/backstage/move/topic/{{ topic.key }}" class="op">MOVE</a>{% endif %}{% if can_edit %} <a href="/edit/topic/{{ topic.num }}" class="op">EDIT</a>{% endif %}</small>
+                </div>{% if topic.has_content %}
                 <div class="inner">
                     <div class="content topic_content">{{ topic.content_rendered }}</div>
-                </div>
+                </div>{% endif %}
                 {% if member %}<div class="inner"><div class="fr" align="right">{% if topic.stars %}<span style="font-size: 10px; line-height: 10px; color: #99a;">已有 {{ topic.stars }} 人收藏此主题 &nbsp; </span>{% endif %}{% if favorited %}<a href="/unfavorite/topic/{{ topic.num }}" class="op">取消收藏</a>{% else %}<a href="/favorite/topic/{{ topic.num }}" class="op">加入收藏</a>{% endif %}</div> &nbsp; </div>{% endif %}
                 {% ifequal topic.explicit 1 %}
                 <div class="inner">

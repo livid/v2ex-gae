@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+# coding=utf-8
+
+import os
 import random
 import re
 
 from google.appengine.ext import db
 from google.appengine.api import memcache
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
 
 from v2ex.babel.ext.cookies import Cookies
 
@@ -108,14 +113,17 @@ class BaseHandler(webapp.RequestHandler):
                 if self.member.l10n == 'zh-Hans':
                     from v2ex.babel.l10n.messages import zhHans as messages
             else:
-                if site.l10n == 'en':
+                if self.site.l10n == 'en':
                     from v2ex.babel.l10n.messages import en as messages
-                if site.l10n == 'zh-Hans':
+                if self.site.l10n == 'zh-Hans':
                     from v2ex.babel.l10n.messages import zhHans as messages
             self._l10n = messages
         return self._l10n
     
-    def finalize(self, template_name, mobile_optimized=False, template_root=False, template_type=False):
+    def set_title(self, title):
+        self.values['page_title'] = self.site.title + u' › ' + title
+    
+    def finalize(self, template_name, mobile_optimized=False, template_root='desktop', template_type='html'):
         """Insert common values into handler's dictionary for template.
         
         Load proper template according to current browser capacity.
@@ -125,10 +133,7 @@ class BaseHandler(webapp.RequestHandler):
         if self.browser['ios'] and mobile_optimized:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', template_name + '.html')
         else:
-            if template_root and template_type:
-                path = os.path.join(os.path.dirname(__file__), 'tpl', template_root, template_name + '.' + template_type)
-            else:
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', template_name + '.html')
+            path = os.path.join('tpl', template_root, template_name + '.' + template_type)
         output = template.render(path, self.values)
         self.response.out.write(output)
     

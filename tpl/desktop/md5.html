@@ -1,0 +1,36 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> <a href="/md5">MD5 / SHA1 Calculator</a></span></div>
+                <div class="cell">
+                    <div class="page">
+                        <h1>MD5 / SHA1 Calculator</h1>
+                        <div class="sep10"></div>
+                        <form method="get" action="/md5">
+                        <input type="text" name="input" class="sl" /> <input type="submit" class="super normal button" value="Calculate" maxlength="255" />
+                        </form>
+                        {% if md5 %}
+                        <div class="sep20"></div>
+                        <div style="padding: 10px 15px 10px 15px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; border: 2px solid #e9e9e9; background-color: #f0f0f0; color: #333; font-size: 16px; font-family: 'Panic Sans', 'Menlo', 'Courier New';"><strong class="fade" style="font-size: 12px;">MD5:</strong><div class="sep5"></div>{{ md5 }}<div class="sep20"></div><strong class="fade" style="font-size: 12px;">SHA1</strong><div class="sep5"></div>{{ sha1 }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="inner"><span class="fade">本页可用于计算 255 个以内的字符的 MD5 / SHA1 值。</span></div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

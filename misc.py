@@ -31,6 +31,8 @@ from v2ex.babel.da import *
 from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 
+from v2ex.babel.handlers import BaseHandler
+
 template.register_template_library('v2ex.templatetags.filters')
 
 class WorldClockHandler(webapp.RequestHandler):
@@ -49,17 +51,19 @@ class WorldClockHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
-class WeblukerHandler(webapp.RequestHandler):
-    def head(self):
-        self.response.out.write('webluker-site-verification:webluker-8d00e4a6a4a4fc50.html')
-
-    def get(self):
-        self.response.out.write('webluker-site-verification:webluker-8d00e4a6a4a4fc50.html')
-
+class MD5Handler(BaseHandler):
+    def get(self, source):
+        i = str(self.request.get('input').strip())
+        if (i):
+            self.values['md5'] = hashlib.md5(i).hexdigest()
+            self.values['sha1'] = hashlib.sha1(i).hexdigest()
+        self.set_title(u'MD5 / SHA1 计算器')
+        self.finalize(template_name='md5')
+        
 def main():
     application = webapp.WSGIApplication([
     ('/time/?', WorldClockHandler),
-    ('/webluker-verif.html', WeblukerHandler)
+    ('/(md5|sha1)/?', MD5Handler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

@@ -54,9 +54,6 @@ class HomeHandler(webapp.RequestHandler):
         pass
         
     def get(self):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         host = self.request.headers['Host']
         if host == 'beta.v2ex.com':
             self.redirect('http://www.v2ex.com/')
@@ -131,7 +128,7 @@ class HomeHandler(webapp.RequestHandler):
                     q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
                     topics = []
                     for topic in q2:
-                        if topic.node.name not in ignored:
+                        if topic.node_name not in ignored:
                             topics.append(topic)
                     memcache.set('q_latest_16', topics, 600)
                     latest = topics
@@ -150,7 +147,7 @@ class HomeHandler(webapp.RequestHandler):
                     q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16")
                     topics = []
                     for topic in q2:
-                        if topic.node.name not in ignored:
+                        if topic.node_name not in ignored:
                             topics.append(topic)
                     memcache.set('q_latest_16', topics, 600)
                     latest = topics
@@ -287,9 +284,6 @@ class UAHandler(webapp.RequestHandler):
         
 class SigninHandler(webapp.RequestHandler):
     def get(self):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         browser = detect(self.request)
@@ -309,9 +303,6 @@ class SigninHandler(webapp.RequestHandler):
         self.response.out.write(output)
  
     def post(self):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         browser = detect(self.request)
@@ -349,9 +340,6 @@ class SigninHandler(webapp.RequestHandler):
         
 class SignupHandler(webapp.RequestHandler):
     def get(self):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         chtml = captcha.displayhtml(
@@ -375,9 +363,6 @@ class SignupHandler(webapp.RequestHandler):
         self.response.out.write(output)
         
     def post(self):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         member = False
         browser = detect(self.request)
@@ -702,9 +687,6 @@ class PasswordResetHandler(BaseHandler):
 
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
-        if 'User-Agent' in self.request.headers:
-            if 'MSIE 6.0' in self.request.headers['User-Agent']:
-                return self.redirect('http://chrome.google.com')
         site = GetSite()
         browser = detect(self.request)
         self.session = Session()
@@ -812,7 +794,7 @@ class NodeHandler(webapp.RequestHandler):
         if node:
             q3 = db.GqlQuery("SELECT * FROM Topic WHERE node_num = :1 ORDER BY last_touched DESC LIMIT " + str(start) + ", " + str(page_size), node.num)
             topics = q3
-        template_values['topics'] = topics
+        template_values['latest'] = topics
         if browser['ios']:
             if (node):
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'node.html')
