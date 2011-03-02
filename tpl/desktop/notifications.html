@@ -1,0 +1,35 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">   
+        </div>
+        <div id="Rightbar">
+            {% include 'rightbar/user.html' %}
+            <div class="sep20"></div>
+            {% include 'rightbar/ads.html' %}
+        </div>
+        <div id="Content">
+            <div class="box">
+                <div class="cell"><span class="fade"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> 提醒系统</span></div>
+                {% for n in notifications %}
+                <div class="inner"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td width="32" align="left" valign="top"><a href="/member/{{ n.member.username }}">{{ n.member|avatar:"mini" }}</a></td><td valign="top"><span class="fade">{{ n.text }}</span> &nbsp; <span class="snow">{{ n.created|timesince }} ago</span><div class="sep5"></div><div class="payload">{{ n.payload|escape|mentions|urlize|linebreaksbr }}</div></td></tr></table></div>
+                {% endfor %}
+            </div>
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><span class="fade">在设备上接收提醒</span></div>
+                <div class="inner">
+                    将这个地址加入 <a href="http://boxcar.io/" target="_blank">Boxcar</a> 或是 <a href="http://reader.google.com/" target="_blank">Google Reader</a> 中，即可在 iPhone 或其他移动设备上获得来自 {{ site.title }} 的最新提醒。
+                    <div class="sep10"></div>
+                    <input type="text" class="sll" value="http://{{ site.domain }}/n/{{ member.private_token }}.xml" onfocus="this.select();" />
+                </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>
