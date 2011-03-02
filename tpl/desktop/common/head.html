@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<meta content="True" name="HandheldFriendly" />
 	<meta content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0; name='viewport'" />
-	<title>{{ page_title|escape }}</title>
+	<title>{{ page_title|escape }}{% if member.notifications %} {% ifequal member.notifications 0 %}{% else %}({{ member.notifications }}){% endifequal %}{% endif %}</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/css/{{ site.theme }}.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
 	{% if feed_link %}

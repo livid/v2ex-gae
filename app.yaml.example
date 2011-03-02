@@ -167,6 +167,18 @@ handlers:
 - url: /sso/(.*)
   script: sso.py
 
+- url: /notifications/?
+  script: notifications.py
+
+- url: /n/([a-z0-9]+).xml
+  script: notifications.py
+    
+- url: /notifications/(.*)
+  script: notifications.py
+
+- url: /bfbcs/poke/(ps3|360|pc)/(.*)
+  script: misc.py
+
 - url: .*
   script: main.py
 

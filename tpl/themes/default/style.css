@@ -21,9 +21,9 @@ body {
 }
 
 h1 {
-	font-size: 22px;
-	line-height: 25px;
-	font-weight: bold;
+	font-size: 20px;
+	line-height: 150%;
+	font-weight: 500;
 	padding: 10px 0px 10px 0px;
 	margin: 0px;
 }
@@ -164,7 +164,7 @@ a.dark:hover {
 
 #Wrapper {
 	background-color: #fff;
-	background-image: url("http://static.v2ex.com/tiles/imneway.jpg");
+	background-image: url("http://static.v2ex.com/tiles/bohemian.jpg");
 }
 
 #Main {
@@ -210,10 +210,10 @@ a.dark:hover {
 	-o-border-radius: 5px;
 	border-radius: 5px;
 
-	-webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-	-moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-	-o-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	-o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
 	background-color: #fff;
 	border: 2px solid #fff;
@@ -228,6 +228,11 @@ a.dark:hover {
 	padding: 10px;
 	font-size: 12px;
 	line-height: 16px;
+}
+
+.box .highlighted {
+	border-left: 3px solid #3c3;
+	background-color: #f5f5f5;
 }
 
 .box .yellow {
@@ -920,4 +925,25 @@ a.slot:hover {
 	font-size: 12px;
 	background-color: none;
 	color: transparent;
+}
+
+.payload {
+	display: inline-block;
+	background-color: #f5f5f5;
+	padding: 5px 10px 5px 10px;
+	font-size: 14px;
+	line-height: 120%;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+
+a.fade:link, a.fade:visited, a.fade:active {
+	color: #999;
+	text-decoration: none;
+}
+
+a.fade:hover {
+	color: #666;
+	text-decoration: none;
 }

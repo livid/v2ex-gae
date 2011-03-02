@@ -1,10 +1,6 @@
 <div class="box">
     {% if member %}
-    {% if nodes_fav %}
     <div class="cell">
-    {% else %}
-    <div class="inner">
-    {% endif %}
         <table cellpadding="0" cellspacing="0" border="0" width="100%">
             <tr>
                 <td width="48" valign="top"><a href="/member/{{ member.username }}">{{ member|avatar:"normal"}}</a></td>
@@ -32,10 +28,7 @@
         </form>
         {% endif %}
     </div>
-    {% if nodes_fav %}
-    <div class="inner">
-    </div>
-    {% endif %}
+    <div class="inner">{% ifequal member.notifications 0 %}<a href="/notifications" class="fade">{{ member.notifications }} 条未读提醒</a>{% else %}<img src="/static/img/dot_orange.png" align="absmiddle" />&nbsp;<strong><a href="/notifications">{{ member.notifications }} 条未读提醒</a></strong>{% endifequal %}</div>
     {% if member.avatar_large_url %}
     {% else %}
     <div class="yellow">

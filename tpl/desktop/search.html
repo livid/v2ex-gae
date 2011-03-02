@@ -21,10 +21,13 @@
                 {% if topics %}
                 {% include 'common/topics_search.html' %}
                 {% else %}
-                <div class="inner">
+                <div class="cell">
                 <div class="note">非常抱歉，{{ site.title }} 没有能够找到任何匹配 <strong>{{ q|escape }}</strong> 的结果，请尝试缩小或更换关键字。如果你觉得这是一个错误，请至 <a href="/go/feedback">Feedback</a> 向我们反馈。谢谢。</div>
                 </div>
                 {% endif %}
+                <div class="inner" align="center">
+                    <!-- SiteSearch Google --><form method="get" action="http://www.google.com/custom"><a href="http://www.google.com/" class="var"><img src="/static/img/google.png" border="0" alt="Google" align="absmiddle"></img></a><div class="sep10"></div><input type="hidden" name="domains" value="v2ex.com"></input><input type="text" id="txt_google_search" class="sl" name="q" size="15" maxlength="255" value="{{ q|escape }}"></input><div class="sep10"></div><label><input type="radio" name="sitesearch" value=""></input>Web&nbsp;&nbsp;</label><label><input type="radio" name="sitesearch" value="v2ex.com" checked="checked"></input>V2EX&nbsp;&nbsp;</label><div class="sep10"></div><input type="submit" name="sa" value="搜索" class="super normal button" align="absmiddle"></input><input type="hidden" name="client" value="pub-9823529788289591"></input><input type="hidden" name="forid" value="1"></input><input type="hidden" name="ie" value="UTF-8"></input><input type="hidden" name="oe" value="UTF-8"></input><input type="hidden" name="flav" value="0000"></input><input type="hidden" name="sig" value="sPOKErd-NdJXfEEx"></input><input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#FFFFFF;VLC:663399;AH:center;BGC:FFFFFF;LBGC:FFFFFF;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;LH:50;LW:167;L:http://www.v2ex.com/img/v2ex_site_search.png;S:http://www.v2ex.com;FORID:1;"></input><input type="hidden" name="hl" value="zh-CN"></input></form><!-- SiteSearch Google -->
+                </div>
             </div>
         </div>
     <div class="c"></div>

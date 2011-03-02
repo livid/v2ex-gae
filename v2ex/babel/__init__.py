@@ -51,6 +51,9 @@ class Member(db.Model):
     favorited_members = db.IntegerProperty(required=True, default=0)
     followers_count = db.IntegerProperty(required=True, default=0)
     level = db.IntegerProperty(required=True, default=1000)
+    notifications = db.IntegerProperty(required=True, default=0)
+    notification_position = db.IntegerProperty(required=True, default=0)
+    private_token = db.StringProperty(required=False, indexed=True)
     
     def hasFavorited(self, something):
         if type(something).__name__ == 'Node':
@@ -166,6 +169,7 @@ class Reply(db.Model):
     created_by = db.StringProperty(required=False, indexed=True)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
+    highlighted = db.IntegerProperty(required=True, default=0)
     
 class Avatar(db.Model):
     num = db.IntegerProperty(indexed=True)
@@ -272,9 +276,15 @@ class MemberBookmark(db.Model):
     member_num = db.IntegerProperty(indexed=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
-# Notification type: 1 => mention, 2 => reply, 3 => start following
+# Notification type: mention_topic, mention_reply, reply
 class Notification(db.Model):
+    num = db.IntegerProperty(required=False, indexed=True)
     member = db.ReferenceProperty(Member, indexed=True)
-    type = db.IntegerProperty(indexed=True)
-    content = db.TextProperty()
+    for_member_num = db.IntegerProperty(required=False, indexed=True)
+    type = db.StringProperty(required=False, indexed=True)
+    payload = db.TextProperty(required=False, default='')
+    label1 = db.StringProperty(required=False, indexed=False)
+    link1 = db.StringProperty(required=False, indexed=False)
+    label2 = db.StringProperty(required=False, indexed=False)
+    link2 = db.StringProperty(required=False, indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)

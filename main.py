@@ -850,18 +850,21 @@ class SearchHandler(webapp.RequestHandler):
             q_md5 = hashlib.md5(q_lowered).hexdigest()
             topics = memcache.get('q::' + q_md5)
             if topics is None:
-                if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
-                    fts = u'http://127.0.0.1:20000/search?q=' + str(urllib.quote(q_lowered))
-                else:
-                    fts = u'http://' + config.fts_server + '/search?q=' + str(urllib.quote(q_lowered))
-                response = urlfetch.fetch(fts, headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
-                if response.status_code == 200:
-                    results = json.loads(response.content)
-                    topics = []
-                    for num in results:
-                        topics.append(GetKindByNum('Topic', num))
-                    template_values['topics'] = topics
-                    memcache.set('q::' + q_md5, topics, 86400)
+                try:
+                    if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
+                        fts = u'http://127.0.0.1:20000/search?q=' + str(urllib.quote(q_lowered))
+                    else:
+                        fts = u'http://' + config.fts_server + '/search?q=' + str(urllib.quote(q_lowered))
+                    response = urlfetch.fetch(fts, headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
+                    if response.status_code == 200:
+                        results = json.loads(response.content)
+                        topics = []
+                        for num in results:
+                            topics.append(GetKindByNum('Topic', num))
+                        template_values['topics'] = topics
+                        memcache.set('q::' + q_md5, topics, 86400)
+                except:
+                    template_values['topics'] = []
             else:
                 template_values['topics'] = topics
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'search.html')

@@ -27,6 +27,7 @@ from v2ex.babel import Section
 from v2ex.babel import Node
 from v2ex.babel import Topic
 from v2ex.babel import Reply
+from v2ex.babel import Notification
 
 from v2ex.babel import SYSTEM_VERSION
 
@@ -667,6 +668,51 @@ class TopicHandler(webapp.RequestHandler):
                 counter.put()
                 counter2.put()
                 
+                # Notifications
+                
+                notified_members = []
+                keys = []
+                
+                # type: reply
+                
+                if reply.member_num != topic.member_num:
+                    q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'notification.max')
+                    if (q.count() == 1):
+                        counter = q[0]
+                        counter.value = counter.value + 1
+                    else:
+                        counter = Counter()
+                        counter.name = 'notification.max'
+                        counter.value = 1
+                    q2 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'notification.total')
+                    if (q2.count() == 1):
+                        counter2 = q2[0]
+                        counter2.value = counter2.value + 1
+                    else:
+                        counter2 = Counter()
+                        counter2.name = 'notification.total'
+                        counter2.value = 1
+                    
+                    notification = Notification(parent=topic.member)
+                    notification.num = counter.value
+                    notification.type = 'reply'
+                    notification.payload = reply.content
+                    notification.label1 = topic.title
+                    notification.link1 = '/t/' + str(topic.num) + '#reply' + str(topic.replies)
+                    notification.member = member
+                    notification.for_member_num = topic.member_num
+                    
+                    keys.append(str(topic.member.key()))
+                    
+                    counter.put()
+                    counter2.put()
+                    notification.put()
+                    
+                    for key in keys:
+                        taskqueue.add(url='/notifications/check/' + key)
+                
+                taskqueue.add(url='/notifications/reply/' + str(reply.key()))
+                
                 page_size = TOPIC_PAGE_SIZE
                 pages = 1
                 if topic.replies > page_size:
@@ -692,10 +738,11 @@ class TopicHandler(webapp.RequestHandler):
                 memcache.delete('home_rendered')
                 memcache.delete('home_rendered_mobile')
                 if topic.replies < 50:
-                    try:
-                        taskqueue.add(url='/index/topic/' + str(topic.num))
-                    except:
-                        pass
+                    if config.fts_enabled:
+                        try:
+                            taskqueue.add(url='/index/topic/' + str(topic.num))
+                        except:
+                            pass
                 # Twitter Sync
                 if member.twitter_oauth == 1 and member.twitter_sync == 1:
                     access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -1030,14 +1077,12 @@ class TopicIndexHandler(webapp.RequestHandler):
         site = GetSite()
         if config.fts_enabled:
             if os.environ['SERVER_SOFTWARE'] == 'Development/1.0':
-                urlfetch.fetch('http://127.0.0.1:20000/index/' + str(topic_num), headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
+                try:
+                    urlfetch.fetch('http://127.0.0.1:20000/index/' + str(topic_num), headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
+                except:
+                    pass
             else:
                 urlfetch.fetch('http://' + config.fts_server + '/index/' + str(topic_num), headers = {"Authorization" : "Basic %s" % base64.b64encode(config.fts_username + ':' + config.fts_password)})
-        try:
-            logging.info('foo')
-        except:
-            logging.info('Topic #' + str(topic_num) + ' indexed with minor problem')
-
 
 class ReplyEditHandler(webapp.RequestHandler):
     def get(self, reply_num):

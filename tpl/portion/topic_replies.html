@@ -1,8 +1,16 @@
 {% for reply in replies %}
 {% ifequal forloop.counter replies_count %}
-<div class="inner reply from_{{ reply.member_num }}">
+    {% if reply.highlighted %}
+    <div class="inner reply highlighted from_{{ reply.member_num }}">
+    {% else %}
+    <div class="inner reply from_{{ reply.member_num }}">
+    {% endif %}
 {% else %}
-<div class="cell reply from_{{ reply.member_num }}">
+    {% if reply.highlighted %}
+    <div class="cell reply highlighted from_{{ reply.member_num }}">
+    {% else %}
+    <div class="cell reply from_{{ reply.member_num }}">
+    {% endif %}
 {% endifequal %}
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
         <tr>

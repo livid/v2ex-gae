@@ -76,6 +76,18 @@ indexes:
   - name: last_modified
     direction: desc
 
+- kind: Notification
+  properties:
+  - name: for_member_num
+  - name: created
+    direction: desc
+
+- kind: Notification
+  properties:
+  - name: for_member_num
+  - name: num
+    direction: desc
+
 - kind: Page
   properties:
   - name: minisite
