@@ -37,7 +37,7 @@ class FeedHomeHandler(BaseHandler):
             self.values['site_updated'] = datetime.datetime.now()
             q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")
             topics = []
-            IGNORED = ['pointless', '528491']
+            IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic']
             for topic in q:
                 if topic.node.name not in IGNORED:
                     topics.append(topic)

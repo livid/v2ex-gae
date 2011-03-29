@@ -5,11 +5,7 @@
 	<td style="padding-left: 12px" valign="top">
 	    {% ifequal topic.replies 0 %}{% else %}
 	        <div class="fr">
-	            {% ifequal member.num topic.member_num %}
-	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_orange">{{ topic.replies }}</a>
-	            {% else %}
-	                <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_livid">{{ topic.replies }}</a>
-	            {% endifequal %}
+	            <a href="/t/{{ topic.num }}#reply{{ topic.replies }}" class="count_livid">{{ topic.replies }}</a>
 	        </div>
 	    {% endifequal %}
 	    <div class="sep3"></div>

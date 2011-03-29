@@ -73,6 +73,7 @@ replies = "replies"
 till = "Till"
 sure_to_delete = "Sure to delete?"
 no_pointless = "➥ Please avoid posting pointless replies, it's always great to save everyone's precious time."
+for_good = "All for a better world."
 
 # Messages on /go/
 

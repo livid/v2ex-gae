@@ -33,6 +33,8 @@ from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.l10n import *
 
+from v2ex.babel.handlers import BaseHandler
+
 template.register_template_library('v2ex.templatetags.filters')
 
 import config
@@ -2104,6 +2106,15 @@ class BackstageMembersHandler(webapp.RequestHandler):
         else:
             self.redirect('/signin')
 
+class BackstageRemoveNotificationHandler(BaseHandler):
+    def get(self, key):
+        o = db.get(db.Key(key))
+        if o and self.member:
+            if type(o).__name__ == 'Notification':
+                if o.for_member_num == self.member.num:
+                    o.delete()
+        self.redirect('/notifications')
+
 def main():
     application = webapp.WSGIApplication([
     ('/backstage', BackstageHomeHandler),
@@ -2126,7 +2137,8 @@ def main():
     ('/backstage/topic', BackstageTopicHandler),
     ('/backstage/remove/mc', BackstageRemoveMemcacheHandler),
     ('/backstage/member/(.*)', BackstageMemberHandler),
-    ('/backstage/members', BackstageMembersHandler)
+    ('/backstage/members', BackstageMembersHandler),
+    ('/backstage/remove/notification/(.*)', BackstageRemoveNotificationHandler),
     ],
                                          debug=True)
     util.run_wsgi_app(application)

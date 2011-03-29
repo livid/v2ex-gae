@@ -117,7 +117,7 @@ class HomeHandler(webapp.RequestHandler):
                         s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
                 memcache.set('home_sections_neue', s, 600)
             template_values['s'] = s
-        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491']
+        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic']
         if browser['ios']:
             home_rendered = memcache.get('home_rendered_mobile')
             if home_rendered is None:
@@ -248,7 +248,7 @@ class RecentHandler(webapp.RequestHandler):
             topics = []
             ignored = ['newbie', 'in', 'flamewar', 'pointless']
             for topic in q2:
-                if topic.node.name not in ignored:
+                if topic.node_name not in ignored:
                     topics.append(topic)
             memcache.set('q_recent_50', topics, 80)
             template_values['latest'] = topics
@@ -382,6 +382,9 @@ class SignupHandler(webapp.RequestHandler):
             l10n.username_invalid,
             l10n.username_taken]
         member_username = self.request.get('username').strip()
+        # Special cases
+        if 'vpn' in member_username:
+            return self.redirect('http://www.v2ex.com/')
         if (len(member_username) == 0):
             errors = errors + 1
             member_username_error = 1
@@ -500,6 +503,8 @@ class SignupHandler(webapp.RequestHandler):
             member.email = member_email.lower()
             member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
             member.l10n = site.l10n
+            member.newbie = 1
+            member.noob = 1
             if member.num == 1:
                 member.level = 0
             else:

@@ -199,12 +199,12 @@ class NewTopicHandler(webapp.RequestHandler):
                 # Verification: content
                 topic_content_error = 0
                 topic_content_error_messages = ['',
-                    u'主题内容长度不能超过 2000 个字符'
+                    u'主题内容长度不能超过 200000 个字符'
                 ]
                 topic_content = self.request.get('content').strip()
                 topic_content_length = len(topic_content)
                 if (topic_content_length > 0):
-                    if (topic_content_length > 2000):
+                    if (topic_content_length > 200000):
                         errors = errors + 1
                         topic_content_error = 1
                 template_values['topic_content'] = topic_content
@@ -319,6 +319,14 @@ class NewTopicHandler(webapp.RequestHandler):
                             twitter.PostUpdate(status.encode('utf-8'))
                         except:
                             logging.error("Failed to sync to Twitter for Topic #" + str(topic.num))
+                    # Change newbie status?
+                    if member.newbie == 1:
+                        now = datetime.datetime.now()
+                        created = member.created
+                        diff = now - created
+                        if diff.seconds > (86400 * 60):
+                            member.newbie = 0
+                            member.put()
                     self.redirect('/t/' + str(topic.num) + '#reply0')
                 else:    
                     if browser['ios']:
@@ -601,14 +609,14 @@ class TopicHandler(webapp.RequestHandler):
             reply_content_error = 0
             reply_content_error_messages = ['',
                 u'请输入回复内容',
-                u'回复内容长度不能超过 2000 个字符'
+                u'回复内容长度不能超过 200000 个字符'
             ]
             reply_content = self.request.get('content').strip()
             if (len(reply_content) == 0):
                 errors = errors + 1
                 reply_content_error = 1
             else:
-                if (len(reply_content) > 2000):
+                if (len(reply_content) > 200000):
                     errors = errors + 1
                     reply_content_error = 2
             template_values['reply_content'] = reply_content
@@ -667,6 +675,11 @@ class TopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
+                
+                # Update member.ua
+                
+                member.ua = ua.replace(',gzip(gfe),gzip(gfe),gzip(gfe)', '')
+                member.put()
                 
                 # Notifications
                 
@@ -924,11 +937,11 @@ class TopicEditHandler(webapp.RequestHandler):
                     # Verification: content
                     topic_content_error = 0
                     topic_content_error_messages = ['',
-                        u'主题内容长度不能超过 5000 个字符'
+                        u'主题内容长度不能超过 200000 个字符'
                     ]
                     topic_content = self.request.get('content').strip()
                     topic_content_length = len(topic_content)
-                    if (topic_content_length > 5000):
+                    if (topic_content_length > 200000):
                         errors = errors + 1
                         topic_content_error = 1
                     template_values['topic_content'] = topic_content

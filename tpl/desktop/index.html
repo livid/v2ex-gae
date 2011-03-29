@@ -24,8 +24,10 @@
             <div class="box" id="topics_index">
                 {{ site.home_top }}
                 {% if member %}
+                {% ifequal member.newbie 0 %}
                 <div class="cell"><div class="fr fade">请在 120 字内描述你的问题，或者，也可以使用 <a href="/new/qna">详细提问模式</a></div><span class="bigger snow"><strong style="font-family: 'Arial Black'; letter-spacing: -1.5px;">V2EX</strong> =› way to explore</span>
                     <div class="sep3"></div><form method="post" action="/new/qna"><textarea class="mll short" name="title"></textarea><div class="sep3"></div><div align="right"><input type="submit" class="super normal button" value="向世界提问" /></div></form></div>
+                {% endifequal %}
                 {% endif %}
                 {{ home }}
                 {% if member %}

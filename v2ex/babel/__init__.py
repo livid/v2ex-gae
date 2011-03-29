@@ -54,6 +54,9 @@ class Member(db.Model):
     notifications = db.IntegerProperty(required=True, default=0)
     notification_position = db.IntegerProperty(required=True, default=0)
     private_token = db.StringProperty(required=False, indexed=True)
+    ua = db.StringProperty(required=False, default='')
+    newbie = db.IntegerProperty(required=True, default=0)
+    noob = db.IntegerProperty(required=True, default=0)
     
     def hasFavorited(self, something):
         if type(something).__name__ == 'Node':

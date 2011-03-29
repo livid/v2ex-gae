@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8" />
@@ -10,7 +10,7 @@
 	{% if feed_link %}
 	<link rel="alternate" type="application/atom+xml" href="{{ feed_link }}" title="{{ feed_title }}" />
 	{% else %}
-	<link rel="alternate" type="application/atom+xml" href="/index.xml" />
+	<link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/v2ex/latest" />
     {% endif %}
 	{% if canonical %}<link rel="canonical" href="{{ canonical }}" />{% endif %}
 	<script src="http://www.v2ex.com/static/js/jquery.js" type="text/javascript"></script>

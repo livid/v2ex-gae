@@ -51,6 +51,16 @@
         			            {{ one.created|timezone:8 }}
         			        </td>
         			    </tr>
+        			    {% if one.ua %}
+        			    <tr>
+        			        <td width="100" align="right">
+        			            User Agent
+        			        </td>
+        			        <td width="200" align="left">
+        			            {{ one.ua|escape }}
+        			        </td>
+        			    </tr>
+        			    {% endif %}
                         <tr>
         			        <td width="100" align="right">
         			            {{ l10n.username }}
