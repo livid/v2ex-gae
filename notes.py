@@ -67,6 +67,7 @@ class NotesHomeHandler(webapp.RequestHandler):
 class NotesNewHandler(webapp.RequestHandler):
     def get(self):
         site = GetSite()
+        browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
@@ -76,7 +77,10 @@ class NotesNewHandler(webapp.RequestHandler):
         template_values['l10n'] = l10n
         if member:
             template_values['member'] = member
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
+            if browser['ios']:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_new.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
             output = template.render(path, template_values)
             self.response.out.write(output)
         else:
@@ -84,6 +88,7 @@ class NotesNewHandler(webapp.RequestHandler):
     
     def post(self):
         site = GetSite()
+        browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
@@ -127,7 +132,10 @@ class NotesNewHandler(webapp.RequestHandler):
                 self.redirect('/notes/' + str(note.num))
             else:
                 template_values['note_content'] = note_content
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
+                if browser['ios']:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_new.html')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
         else:

@@ -395,7 +395,18 @@ class TopicHandler(webapp.RequestHandler):
             if (q.count() == 1):
                 topic = q[0]
                 memcache.set('Topic_' + str(topic_num), topic, 86400)
+        can_edit = False
+        can_move = False
         if topic:
+            if member:
+                if member.level == 0:
+                    can_edit = True
+                    can_move = True
+                if topic.member_num == member.num:
+                    now = datetime.datetime.now()
+                    if (now - topic.created).seconds < 300:
+                        can_edit = True
+                        can_move = True
             try:
                 taskqueue.add(url='/hit/topic/' + str(topic.key()))
             except:
@@ -412,17 +423,6 @@ class TopicHandler(webapp.RequestHandler):
         else:
             template_values['page_title'] = site.title + u' › 主题未找到'
         template_values['topic'] = topic
-        can_edit = False
-        can_move = False
-        if member:
-            if member.level == 0:
-                can_edit = True
-                can_move = True
-            if topic.member_num == member.num:
-                now = datetime.datetime.now()
-                if (now - topic.created).seconds < 300:
-                    can_edit = True
-                    can_move = True
         template_values['can_edit'] = can_edit
         template_values['can_move'] = can_move
         if (topic):
@@ -991,7 +991,8 @@ class TopicEditHandler(webapp.RequestHandler):
                         path = os.path.join(os.path.dirname(__file__), 'tpl', 'portion', 'topic_content.html')
                         output = template.render(path, {'topic' : topic})
                         topic.content_rendered = output.decode('utf-8')
-                        topic.last_touched = datetime.datetime.now()
+                        if member.level != 0:
+                            topic.last_touched = datetime.datetime.now()
                         if site.use_topic_types:
                             if topic_type > 0:
                                 topic.type = topic_type_label

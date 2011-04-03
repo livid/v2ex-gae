@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.4.3'
+SYSTEM_VERSION = '2.5.0-dev'
 
 import datetime
 import hashlib
@@ -132,6 +132,9 @@ class Node(db.Model):
     sidebar_ads = db.TextProperty(required=False)
     category = db.StringProperty(required=False, indexed=True)
     topics = db.IntegerProperty(default=0)
+    avatar_large_url = db.StringProperty(required=False, indexed=False)
+    avatar_normal_url = db.StringProperty(required=False, indexed=False)
+    avatar_mini_url = db.StringProperty(required=False, indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
     last_modified = db.DateTimeProperty(auto_now=True)
     

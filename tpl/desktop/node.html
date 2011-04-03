@@ -21,18 +21,31 @@
         </div>
         <div id="Content">
             <div class="box">
-                <div class="cell"><div class="fr" align="right"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong>{% if member %} &nbsp;<span class="snow">•</span>&nbsp; {% if favorited %}<a href="/unfavorite/node/{{ node.name }}">取消收藏</a>{% else %}<a href="/favorite/node/{{ node.name }}">加入收藏</a>{% endif %}{% if can_manage %} &nbsp;<span class="snow">•</span>&nbsp; <a href="/backstage/node/{{ node.name }}">管理节点信息</a>{% endif %}{% endif %}</span></div>
-                <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
-                {% if node.header %}
-                <div class="sep10"></div>
-                <span class="header">{{ node.header|linebreaksbr }}</span>
-                {% endif %}
-                {% if can_create %}
-                <div class="sep10"></div>
-                <div class="sep5"></div>
-                <a href="/new/{{ node.name }}" class="super normal button">{{ l10n.create_new_topic }}</a>
-                <div class="sep5"></div>
-                {% endif %}
+                <div class="cell" style="padding-bottom: 0px;"><table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    {% if node.avatar_large_url %}
+                    <td width="73" valign="top">{{ node|avatar:"large" }}</td>
+                    <td width="10"></td>
+                    {% endif %}
+                    <td width="auto" valign="top"><div class="fr" align="right"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong>{% if member %} &nbsp;<span class="snow">•</span>&nbsp; {% if favorited %}<a href="/unfavorite/node/{{ node.name }}">取消收藏</a>{% else %}<a href="/favorite/node/{{ node.name }}">加入收藏</a>{% endif %}{% if can_manage %} &nbsp;<span class="snow">•</span>&nbsp; <a href="/backstage/node/{{ node.name }}">管理节点信息</a>{% endif %}{% endif %}</span></div>
+                    <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
+                    {% if node.header %}
+                    <div class="sep10"></div>
+                    <span class="header">{{ node.header|linebreaksbr }}</span>
+                    {% endif %}
+                    {% if can_create %}
+                    <div class="sep10"></div>
+                    <div class="sep10"></div>
+                    <div align="left"><a href="/new/{{ node.name }}" class="super normal button">{{ l10n.create_new_topic }}</a></div>
+                    <div class="sep5"></div>
+                    <div class="sep10"></div>
+                    <div>
+                        <div style="padding: 3px 10px 5px 10px; display: inline-block; border-bottom: 5px solid #3c3; margin: 0px 2px 0px 2px;">所有讨论</div>
+                    </div>
+                    {% endif %}
+                    </td>
+                </tr>
+                </table>
                 </div>
                 {% include 'common/topics_node.html' %}
                 <div class="inner">

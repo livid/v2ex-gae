@@ -541,10 +541,17 @@ class SettingsAvatarHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if (member):
+            dest = '/settings/avatar'
             timestamp = str(int(time.time()))
-            avatar = self.request.get('avatar')
+            try:
+                avatar = self.request.get('avatar')
+            except:
+                return self.redirect(dest)
             if avatar is None:
-                return self.redirect('/settings/avatar')
+                return self.redirect(dest)
+            avatar_len = len(avatar)
+            if avatar_len == 0:
+                return self.redirect(dest)
             avatar_73 = images.resize(avatar, 73, 73)
             avatar_48 = images.resize(avatar, 48, 48)
             avatar_24 = images.resize(avatar, 24, 24)

@@ -59,7 +59,7 @@ handlers:
 - url: /index/.*
   script: topic.py
   
-- url: /avatar/.*
+- url: /(avatar|navatar)/.*
   script: avatar.py
 
 - url: /index.xml

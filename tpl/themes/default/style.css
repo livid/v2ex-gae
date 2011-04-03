@@ -376,6 +376,10 @@ td.avatar_mini {
 	float: right;
 }
 
+.fl {
+	float: left;
+}
+
 .item_node {
 	font-size: 13px;
 	line-height: 13px;

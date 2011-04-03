@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import base64
 import os
 import re
 import time
@@ -13,10 +14,12 @@ import math
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.api import images
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
 
+from v2ex.babel import Avatar
 from v2ex.babel import Member
 from v2ex.babel import Counter
 from v2ex.babel import Section
@@ -1309,6 +1312,141 @@ class BackstageNodeHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
 
+class BackstageNodeAvatarHandler(BaseHandler):
+    def get(self, node_name):
+        self.redirect('/backstage/node/' + node_name)
+    
+    def post(self, node_name):
+        if self.member:
+            if self.member.level == 0:
+                node = GetKindByName('Node', node_name)
+                if node is None:
+                    return self.redirect('/backstage')
+                dest = '/backstage/node/' + node.name
+                timestamp = str(int(time.time()))
+                try:
+                    avatar = self.request.get('avatar')
+                except:
+                    return self.redirect(dest)
+                if avatar is None:
+                    return self.redirect(dest)
+                avatar_len = len(avatar)
+                if avatar_len == 0:
+                    return self.redirect(dest)
+                avatar_73 = images.resize(avatar, 73, 73)
+                avatar_48 = images.resize(avatar, 48, 48)
+                avatar_24 = images.resize(avatar, 24, 24)
+                # Large 73x73
+                q1 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'node_' + str(node.num) + '_large')
+                if (q1.count() == 1):
+                    avatar_large = q1[0]
+                    avatar_large.content = db.Blob(avatar_73)
+                    avatar_large.put()
+                else:
+                    qc1 = db.GqlQuery("SELECT * FROM Counter WHERE name = :1", 'avatar.max')
+                    if (qc1.count() == 1):
+                        counter1 = qc1[0]
+                        counter1.value = counter1.value + 1
+                    else:
+                        counter1 = Counter()
+                        counter1.name = 'avatar.max'
+                        counter1.value = 1
+                    counter1.put()
+                    avatar_large = Avatar()
+                    avatar_large.name = 'node_' + str(node.num) + '_large'
+                    avatar_large.content = db.Blob(avatar_73)
+                    avatar_large.num = counter1.value
+                    avatar_large.put()
+                node.avatar_large_url = '/navatar/' + str(node.num) + '/large?r=' + timestamp
+                node.put()
+                # Normal 48x48
+                q2 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'node_' + str(node.num) + '_normal')
+                if (q2.count() == 1):
+                    avatar_normal = q2[0]
+                    avatar_normal.content = db.Blob(avatar_48)
+                    avatar_normal.put()
+                else:
+                    qc2 = db.GqlQuery("SELECT * FROM Counter WHERE name = :1", 'avatar.max')
+                    if (qc2.count() == 1):
+                        counter2 = qc2[0]
+                        counter2.value = counter2.value + 1
+                    else:
+                        counter2 = Counter()
+                        counter2.name = 'avatar.max'
+                        counter2.value = 1
+                    counter2.put()
+                    avatar_normal = Avatar()
+                    avatar_normal.name = 'node_' + str(node.num) + '_normal'
+                    avatar_normal.content = db.Blob(avatar_48)
+                    avatar_normal.num = counter2.value
+                    avatar_normal.put()
+                node.avatar_normal_url = '/navatar/' + str(node.num) + '/normal?r=' + timestamp
+                node.put() 
+                # Mini 24x24
+                q3 = db.GqlQuery("SELECT * FROM Avatar WHERE name = :1", 'node_' + str(node.num) + '_mini')
+                if (q3.count() == 1):
+                    avatar_mini = q3[0]
+                    avatar_mini.content = db.Blob(avatar_24)
+                    avatar_mini.put()
+                else:
+                    qc3 = db.GqlQuery("SELECT * FROM Counter WHERE name = :1", 'avatar.max')
+                    if (qc3.count() == 1):
+                        counter3 = qc3[0]
+                        counter3.value = counter3.value + 1
+                    else:
+                        counter3 = Counter()
+                        counter3.name = 'avatar.max'
+                        counter3.value = 1
+                    counter3.put()
+                    avatar_mini = Avatar()
+                    avatar_mini.name = 'node_' + str(node.num) + '_mini'
+                    avatar_mini.content = db.Blob(avatar_24)
+                    avatar_mini.num = counter3.value
+                    avatar_mini.put()
+                node.avatar_mini_url = '/navatar/' + str(node.num) + '/mini?r=' + timestamp
+                node.put()
+                # Upload to MobileMe
+                use_this = False
+                if config.mobileme_enabled and use_this:
+                    headers = {'Authorization' : 'Basic ' + base64.b64encode(config.mobileme_username + ':' + config.mobileme_password)}
+                    host = 'idisk.me.com'
+                    # Sharding
+                    timestamp = str(int(time.time()))
+                    shard = node.num % 31
+                    root = '/' + config.mobileme_username + '/Web/Sites/v2ex/navatars/' + str(shard)
+                    root_mini = root + '/mini'
+                    root_normal = root + '/normal'
+                    root_large = root + '/large'
+                    h = httplib.HTTPConnection(host)
+                    # Mini
+                    h.request('PUT', root_mini + '/' + str(node.num) + '.png', str(avatar_24), headers)
+                    response = h.getresponse()
+                    if response.status == 201 or response.status == 204:
+                        node.avatar_mini_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/navatars/' + str(shard) + '/mini/' + str(node.num) + '.png?r=' + timestamp
+                    # Normal
+                    h.request('PUT', root_normal + '/' + str(node.num) + '.png', str(avatar_48), headers)
+                    response = h.getresponse()
+                    if response.status == 201 or response.status == 204:
+                        node.avatar_normal_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/navatars/' + str(shard) + '/normal/' + str(node.num) + '.png?r=' + timestamp
+                    # Large
+                    h.request('PUT', root_large + '/' + str(node.num) + '.png', str(avatar_73), headers)
+                    response = h.getresponse()
+                    if response.status == 201 or response.status == 204:
+                        node.avatar_large_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/navatars/' + str(shard) + '/large/' + str(node.num) + '.png?r=' + timestamp
+                    node.put()
+                memcache.set('Node_' + str(node.num), node, 86400 * 365)
+                memcache.set('Node::' + node.name, node, 86400 * 365)
+                memcache.delete('Avatar::node_' + str(node.num) + '_large')
+                memcache.delete('Avatar::node_' + str(node.num) + '_normal')
+                memcache.delete('Avatar::node_' + str(node.num) + '_mini')
+                #self.session['message'] = '新节点头像设置成功'
+                self.redirect(dest)
+            else:
+                self.redirect('/')
+        else:
+            self.redirect('/signin')
+        
+
 class BackstageRemoveReplyHandler(webapp.RequestHandler):
     def get(self, reply_key):
         member = CheckAuth(self)
@@ -1415,6 +1553,8 @@ class BackstageDeactivateUserHandler(webapp.RequestHandler):
                         one.deactivated = int(time.time())
                         one.password = hashlib.sha1(str(time.time())).hexdigest()
                         one.auth = hashlib.sha1(str(one.num) + ':' + one.password).hexdigest()
+                        one.newbie = 1
+                        one.noob = 1
                         one.put()
                         memcache.delete('Member_' + str(one.num))
                         return self.redirect('/member/' + one.username)
@@ -2127,7 +2267,8 @@ def main():
     ('/backstage/new/section', BackstageNewSectionHandler),
     ('/backstage/section/(.*)', BackstageSectionHandler),
     ('/backstage/new/node/(.*)', BackstageNewNodeHandler),
-    ('/backstage/node/(.*)', BackstageNodeHandler),
+    ('/backstage/node/([a-z0-9A-Z]+)', BackstageNodeHandler),
+    ('/backstage/node/([a-z0-9A-Z]+)/avatar', BackstageNodeAvatarHandler),
     ('/backstage/remove/reply/(.*)', BackstageRemoveReplyHandler),
     ('/backstage/tidy/reply/([0-9]+)', BackstageTidyReplyHandler),
     ('/backstage/tidy/topic/([0-9]+)', BackstageTidyTopicHandler),

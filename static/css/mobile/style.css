@@ -296,7 +296,6 @@ td.avatar_mini {
 	font-size: 14px;
 	font-weight: bold;
 	border: 1px solid #ccc;
-	width: 150px;
 }
 
 .sl:focus {
@@ -319,7 +318,7 @@ td.avatar_mini {
 	font-size: 14px;
 	font-weight: bold;
 	border: 1px solid #ccc;
-	width: 280px;
+	width: 300px;
 }
 
 .sll:focus {
@@ -329,7 +328,6 @@ td.avatar_mini {
 	font-size: 14px;
 	font-weight: bold;
 	border: 1px solid #889fb9;
-	width: 280px;
 	-moz-box-shadow: 0px 0px 5px #889fb9;
 	-webkit-box-shadow: 0px 0px 5px #889fb9;
 	outline: none;
@@ -343,7 +341,7 @@ td.avatar_mini {
 	font-weight: normal;
 	border: 1px solid #ccc;
 	display: block;
-	width: 280px;
+	width: 300px;
 	height: 160px;
 	font-family: "Menlo", "Panic Sans", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
@@ -355,8 +353,6 @@ td.avatar_mini {
 	font-size: 14px;
 	font-weight: normal;
 	border: 1px solid #889fb9;
-	width: 280px;
-	height: 160px;
 	-moz-box-shadow: 0px 0px 5px #889fb9;
 	-webkit-box-shadow: 0px 0px 5px #889fb9;
 	outline: none;

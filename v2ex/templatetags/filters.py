@@ -105,7 +105,7 @@ register.filter(gravatar)
 # avatar filter
 def avatar(value, arg):
     default = "/static/img/avatar_" + str(arg) + ".png"
-    if type(value).__name__ != 'Member':
+    if type(value).__name__ not in ['Member', 'Node']:
         return '<img src="' + default + '" border="0" />'
     if arg == 'large':
         number_size = 73
@@ -118,9 +118,9 @@ def avatar(value, arg):
         member_avatar_url = value.avatar_mini_url
         
     if value.avatar_mini_url:
-        return '<img src="'+ member_avatar_url +'" border="0" alt="' + value.username + '" />'
+        return '<img src="'+ member_avatar_url +'" border="0" />'
     else:
-        return '<img src="' + default + '" border="0" alt="' + value.username + '" />'
+        return '<img src="' + default + '" border="0" />'
 register.filter(avatar)
 
 # github gist script support

@@ -318,7 +318,10 @@ class SigninHandler(webapp.RequestHandler):
         error_messages = ['', '请输入用户名和密码', '你输入的用户名或密码不正确']
         if (len(u) > 0 and len(p) > 0):
             p_sha1 = hashlib.sha1(p).hexdigest()
-            q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1 AND password = :2", u.lower(), p_sha1)
+            if '@' in u:
+                q = db.GqlQuery("SELECT * FROM Member WHERE email = :1 AND password = :2", u.lower(), p_sha1)
+            else:
+                q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1 AND password = :2", u.lower(), p_sha1)
             if (q.count() == 1):
                 member = q[0]
                 self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
@@ -389,7 +392,7 @@ class SignupHandler(webapp.RequestHandler):
             errors = errors + 1
             member_username_error = 1
         else:
-            if (len(member_username) > 32):
+            if (len(member_username) > 16):
                 errors = errors + 1
                 member_username_error = 2
             else:

@@ -21,10 +21,22 @@ class AvatarHandler(webapp.RequestHandler):
             self.response.out.write(avatar.content)
         else:
             self.error(404)
+
+class NodeAvatarHandler(webapp.RequestHandler):
+    def get(self, node_num, size):
+        avatar = GetKindByName('Avatar', 'node_' + str(node_num) + '_' + str(size))
+        if avatar is not None:
+            self.response.headers['Content-Type'] = "image/png"
+            self.response.headers['Cache-Control'] = "max-age=172800, public, must-revalidate"
+            self.response.headers['Expires'] = "Sun, 25 Apr 2011 20:00:00 GMT"
+            self.response.out.write(avatar.content)
+        else:
+            self.error(404)
             
 def main():
     application = webapp.WSGIApplication([
-    ('/avatar/([0-9]+)/(large|normal|mini)', AvatarHandler)
+    ('/avatar/([0-9]+)/(large|normal|mini)', AvatarHandler),
+    ('/navatar/([0-9]+)/(large|normal|mini)', NodeAvatarHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)
