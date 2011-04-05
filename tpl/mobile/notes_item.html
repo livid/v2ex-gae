@@ -3,13 +3,13 @@
 	{% include 'common/top.html' %}
 	<div id="Main">
 		<div class="section"><a href="/" class="black">{{ site.title }}</a> › <a href="/notes" class="black">记事本</a></div>
-		<div class="cell"><input type="button" value="编辑" class="btn" onclick="location.href = '/notes/{{ note.num }}/edit';" /></div>
+		<div class="cell"><div class="fr"><input type="button" value="删除" class="btn" onclick="if (confirm('确认彻底删除标题为 {{ note.title|escape }} 的记事？')) { location.href = '/notes/{{ note.num }}/erase'; }" /></div><input type="button" value="编辑" class="btn" onclick="location.href = '/notes/{{ note.num }}/edit';" /></div>
 		<div class="cell" style="padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px;">
 		    <strong>{{ note.title|escape }}</strong>
 		    <div class="sep10"></div>
 		    {{ note.body|escape|urlize|linebreaksbr }}
 		</div>
-		<div class="cell"><input type="button" value="编辑" class="btn" onclick="location.href = '/notes/{{ note.num }}/edit';" /></div>
+		<div class="cell"><div class="fr"><input type="button" value="删除" class="btn" onclick="if (confirm('确认彻底删除标题为 {{ note.title|escape }} 的记事？')) { location.href = '/notes/{{ note.num }}/erase'; }" /></div><input type="button" value="编辑" class="btn" onclick="location.href = '/notes/{{ note.num }}/edit';" /></div>
 	</div>
 	{% include 'common/bottom.html' %}
 </body>
