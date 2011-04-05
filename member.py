@@ -168,7 +168,9 @@ class SettingsHandler(webapp.RequestHandler):
             if (member.bio == None):
                 member.bio = ''
             template_values['member_bio'] = member.bio
-            if (member.l10n == None):
+            template_values['member_show_home_top'] = member.show_home_top
+            template_values['member_show_quick_post'] = member.show_quick_post
+            if member.l10n is None:
                 member.l10n = 'en'
             template_values['member_l10n'] = member.l10n
             s = GetLanguageSelect(member.l10n)
@@ -398,6 +400,19 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_bio_error'] = member_bio_error
             template_values['member_bio_error_message'] = member_bio_error_messages[member_bio_error]
             template_values['errors'] = errors
+            # Verification: show_home_top and show_quick_post
+            try:
+                member_show_home_top = int(self.request.get('show_home_top'))
+            except:
+                member_show_home_top = 1
+            try:
+                member_show_quick_post = int(self.request.get('show_quick_post'))
+            except:
+                member_show_quick_post = 0
+            if member_show_home_top not in [0, 1]:
+                member_show_home_top = 1
+            if member_show_quick_post not in [0, 1]:
+                member_show_quick_post = 0
             # Verification: l10n
             member_l10n = self.request.get('l10n').strip()
             supported = GetSupportedLanguages()
@@ -427,6 +442,8 @@ class SettingsHandler(webapp.RequestHandler):
                 if member.twitter_oauth == 1:
                     member.twitter_sync = member_twitter_sync
                 member.bio = member_bio
+                member.show_home_top = member_show_home_top
+                member.show_quick_post = member_show_quick_post
                 member.l10n = member_l10n
                 member.put()
                 memcache.delete('Member_' + str(member.num))

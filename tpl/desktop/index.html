@@ -22,11 +22,13 @@
         </div>
         <div id="Content">
             <div class="box" id="topics_index">
-                {{ site.home_top }}
+                {% if member %}{% if member.show_home_top %}{{ site.home_top }}{% endif %}{% else %}{{ site.home_top }}{% endif %}
                 {% if member %}
                 {% ifequal member.newbie 0 %}
+                {% ifequal member.show_quick_post 1 %}
                 <div class="cell"><div class="fr fade">请在 120 字内描述你的问题，或者，也可以使用 <a href="/new/qna">详细提问模式</a></div><span class="bigger snow"><strong style="font-family: 'Arial Black'; letter-spacing: -1.5px;">V2EX</strong> =› way to explore</span>
                     <div class="sep3"></div><form method="post" action="/new/qna"><textarea class="mll short" name="title"></textarea><div class="sep3"></div><div align="right"><div class="fl"><a href="/t/10686" class="node">V2EX 提问指南</a><span class="snow"> • </span><a href="/go/guide" class="node">本站规则指南</a></div><input type="submit" class="super normal button" value="向世界提问" /></div></form></div>
+                {% endifequal %}
                 {% endifequal %}
                 {% endif %}
                 {{ home }}
@@ -57,7 +59,7 @@
             </div>
             <div class="sep20"></div>
             <div class="box">
-                <div class="cell"><span class="fade"><strong>{{ site.title }}</strong> / {{ l10n.nodes_portal }}</span></div>
+                <div class="cell"><div class="fr"><a href="/planes">{{ l10n.planes }}</a></div><span class="fade"><strong>{{ site.title }}</strong> / {{ l10n.nodes_portal }}</span></div>
                 {{ c }}
             </div>
         </div>

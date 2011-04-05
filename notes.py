@@ -199,6 +199,7 @@ class NotesItemEraseHandler(webapp.RequestHandler):
 class NotesItemEditHandler(webapp.RequestHandler):
     def get(self, num):
         site = GetSite()
+        browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
@@ -213,7 +214,11 @@ class NotesItemEditHandler(webapp.RequestHandler):
                 if note.member.num == member.num:
                     template_values['member'] = member
                     template_values['note'] = note
-                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_edit.html')
+                    template_values['note_content'] = note.content
+                    if browser['ios']:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_edit.html')
+                    else:
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_edit.html')
                     output = template.render(path, template_values)
                     self.response.out.write(output)
                 else:
@@ -225,6 +230,7 @@ class NotesItemEditHandler(webapp.RequestHandler):
 
     def post(self, num):
         site = GetSite()
+        browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
         template_values['system_version'] = SYSTEM_VERSION
@@ -257,7 +263,10 @@ class NotesItemEditHandler(webapp.RequestHandler):
                     self.redirect('/notes')
             else:
                 template_values['note_content'] = note_content
-                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
+                if browser['ios']:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notes_new.html')
+                else:
+                    path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notes_new.html')
                 output = template.render(path, template_values)
                 self.response.out.write(output)
         else:

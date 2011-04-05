@@ -57,6 +57,8 @@ class Member(db.Model):
     ua = db.StringProperty(required=False, default='')
     newbie = db.IntegerProperty(required=True, default=0)
     noob = db.IntegerProperty(required=True, default=0)
+    show_home_top = db.IntegerProperty(required=True, default=1)
+    show_quick_post = db.IntegerProperty(required=True, default=0)
     
     def hasFavorited(self, something):
         if type(something).__name__ == 'Node':

@@ -296,6 +296,7 @@ td.avatar_mini {
 	font-size: 14px;
 	font-weight: bold;
 	border: 1px solid #ccc;
+	width: 150px;
 }
 
 .sl:focus {
@@ -305,7 +306,6 @@ td.avatar_mini {
 	font-size: 14px;
 	font-weight: bold;
 	border: 1px solid #889fb9;
-	width: 150px;
 	-moz-box-shadow: 0px 0px 5px #889fb9;
 	-webkit-box-shadow: 0px 0px 5px #889fb9;
 	outline: none;

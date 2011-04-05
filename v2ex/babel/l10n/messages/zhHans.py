@@ -11,6 +11,7 @@ backstage = '后台'
 signin = '登入'
 signup = '注册'
 signout = '登出'
+planes = '位面'
 
 # Messages shared by forms
 
@@ -112,6 +113,10 @@ twitter_link_explained = "通过 OAuth 可以安全地绑定你的 Twitter 账�
 personal_records = "个人纪录"
 blocked = "屏蔽"
 updated_every_4_hours = "以上数据大约每 4 小时更新一次"
+show_home_top = "首页头部信息"
+show_quick_post = "快捷发布"
+do_show = "显示"
+do_not_show = "不显示"
 
 # Messages on /member/
 

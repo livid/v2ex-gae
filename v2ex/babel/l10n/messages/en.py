@@ -11,6 +11,7 @@ backstage = 'Backstage'
 signin = 'Sign In'
 signup = 'Sign Up'
 signout = 'Sign Out'
+planes = 'Planes'
 
 # Messages shared by forms
 
@@ -112,6 +113,10 @@ twitter_link_explained = "Link your Twitter account securely via OAuth, then you
 personal_records = "Personal Records"
 blocked = "Blocked"
 updated_every_4_hours = "Updated Every 4 Hours"
+show_home_top = "Show Site Header"
+show_quick_post = "Show Quick Post"
+do_show = "Show"
+do_not_show = "Do Not Show"
 
 # Messages on /member/
 

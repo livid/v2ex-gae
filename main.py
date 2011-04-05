@@ -56,8 +56,7 @@ class HomeHandler(webapp.RequestHandler):
     def get(self):
         host = self.request.headers['Host']
         if host == 'beta.v2ex.com':
-            self.redirect('http://www.v2ex.com/')
-            return
+            return self.redirect('http://www.v2ex.com/')
         site = GetSite()
         browser = detect(self.request)
         template_values = {}
@@ -219,6 +218,39 @@ class HomeHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'index.html')
         output = template.render(path, template_values)
         self.response.out.write(output)
+
+class PlanesHandler(BaseHandler):
+    def get(self):
+        c = 0
+        c = memcache.get('planes_c')
+        s = ''
+        s = memcache.get('planes')
+        if (s == None):
+            c = 0
+            s = ''
+            q = db.GqlQuery("SELECT * FROM Section ORDER BY nodes DESC")
+            if (q.count() > 0):
+                for section in q:
+                    q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY topics DESC", section.num)
+                    n = ''
+                    if (q2.count() > 0):
+                        nodes = []
+                        i = 0
+                        for node in q2:
+                            nodes.append(node)
+                            i = i + 1
+                        random.shuffle(nodes)
+                        for node in nodes:
+                            fs = random.randrange(12, 16)
+                            n = n + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
+                            c = c + 1
+                    s = s + '<div class="sep20"></div><div class="box"><div class="cell"><div class="fr"><strong class="snow">' + section.title_alternative + u'</strong><small class="snow"> • ' + str(section.nodes) + ' nodes</small></div>' + section.title + '</div><div class="inner">' + n + '</div></div>'
+            memcache.set('planes', s, 3600)
+            memcache.set('planes_c', c, 3600)
+        self.values['c'] = c
+        self.values['s'] = s
+        self.values['page_title'] = self.site.title.decode('utf-8') + u' › ' + self.l10n.planes.decode('utf-8')
+        self.finalize(template_name='planes')
         
 class RecentHandler(webapp.RequestHandler):
     def get(self):
@@ -507,7 +539,7 @@ class SignupHandler(webapp.RequestHandler):
             member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
             member.l10n = site.l10n
             member.newbie = 1
-            member.noob = 1
+            member.noob = 0
             if member.num == 1:
                 member.level = 0
             else:
@@ -1041,6 +1073,7 @@ class NotificationsHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([
     ('/', HomeHandler),
+    ('/planes/?', PlanesHandler),
     ('/recent', RecentHandler),
     ('/ua', UAHandler),
     ('/signin', SigninHandler),
