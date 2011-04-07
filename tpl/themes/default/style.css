@@ -383,19 +383,18 @@ td.avatar_mini {
 .item_node {
 	font-size: 13px;
 	line-height: 13px;
-	padding: 2px 7px 3px 7px;
+	padding: 4px 10px 4px 10px;
 	margin: 3px;
 	background-color: #f5f5f5;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border: 1px solid #f0f0f0;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 	display: inline-block;
 }
 
 .item_node:hover {
 	text-decoration: none;
-	border: 1px solid #e2e2e2;
-	background-color: #fff;
+	background-color: #99a;
+	color: #fff;
 }
 
 .topics td, .topics th {
