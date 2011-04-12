@@ -84,7 +84,11 @@
         			            头部信息
         			        </td>
         			        <td width="200" align="left">
-        			            <textarea class="ml" name="header">{{ node_header|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td colspan="2">
+        			            <textarea class="mle" name="header">{{ node_header|escape }}</textarea>
         			        </td>
         			    </tr>
         			    <tr>
@@ -92,7 +96,11 @@
         			            尾部信息
         			        </td>
         			        <td width="200" align="left">
-        			            <textarea class="ml" name="footer">{{ node_footer|escape }}</textarea>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td colspan="2">
+        			            <textarea class="mle" name="footer">{{ node_footer|escape }}</textarea>
         			        </td>
         			    </tr>
         			    <tr>
@@ -100,17 +108,24 @@
         			            侧栏信息
         			        </td>
         			        <td width="200" align="left">
-        			            <textarea class="ml" name="sidebar">{{ node_sidebar|escape }}</textarea>
-        			            <div class="sep5"></div>
         			            <span class="fade">头部，尾部及侧栏可使用 HTML</span>
         			        </td>
         			    </tr>
         			    <tr>
+        			        <td colspan="2">
+        			        <textarea class="mle tall" name="sidebar">{{ node_sidebar|escape }}</textarea>
+        			        </td>
+        			    </tr>
+                        <tr>
         			        <td width="80" align="right">
         			            侧栏广告代码
         			        </td>
         			        <td width="200" align="left">
-        			            <textarea class="ml" name="sidebar_ads">{{ node_sidebar_ads|escape }}</textarea>
+        			            <span class="fade">如果为空则使用系统的默认 Google AdSense 样式</span>
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td colspan="2"><textarea class="mle" name="sidebar_ads">{{ node_sidebar_ads|escape }}</textarea>
         			        </td>
         			    </tr>
         			    <tr>

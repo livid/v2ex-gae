@@ -55,6 +55,12 @@ indexes:
 - kind: Node
   properties:
   - name: section_num
+  - name: last_modified
+    direction: desc
+
+- kind: Node
+  properties:
+  - name: section_num
   - name: topics
     direction: desc
 

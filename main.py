@@ -244,7 +244,7 @@ class PlanesHandler(BaseHandler):
                             fs = random.randrange(12, 16)
                             n = n + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
                             c = c + 1
-                    s = s + '<div class="sep20"></div><div class="box"><div class="cell"><div class="fr"><strong class="snow">' + section.title_alternative + u'</strong><small class="snow"> • ' + str(section.nodes) + ' nodes</small></div>' + section.title + '</div><div class="inner">' + n + '</div></div>'
+                    s = s + '<div class="sep20"></div><div class="box"><div class="cell"><div class="fr"><strong class="snow">' + section.title_alternative + u'</strong><small class="snow"> • ' + str(section.nodes) + ' nodes</small></div>' + section.title + '</div><div class="inner" align="center">' + n + '</div></div>'
             memcache.set('planes', s, 3600)
             memcache.set('planes_c', c, 3600)
         self.values['c'] = c

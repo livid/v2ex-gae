@@ -823,6 +823,8 @@ class BackstageSectionHandler(webapp.RequestHandler):
                     section.nodes = q.count()
                     section.put()
                     template_values['section'] = section
+                    q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY last_modified DESC LIMIT 10", section.num)
+                    template_values['recent_modified'] = q2
                 else:
                     template_values['nodes'] = False
                 if browser['ios']:

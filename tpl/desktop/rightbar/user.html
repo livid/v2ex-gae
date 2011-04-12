@@ -7,7 +7,7 @@
                 <td width="10" valign="top"></td>
                 <td width="auto" align="left"><span class="bigger"><a href="/member/{{ member.username }}">{{ member.username }}</a></span>
                     <div class="sep5"></div>
-                    <span class="fade">{{ member.tagline }}</span>
+                    <span class="fade">{{ member.tagline|escape }}</span>
                 </td>
             </tr>
         </table>

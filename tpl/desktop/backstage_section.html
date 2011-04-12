@@ -101,6 +101,23 @@
                     </form>
                 </div>
             </div>
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><span class="fade">最近修改过的节点</span></div>
+                <div class="grid" style="font-size: 14px;">
+                    <table cellpadding="10" cellspacing="0" border="0" width="100%">
+                        {% for node in recent_modified %}
+                        <tr>
+                            <td align="center" valign="middle" width="48" style="border-bottom: 1px solid #e2e2e2; border-right: 1px solid #e2e2e2;"><strong style="font-size: 24px; font-family: DINPro">{{ node.topics }}</strong></td>
+                            <td align="left" valign="top" width="auto" style="border-bottom: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/backstage/node/{{ node.name }}">{{ node.title|escape }}</a>
+                            <div class="sep10"></div>
+                            <span class="fade" style="font-size: 12px">Modified at {{ node.last_modified|timesince }} ago</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>
     <div class="c"></div>
     </div>

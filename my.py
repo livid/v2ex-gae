@@ -76,7 +76,14 @@ class MyTopicsHandler(webapp.RequestHandler):
             if member.favorited_topics > 0:
                 template_values['has_topics'] = True
                 q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE member = :1 ORDER BY created DESC", member)
-                template_values['bookmarks'] = q
+                bookmarks = []
+                for bookmark in q:
+                    try:
+                        topic = bookmark.topic
+                        bookmarks.append(bookmark)
+                    except:
+                        bookmark.delete()
+                template_values['bookmarks'] = bookmarks
             else:
                 template_values['has_topics'] = False
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'my_topics.html')

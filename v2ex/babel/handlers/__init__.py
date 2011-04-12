@@ -145,3 +145,8 @@ class BaseHandler(webapp.RequestHandler):
         
     def post(self):
         pass
+    
+    def escape(self, text):
+        text = text.replace('<', '&lt;')
+        text = text.replace('>', '&gt;')
+        return text
