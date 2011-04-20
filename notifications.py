@@ -59,6 +59,9 @@ class NotificationsHandler(BaseHandler):
                 if n.type == 'mention_reply':
                     n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在回复 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
                     notifications.append(n)
+                if n.type == 'mention_topic':
+                    n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在创建主题 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
+                    notifications.append(n)
                 i = i + 1
             self.values['notifications'] = notifications
             self.set_title(u'提醒系统')
@@ -80,6 +83,7 @@ class NotificationsCheckHandler(BaseHandler):
                 member.notifications = count
                 member.put()
 
+# For mentions in reply content
 class NotificationsReplyHandler(BaseHandler):
     def post(self, reply_key):
         reply = db.get(db.Key(reply_key))
@@ -129,6 +133,56 @@ class NotificationsReplyHandler(BaseHandler):
         for k in keys:
             taskqueue.add(url='/notifications/check/' + k)
 
+# For mentions in topic title and content
+class NotificationsTopicHandler(BaseHandler):
+    def post(self, topic_key):
+        topic = db.get(db.Key(topic_key))
+        combined = topic.title + " " + topic.content
+        ms = re.findall('(@[a-zA-Z0-9\_]+\.?)\s?', combined)
+        keys = []
+        if (len(ms) > 0):
+            for m in ms:
+                m_id = re.findall('@([a-zA-Z0-9\_]+\.?)', m)
+                if (len(m_id) > 0):
+                    if (m_id[0].endswith('.') != True):
+                        member_username = m_id[0]
+                        member = GetMemberByUsername(member_username)
+                        if member:
+                            if member.key() != topic.member.key() and member.key() not in keys:
+                                q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'notification.max')
+                                if (q.count() == 1):
+                                    counter = q[0]
+                                    counter.value = counter.value + 1
+                                else:
+                                    counter = Counter()
+                                    counter.name = 'notification.max'
+                                    counter.value = 1
+                                q2 = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'notification.total')
+                                if (q2.count() == 1):
+                                    counter2 = q2[0]
+                                    counter2.value = counter2.value + 1
+                                else:
+                                    counter2 = Counter()
+                                    counter2.name = 'notification.total'
+                                    counter2.value = 1
+
+                                notification = Notification(parent=member)
+                                notification.num = counter.value
+                                notification.type = 'mention_topic'
+                                notification.payload = topic.content
+                                notification.label1 = topic.title
+                                notification.link1 = '/t/' + str(topic.num) + '#reply' + str(topic.replies)
+                                notification.member = topic.member
+                                notification.for_member_num = member.num
+
+                                keys.append(str(member.key()))
+
+                                counter.put()
+                                counter2.put()
+                                notification.put()
+        for k in keys:
+            taskqueue.add(url='/notifications/check/' + k)
+
 class NotificationsFeedHandler(BaseHandler):
     def head(self, private_token):
         pass
@@ -161,6 +215,7 @@ def main():
     ('/notifications/?', NotificationsHandler),
     ('/notifications/check/(.+)', NotificationsCheckHandler),
     ('/notifications/reply/(.+)', NotificationsReplyHandler),
+    ('/notifications/topic/(.+)', NotificationsTopicHandler),
     ('/n/([a-z0-9]+).xml', NotificationsFeedHandler)
     ],
                                          debug=True)

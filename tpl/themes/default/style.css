@@ -44,6 +44,14 @@ h3 {
 	margin: 0px;
 }
 
+h4 {
+	font-size: 20px;
+	line-height: 20px;
+	font-weight: 500;
+	padding: 0px 0px 0px 0px;
+	margin: 0px;
+}
+
 form {
 	display: inline;
 	padding: none;

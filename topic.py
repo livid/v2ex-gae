@@ -310,6 +310,7 @@ class NewTopicHandler(webapp.RequestHandler):
                         taskqueue.add(url='/index/topic/' + str(topic.num))
                     except:
                         pass
+                    
                     # Twitter Sync
                     if member.twitter_oauth == 1 and member.twitter_sync == 1:
                         access_token = OAuthToken.from_string(member.twitter_oauth_string)
@@ -327,6 +328,10 @@ class NewTopicHandler(webapp.RequestHandler):
                         if diff.seconds > (86400 * 60):
                             member.newbie = 0
                             member.put()
+                    
+                    # Notifications: mention_topic
+                    taskqueue.add(url='/notifications/topic/' + str(topic.key()))
+                    
                     self.redirect('/t/' + str(topic.num) + '#reply0')
                 else:    
                     if browser['ios']:

@@ -1,0 +1,90 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">
+        </div>
+        <div id="Rightbar">
+            <div class="box">
+                <div class="cell">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                            <td width="48" valign="top"><a href="/member/{{ member.username }}">{{ one|avatar:"normal"}}</a></td>
+                            <td width="10" valign="top"></td>
+                            <td width="auto" align="left"><span class="bigger"><a href="/member/{{ one.username }}">{{ one.username }}</a></span>
+                                <div class="sep5"></div>
+                                <span class="fade">{{ one.tagline|escape }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="inner">
+                    {% if one.bio %}
+                    {{ one.bio|escape|mentions|urlize|linebreaksbr }}<div class="sep10"></div>
+                    {% endif %}
+                    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                        {% if one.location %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/location.png" border="0" /></td>
+                            <td><a href="http://www.google.com/maps?q={{ one.location|escape }}" target="_blank">{{ one.location|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if one.website %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/mobileme.png" border="0" /></td>
+                            <td><a href="{{ one.website|escape }}" target="_blank">{{ one.website|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if one.twitter %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/twitter.png" border="0" /></td>
+                            <td>@<a href="https://twitter.com/{{ one.twitter|escape }}" target="_blank">{{ one.twitter|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if one.psn %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/psn.png" border="0" /></td>
+                            <td><a href="http://us.playstation.com/publictrophy/index.htm?onlinename={{ one.psn|escape }}" target="_blank">{{ one.psn|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="Content">
+            <div class="box">
+            <div class="cell">
+                <h1 style="font-size: 32px; padding: 0px; margin: 0px 40px 0px 0px; display: inline-block;" align="absmiddle"><a href="/blog/{{ one.username }}">{{ one.username }}'s Blog</a></h1><h2 style="font-size: 20px; padding: 0px; margin: 0px; display: inline-block; color: #999; font-weight: 400;" align="absmiddle">Random Thoughts</h1>
+            </div>
+            <div class="inner">
+            {% if topic.content %}
+                <h4>{{ topic.title|escape }}</h4>
+                <div class="sep20"></div>
+                <div class="content">
+                {{ topic.content_rendered }}
+                </div>
+                {% else %}
+                <div class="content">
+                {{ topic.title|escape|mentions|urlize }}
+                </div>
+            {% endif %}
+            <div class="sep10"></div>
+            <small class="fade">Posted at {{ topic.created|timezone:8 }} • {{ topic.replies }} comments</small>
+            {% if replies %}
+            <div class="sep20"></div>
+            <table width="100%" cellpadding="0" cellspacing="2" border="0">
+            {% for reply in replies %}
+            <tr><td width="80" align="right" valign="top" style="padding: 5px 10px 5px 10px;"><a href="/member/{{ reply.member.username }}">{{ reply.member.username }}</a></td><td valign="top" style="background-color: #f5f5f5; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; padding: 5px 10px 5px 10px;"><div class="fr snow"><strong><small>{{ forloop.counter }} • {{ reply.created|timesince }} ago</small></strong></div>{{ reply.content|escape|mentions|urlize }}</td></tr>
+            {% endfor %}
+            </table>
+            {% endif %}
+            </div>
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

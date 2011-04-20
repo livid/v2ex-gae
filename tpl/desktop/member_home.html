@@ -32,6 +32,7 @@
                             <div class="sep10"></div>
                             <div align="center"><small><strong><a href="/backstage/deactivate/user/{{ one.key }}" class="dark">DEACTIVATE</a></strong></small></div>
                             {% endif %}
+                            {% if member %}{% ifequal member.level 0 %}<div class="sep10"></div><div align="center"><a href="/backstage/member/{{ one.username }}"><img src="/static/img/gear.png" border="0" alt="管理" /></a></div>{% endifequal %}{% endif %}
                         </td>
                         <td width="10" valign="top"></td>
                         <td width="auto" align="left" valign="top">{% if show_follow %}<div class="fr"><div class="sep3"></div>{% if favorited %}<a href="/unfollow/{{ one.num }}" class="super inverse button" onClick="recordOutboundLink(this, 'Social Graph', 'unfollow');">取消特别关注</a>{% else %}<a href="/follow/{{ one.num }}" class="super special button" onClick="recordOutboundLink(this, 'Social Graph', 'follow');">加入特别关注</a>{% endif %}</div>{% endif %}<h2 style="padding: 0px; margin: 0px; font-size: 22px; line-height: 22px;">{{ one.username }}</h2>
@@ -76,6 +77,11 @@
                     </tr>
                 </table>
                 </div>
+                {% if blog %}
+                <div class="cell">
+                <img src="/static/img/chat.png" align="absmiddle" />&nbsp; <span class="fade">Latest from {{ one.username }}'s Blog</span> &nbsp;<span class="chevron">›</span>&nbsp; <a href="/blog/{{ one.username }}">{{ blog.title|escape }}</a>
+                </div>
+                {% endif %}
                 {% if one.bio %}
                 <div class="inner">
                     {{ one.bio|escape|imgly|mentions|urlize|linebreaksbr }}

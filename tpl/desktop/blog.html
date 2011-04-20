@@ -1,0 +1,97 @@
+{% include 'common/head.html' %}
+<body>
+    {% include 'common/top.html' %}
+    <div id="Wrapper">
+    <div id="Main">
+        <div id="Sidebar">
+        </div>
+        <div id="Rightbar">
+            <div class="box">
+                <div class="cell">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                            <td width="48" valign="top"><a href="/member/{{ member.username }}">{{ one|avatar:"normal"}}</a></td>
+                            <td width="10" valign="top"></td>
+                            <td width="auto" align="left"><span class="bigger"><a href="/member/{{ one.username }}">{{ one.username }}</a></span>
+                                <div class="sep5"></div>
+                                <span class="fade">{{ one.tagline|escape }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="inner">
+                    {% if one.bio %}
+                    {{ one.bio|escape|mentions|urlize|linebreaksbr }}<div class="sep10"></div>
+                    {% endif %}
+                    <table cellpadding="5" cellspacing="0" border="0" width="100%">
+                        {% if one.location %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/location.png" border="0" /></td>
+                            <td><a href="http://www.google.com/maps?q={{ one.location|escape }}" target="_blank">{{ one.location|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if one.website %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/mobileme.png" border="0" /></td>
+                            <td><a href="{{ one.website|escape }}" target="_blank">{{ one.website|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if one.twitter %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/twitter.png" border="0" /></td>
+                            <td>@<a href="https://twitter.com/{{ one.twitter|escape }}" target="_blank">{{ one.twitter|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if one.psn %}
+                        <tr>
+                            <td width="16" valign="middle"><img src="http://v2ex.com/static/img/psn.png" border="0" /></td>
+                            <td><a href="http://us.playstation.com/publictrophy/index.htm?onlinename={{ one.psn|escape }}" target="_blank">{{ one.psn|escape }}</a></td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><strong class="fade">{{ one.username }} 关注的</strong></div>
+                <div class="inner">
+                    {% for friend in friends %}
+                    <div style="display: inline-block; margin: 5px;"><a href="/member/{{ friend.one.username }}/blog">{{ friend.one|avatar:"normal" }}</a></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div id="Content">
+            <div class="box">
+            <div class="cell">
+                <h1 style="font-size: 32px; padding: 0px; margin: 0px 40px 0px 0px; display: inline-block;" align="absmiddle">{{ one.username }}'s Blog</h1><h2 style="font-size: 20px; padding: 0px; margin: 0px; display: inline-block; color: #999; font-weight: 400;" align="absmiddle">Random Thoughts</h1>
+            </div>
+            {% for topic in topics %}
+            {% if forloop.last %}
+            <div class="inner">
+            {% else %}
+            <div class="cell">
+            {% endif %}
+                {% if topic.content %}
+                <h4>{{ topic.title|escape }}</h4>
+                <div class="sep20"></div>
+                <div class="content">
+                {{ topic.content_rendered }}
+                </div>
+                {% else %}
+                <div class="content">
+                {{ topic.title|escape|mentions|urlize }}
+                </div>
+                {% endif %}
+                <div class="sep10"></div>
+                <small class="fade">Posted at <a href="/entry/{{ topic.num }}" class="dark">{{ topic.created|timesince }}</a> ago • {{ topic.replies }} comments</small>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+    <div class="c"></div>
+    </div>
+    </div>
+    {% include 'common/bottom.html' %}
+</body>
+</html>

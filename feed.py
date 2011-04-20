@@ -37,7 +37,7 @@ class FeedHomeHandler(BaseHandler):
             self.values['site_updated'] = datetime.datetime.now()
             q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")
             topics = []
-            IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic']
+            IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood']
             for topic in q:
                 if topic.node.name not in IGNORED:
                     topics.append(topic)
@@ -70,10 +70,8 @@ class FeedNodeHandler(webapp.RequestHandler):
             template_values['site_updated'] = datetime.datetime.now()
             q = db.GqlQuery("SELECT * FROM Topic WHERE node = :1 ORDER BY created DESC LIMIT 10", node)
             topics = []
-            IGNORED = ['pointless', 'flamewar', 'in', 'newbie']
             for topic in q:
-                if topic.node.name not in IGNORED:
-                    topics.append(topic)
+                topics.append(topic)
             template_values['topics'] = topics
             template_values['feed_title'] = site.title + u' › ' + node.title
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'feed', 'index.xml')

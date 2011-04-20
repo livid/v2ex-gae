@@ -30,6 +30,8 @@ from v2ex.babel.ext.sessions import Session
 
 from v2ex.babel import SYSTEM_VERSION
 
+from v2ex.babel.handlers import BaseHandler
+
 import config
 
 template.register_template_library('v2ex.templatetags.filters')
@@ -59,6 +61,9 @@ class MemberHandler(webapp.RequestHandler):
             template_values['page_title'] = site.title + u' › ' + one.username
             template_values['canonical'] = 'http://' + site.domain + '/member/' + one.username
         if one is not False:
+            blog = db.GqlQuery("SELECT * FROM Topic WHERE node_name = :1 AND member_num = :2 ORDER BY created DESC LIMIT 1", 'blog', one.num)
+            if blog.count() > 0:
+                template_values['blog'] = blog[0]
             q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
             template_values['topics'] = q2
             replies = memcache.get('member::' + str(one.num) + '::participated')
@@ -132,7 +137,6 @@ class MemberApiHandler(webapp.RequestHandler):
             self.response.out.write(output)
         else:
             self.error(404)
-        
 
 class SettingsHandler(webapp.RequestHandler):
     def get(self):
@@ -188,19 +192,6 @@ class SettingsHandler(webapp.RequestHandler):
             except:
                 blocked = []
             template_values['member_stats_blocks'] = len(blocked)
-            member_topics = memcache.get('Member_' + str(member.num) + '_topics_count')
-            if member_topics is None:
-                q = db.GqlQuery("SELECT __key__ FROM Topic WHERE member = :1", member)
-                member_topics = q.count()
-                memcache.set('Member_' + str(member.num) + '_topics_count', member_topics, 3600 * 4)
-            template_values['member_stats_topics'] = member_topics
-            member_replies = memcache.get('Member_' + str(member.num) + '_replies_count')
-            if member_replies is None:
-                replies = Reply.all()
-                replies.filter("member = ", member)
-                member_replies = replies.count()
-                memcache.set('Member_' + str(member.num) + '_replies_count', member_replies, 3600 * 4)
-            template_values['member_stats_replies'] = member_replies
             if browser['ios']:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'member_settings.html')
             else:

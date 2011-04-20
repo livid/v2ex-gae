@@ -158,6 +158,13 @@ indexes:
 
 - kind: Topic
   properties:
+  - name: member_num
+  - name: node_name
+  - name: created
+    direction: desc
+
+- kind: Topic
+  properties:
   - name: node
   - name: created
 

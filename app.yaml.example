@@ -23,6 +23,12 @@ handlers:
 - url: /css/.*
   script: css.py
 
+- url: /blog/([a-zA-Z0-9\_\-]+)
+  script: blog.py
+  
+- url: /entry/([0-9]+)
+  script: blog.py
+
 - url: /settings
   script: member.py
 
