@@ -208,7 +208,7 @@ class HomeHandler(webapp.RequestHandler):
                         css_class = 'inner'
                     else:
                         css_class = 'cell'
-                    c = c + '<div class="' + css_class + '"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="80"><span class="fade">' + category + '</span></td><td style="line-height: 200%; padding-left: 15px;">'
+                    c = c + '<div class="' + css_class + '"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="60"><span class="fade">' + category + '</span></td><td style="line-height: 200%; padding-left: 15px;">'
                     qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
                     for node in qx:
                         c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
