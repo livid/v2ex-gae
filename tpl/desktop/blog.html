@@ -56,7 +56,7 @@
                 <div class="cell"><strong class="fade">{{ one.username }} 关注的</strong></div>
                 <div class="inner">
                     {% for friend in friends %}
-                    <div style="display: inline-block; margin: 5px;"><a href="/member/{{ friend.one.username }}/blog">{{ friend.one|avatar:"normal" }}</a></div>
+                    <div style="display: inline-block; margin: 5px;"><a href="/blog/{{ friend.one.username }}">{{ friend.one|avatar:"normal" }}</a></div>
                     {% endfor %}
                 </div>
             </div>
