@@ -7,7 +7,19 @@
         "url" : "http://{{ site.domain }}/t/{{ topic.num }}",
         "content" : "{{ topic.content|escapejs }}",
         "content_rendered" : "{{ topic.content_rendered|escapejs}}",
-        "replies" : {{ topic.replies }}
+        "replies" : {{ topic.replies }},
+        "member" : {
+            "id" : {{ topic.member.num }},
+            "username" : "{{ topic.member.username }}"
+        },
+        "node" : {
+            "id" : {{ topic.node.num }},
+            "name" : "{{ topic.node.name }}",
+            "title" : "{{ topic.node.title|escape }}",
+            "title_alternative" : "{{ topic.node.title_alternative|escape }}",
+            "url" : "http://{{ site.domain }}/go/{{ topic.node.name }}",
+            "topics" : {{ topic.node.topics }}
+        }
     }
     {% endfor %}
 ]
