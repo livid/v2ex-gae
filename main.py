@@ -278,9 +278,9 @@ class RecentHandler(webapp.RequestHandler):
         else:
             q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16,50")
             topics = []
-            ignored = ['flamewar', 'pointless']
+            IGNORED_RECENT = ['flamewar', 'pointless', 'in', 'autistic', 'chamber']
             for topic in q2:
-                if topic.node_name not in ignored:
+                if topic.node_name not in IGNORED_RECENT:
                     topics.append(topic)
             memcache.set('q_recent_50', topics, 80)
             template_values['latest'] = topics
