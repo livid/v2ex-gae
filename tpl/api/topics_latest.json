@@ -19,7 +19,10 @@
             "title_alternative" : "{{ topic.node.title_alternative|escape }}",
             "url" : "http://{{ site.domain }}/go/{{ topic.node.name }}",
             "topics" : {{ topic.node.topics }}
-        }
+        },
+        "created" : "{{ topic.created }}",
+        "last_modified" : "{{ topic.last_modified }}",
+        "last_touched" : "{{ topic.last_touched }}"
     }
     {% endfor %}
 ]
