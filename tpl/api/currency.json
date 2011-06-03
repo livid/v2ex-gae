@@ -1,0 +1,17 @@
+{
+"USD" : 1,
+"EUR" : {{ eur }},
+"CNY" : {{ cny }},
+"JPY" : {{ jpy }},
+"CHF" : {{ chf }},
+"AUD" : {{ aud }},
+"TWD" : {{ twd }},
+"CAD" : {{ cad }},
+"GBP" : {{ gbp }},
+"HKD" : {{ hkd }},
+"MYR" : {{ myr }},
+"NZD" : {{ nzd }},
+"PHP" : {{ php }},
+"SGD" : {{ sgd }},
+"THB" : {{ thb }}
+}

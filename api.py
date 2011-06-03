@@ -6,12 +6,14 @@ import re
 import time
 import datetime
 import hashlib
+import logging
 import string
 import random
 import base64
 
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
 from google.appengine.ext.webapp import template
@@ -30,6 +32,8 @@ from v2ex.babel.security import *
 from v2ex.babel.ua import *
 from v2ex.babel.da import *
 from v2ex.babel.ext.cookies import Cookies
+
+from django.utils import simplejson as json
 
 template.register_template_library('v2ex.templatetags.filters')
 
@@ -269,6 +273,28 @@ class MembersShowHandler(webapp.RequestHandler):
             self.response.headers['Content-type'] = 'application/json'
             self.response.out.write(output)
                 
+class CurrencyHandler(webapp.RequestHandler):
+    def get(self):
+        codes = ['EUR', 'JPY', 'CNY', 'CHF', 'AUD', 'TWD', 'CAD', 'GBP', 'HKD', 'MYR', 'NZD', 'PHP', 'SGD', 'THB']
+        template_values = {}
+        o = memcache.get('currency.json')
+        if o is not None:
+            pass
+        else:
+            for code in codes:
+                url = 'http://www.google.com/ig/calculator?hl=en&q=1USD=?' + code
+                response = urlfetch.fetch(url)
+                m = re.findall('rhs: "([0-9\.]+)', response.content)
+                if len(m) > 0:
+                    value = m[0].strip().replace(' ', '')
+                else:
+                    value = 0
+                template_values[code.lower()] = value
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'currency.json')
+            o = template.render(path, template_values)
+            memcache.set('currency.json', o, 86400)
+        self.response.headers['Content-type'] = 'application/json'
+        self.response.out.write(o)
 
 def main():
     application = webapp.WSGIApplication([
@@ -279,7 +305,8 @@ def main():
     ('/api/topics/latest.json', TopicsLatestHandler),
     ('/api/topics/show.json', TopicsShowHandler),
     ('/api/topics/create.json', TopicsCreateHandler),
-    ('/api/members/show.json', MembersShowHandler)
+    ('/api/members/show.json', MembersShowHandler),
+    ('/api/currency.json', CurrencyHandler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

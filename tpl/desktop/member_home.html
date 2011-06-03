@@ -70,9 +70,15 @@
                                     {% endif %}</td>
                                     <td width="50%"></td>
                                 </tr>
-                                
+                                {% if one.btc %}
+                                <tr>
+                                    <td width="50%">
+                                    <span style="line-height: 16px;"><img src="/static/img/btc.png" align="absmiddle" /> &nbsp;<small><a href="http://blockexplorer.com/address/{{ one.btc }}" target="_blank">{{ one.btc }}</a></small></span>
+                                    </td>
+                                    <td width="50%"></td>
+                                </tr>
+                                {% endif %}
                             </table>
-                            
                         </td>
                     </tr>
                 </table>

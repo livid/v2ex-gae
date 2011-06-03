@@ -49,6 +49,9 @@
         				{% if member_psn_error %}
         				<li>{{ member_psn_error_message }}</li>
         				{% endif %}
+        				{% if member_btc_error %}
+        				<li>{{ member_btc_error_message }}</li>
+        				{% endif %}
         				{% if member_location_error %}
         				<li>{{ member_location_error_message }}</li>
         				{% endif %}
@@ -121,6 +124,14 @@
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="psn" value="{{ member_psn|escape }}" />
+        			        </td>
+        			    </tr>
+                        <tr>
+        			        <td align="right">
+        			            BTC Address
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="btc" value="{{ member_btc|escape }}" />
         			        </td>
         			    </tr>
                         <tr>

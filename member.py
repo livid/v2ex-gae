@@ -165,6 +165,7 @@ class SettingsHandler(webapp.RequestHandler):
             if member.psn is None:
                 member.psn = ''
             template_values['member_psn'] = member.psn
+            template_values['member_btc'] = member.btc
             template_values['member_location'] = member.location
             if (member.tagline == None):
                 member.tagline = ''
@@ -345,6 +346,29 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_psn'] = member_psn
             template_values['member_psn_error'] = member_psn_error
             template_values['member_psn_error_message'] = member_psn_error_messages[member_psn_error]
+            # Verification: btc
+            member_btc_error = 0
+            member_btc_error_messages = ['',
+                u'BTC 收款地址长度不能超过 40 个字符',
+                u'BTC 收款地址不符合规则'
+            ]
+            member_btc = self.request.get('btc').strip()
+            if (len(member_btc) == 0):
+                member_btc = ''
+            else:
+                if (len(member_btc) > 40):
+                    errors = errors + 1
+                    member_btc_error = 1
+                else:
+                    p = re.compile('^[a-zA-Z0-9]+$')
+                    if (p.search(member_btc)):
+                        errors = errors
+                    else:
+                        errors = errors + 1
+                        member_btc_error = 2
+            template_values['member_btc'] = member_btc
+            template_values['member_btc_error'] = member_btc_error
+            template_values['member_btc_error_message'] = member_btc_error_messages[member_btc_error]
             # Verification: location
             member_location_error = 0
             member_location_error_messages = ['',
@@ -428,6 +452,7 @@ class SettingsHandler(webapp.RequestHandler):
                 member.website = member_website
                 member.twitter = member_twitter
                 member.psn = member_psn
+                member.btc = member_btc
                 member.location = member_location
                 member.tagline = member_tagline
                 if member.twitter_oauth == 1:

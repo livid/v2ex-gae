@@ -170,6 +170,9 @@ handlers:
   script: queue.py
   login: admin
 
+- url: /money/(.*)
+  script: money.py
+
 - url: /sso/(.*)
   script: sso.py
 
