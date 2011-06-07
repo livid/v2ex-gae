@@ -1,0 +1,11 @@
+<div class="box">
+    <div class="cell"><span class="fade">Siblings</span><div class="sep3"></div>
+    </div>
+    <div class="grid" style="font-size: 12px">
+        <table cellpadding="10" cellspacing="0" border="0" width="100%">
+        {% for sibling in siblings %}
+        <tr><td width="20" align="right" style="border-bottom: 1px solid #e2e2e2;"><strong class="fade">{{ sibling.topics }}</strong></td><td align="left" width="auto" style="border-bottom: 1px solid #e2e2e2; border-left: 1px solid #e2e2e2; background-color: #f9f9f9;"><a href="/backstage/node/{{ sibling.name }}">{{ sibling.title|escape }}</a></td></tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
