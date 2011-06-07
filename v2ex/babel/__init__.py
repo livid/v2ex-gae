@@ -135,6 +135,7 @@ class Node(db.Model):
     sidebar_ads = db.TextProperty(required=False)
     category = db.StringProperty(required=False, indexed=True)
     topics = db.IntegerProperty(default=0)
+    parent_node_name = db.StringProperty(required=False, indexed=True)
     avatar_large_url = db.StringProperty(required=False, indexed=False)
     avatar_normal_url = db.StringProperty(required=False, indexed=False)
     avatar_mini_url = db.StringProperty(required=False, indexed=False)

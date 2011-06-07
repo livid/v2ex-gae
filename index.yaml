@@ -49,6 +49,11 @@ indexes:
 
 - kind: Node
   properties:
+  - name: parent_node_name
+  - name: name
+
+- kind: Node
+  properties:
   - name: section_num
   - name: created
 

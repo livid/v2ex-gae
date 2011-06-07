@@ -7,6 +7,7 @@ import re
 import time
 import datetime
 import hashlib
+import logging
 import string
 import StringIO
 import random
@@ -1117,6 +1118,11 @@ class BackstageNodeHandler(webapp.RequestHandler):
                 q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
                 if (q.count() == 1):
                     node = q[0]
+                    if node.parent_node_name is None:
+                        siblings = []
+                    else:
+                        siblings = db.GqlQuery("SELECT * FROM Node WHERE parent_node_name = :1 AND name != :2", node.parent_node_name, node.name)
+                    template_values['siblings'] = siblings
                     template_values['node'] = node
                     template_values['node_name'] = node.name
                     template_values['node_title'] = node.title
@@ -1125,6 +1131,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                         template_values['node_category'] = ''
                     else:
                         template_values['node_category'] = q[0].category
+                    if q[0].parent_node_name is None:
+                        template_values['node_parent_node_name'] = ''
+                    else:
+                        template_values['node_parent_node_name'] = q[0].parent_node_name
                     if q[0].header is None:
                         template_values['node_header'] = ''
                     else:
@@ -1183,6 +1193,10 @@ class BackstageNodeHandler(webapp.RequestHandler):
                         template_values['node_category'] = ''
                     else:
                         template_values['node_category'] = q[0].category
+                    if q[0].parent_node_name is None:
+                        template_values['node_parent_node_name'] = ''
+                    else:
+                        template_values['node_parent_node_name'] = q[0].parent_node_name
                     if q[0].header is None:
                         template_values['node_header'] = ''
                     else:
@@ -1276,6 +1290,9 @@ class BackstageNodeHandler(webapp.RequestHandler):
                 # Verification: node_category
                 node_category = self.request.get('category').strip()
                 template_values['node_category'] = node_category
+                # Verification: node_parent_node_name
+                node_parent_node_name = self.request.get('parent_node_name').strip()
+                template_values['node_parent_node_name'] = node_parent_node_name
                 # Verification: node_header
                 node_header = self.request.get('header').strip()
                 template_values['node_header'] = node_header
@@ -1294,6 +1311,7 @@ class BackstageNodeHandler(webapp.RequestHandler):
                     node.title = node_title
                     node.title_alternative = node_title_alternative
                     node.category = node_category
+                    node.parent_node_name = node_parent_node_name
                     node.header = node_header
                     node.footer = node_footer
                     node.sidebar = node_sidebar
