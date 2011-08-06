@@ -135,6 +135,10 @@ class NewTopicHandler(webapp.RequestHandler):
                 has_v2ex = True
             if ('https://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True
+            if ('http://fast.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://beta.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
             if has_v2ex is False:
                 can_continue = False
         else:
@@ -567,6 +571,10 @@ class TopicHandler(webapp.RequestHandler):
             if ('https://www.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('https://v2ex.appspot.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://fast.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://beta.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if has_v2ex is False:
                 can_continue = False
