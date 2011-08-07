@@ -725,6 +725,84 @@ class PasswordResetHandler(BaseHandler):
             output = template.render(path, template_values)
             self.response.out.write(output)
 
+class NodeGraphHandler(BaseHandler):
+    def get(self, node_name):
+        site = GetSite()
+        browser = detect(self.request)
+        self.session = Session()
+        template_values = {}
+        template_values['site'] = site
+        template_values['rnd'] = random.randrange(1, 100)
+        template_values['system_version'] = SYSTEM_VERSION
+        member = CheckAuth(self)
+        if member:
+            template_values['member'] = member
+        can_create = False
+        can_manage = False
+        if site.topic_create_level > 999:
+            if member:
+                can_create = True
+        else:
+            if member:
+                if member.level <= site.topic_create_level:
+                    can_create = True
+        if member:
+            if member.level == 0:
+                can_manage = True
+        template_values['can_create'] = can_create
+        template_values['can_manage'] = can_manage
+        l10n = GetMessages(self, member, site)
+        template_values['l10n'] = l10n    
+        node = GetKindByName('Node', node_name)
+        template_values['node'] = node
+        if node:
+            template_values['feed_link'] = '/feed/' + node.name + '.xml'
+            template_values['feed_title'] = site.title + u' › ' + node.title
+            template_values['canonical'] = 'http://' + site.domain + '/go/' + node.name
+            if node.parent_node_name is None:
+                siblings = []
+            else:
+                siblings = db.GqlQuery("SELECT * FROM Node WHERE parent_node_name = :1 AND name != :2", node.parent_node_name, node.name)
+            template_values['siblings'] = siblings
+            if member:
+                favorited = member.hasFavorited(node)
+                template_values['favorited'] = favorited
+                recent_nodes = memcache.get('member::' + str(member.num) + '::recent_nodes')
+                recent_nodes_ids = memcache.get('member::' + str(member.num) + '::recent_nodes_ids')
+                if recent_nodes and recent_nodes_ids:
+                    if (node.num in recent_nodes_ids) is not True:
+                        recent_nodes.insert(0, node)
+                        recent_nodes_ids.insert(0, node.num)
+                        memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
+                        memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
+                else:
+                    recent_nodes = []
+                    recent_nodes.append(node)
+                    recent_nodes_ids = []
+                    recent_nodes_ids.append(node.num)
+                    memcache.set('member::' + str(member.num) + '::recent_nodes', recent_nodes, 7200)
+                    memcache.set('member::' + str(member.num) + '::recent_nodes_ids', recent_nodes_ids, 7200)
+                template_values['recent_nodes'] = recent_nodes
+            template_values['page_title'] = site.title + u' › ' + node.title
+        else:
+            template_values['page_title'] = site.title + u' › 节点未找到'
+        section = False
+        if node:
+            section = GetKindByNum('Section', node.section_num)
+        template_values['section'] = section
+        if browser['ios']:
+            if (node):
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'node_graph.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'node_not_found.html')
+        else:
+            if (node):
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'node_graph.html')
+            else:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'node_not_found.html')
+        output = template.render(path, template_values)
+        self.response.out.write(output)
+
 class NodeHandler(webapp.RequestHandler):
     def get(self, node_name):
         site = GetSite()
@@ -1081,7 +1159,8 @@ def main():
     ('/signout', SignoutHandler),
     ('/forgot', ForgotHandler),
     ('/reset/([0-9]+)', PasswordResetHandler),
-    ('/go/(.*)', NodeHandler),
+    ('/go/([a-zA-Z0-9]+)/graph', NodeGraphHandler),
+    ('/go/([a-zA-Z0-9]+)', NodeHandler),
     ('/n/([a-zA-Z0-9]+).json', NodeApiHandler),
     ('/q/(.*)', SearchHandler),
     ('/_dispatcher', DispatcherHandler),

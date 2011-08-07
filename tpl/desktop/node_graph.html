@@ -35,44 +35,33 @@
                     {% endif %}
                     {% if can_create %}
                     <div class="sep10"></div>
-                    <div class="sep10"></div>
+					<div class="sep10"></div>
                     <div align="left"><a href="/new/{{ node.name }}" class="super normal button">{{ l10n.create_new_topic }}</a></div>
                     <div class="sep5"></div>
                     <div class="sep10"></div>
                     <div>
-                        <div style="padding: 3px 10px 5px 10px; display: inline-block; border-bottom: 5px solid #3c3; margin: 0px 2px 0px 2px;">所有讨论</div>
-                        <div style="padding: 3px 10px 5px 10px; display: inline-block; border-bottom: 5px solid transparent; margin: 0px 2px 0px 2px;"><a href="/go/{{ node.name }}/graph">相关节点</a></div>
+                        <div style="padding: 3px 10px 5px 10px; display: inline-block; border-bottom: 5px solid transparent; margin: 0px 2px 0px 2px;"><a href="/go/{{ node.name }}">所有讨论</a></div>
+                        <div style="padding: 3px 10px 5px 10px; display: inline-block; border-bottom: 5px solid #3c3; margin: 0px 2px 0px 2px;">相关节点</div>
                     </div>
                     {% endif %}
                     </td>
                 </tr>
                 </table>
                 </div>
-                {% include 'common/topics_node.html' %}
-                <div class="inner">
-                    {% if pagination %}
-                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                            <tr>
-                                <td width="100" align="left">
-                                    {% if has_previous %}
-                                    <div class="sep5"></div>
-                                    <a href="/go/{{ node.name }}?p={{ previous }}" class="super normal button">{{ l10n.previous }}</a>
-                                    <div class="sep5"></div>
-                                    {% endif %}
-                                </td>
-                                <td width="auto" align="center" valign="middle">
-                                    <strong style="font-size: 13px"><span class="fade">{{ page }}/{{ pages }}</span><span class="snow"> - {{ node.topics }} Topics</span></strong>
-                                </td>
-                                <td width="100" align="right">
-                                    {% if has_more %}
-                                    <div class="sep5"></div>
-                                    <a href="/go/{{ node.name }}?p={{ more }}" class="super normal button">{{ l10n.next }}</a>
-                                    <div class="sep5"></div>
-                                    {% endif %}
-                                </td>
-                        </table>
-                    {% else %}
-                    {% endif %}
+                {% for sibling in siblings %}
+				<div class="cell">
+					<table cellpadding="0" cellspacing="0" border="0" width="100%">
+						<tr>
+							<td width="73" align="center" valign="middle">{{ sibling|avatar:"large" }}</td>
+							<td width="10"></td>
+							<td width="auto" valign="middle">
+							<strong class="bigger"><a href="/go/{{ sibling.name }}">{{ sibling.title|escape }}</a></strong><div class="sep10"></div>{{ sibling.topics }} topics
+							</td>
+						</tr>
+					</table>
+				</div>
+				{% endfor %}
+				<div class="inner">
                     {% if node.footer %}
                         {% if pagination %}
                         <div class="sep10"></div>
@@ -81,20 +70,6 @@
                     {% endif %}
                 </div>
             </div>
-            {% if can_create %}
-            <div class="sep20"></div>
-            <div class="box">
-                <div class="inner">
-                    <form action="/new/{{ node.name }}" method="post">
-                    <input type="text" name="title" value="" class="sll" />
-                    <div class="sep10"></div>
-                    <textarea name="content" class="mll"></textarea>
-                    <div class="sep10"></div>
-                    <input type="submit" value="{{ l10n.create }}" class="super normal button" />
-                    </form>
-                </div>
-            </div>
-            {% endif %}
         </div>
     <div class="c"></div>
     </div>
