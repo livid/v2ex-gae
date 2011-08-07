@@ -74,13 +74,27 @@ ul li {
 }
 
 a:link, a:visited, a:active {
-	color: #636a86;
+	color: #778087;
 	text-decoration: none;
 }
 
 a:hover {
-	color: #636a86;
+	color: #4d5256;
 	text-decoration: underline;
+}
+
+a.top:link, a.top:visited, a.top:active {
+	color: #778087;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px #fff;
+	font-weight: 500;
+}
+
+a.top:hover {
+	color: #4d5256;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px #fff;
+	font-weight: 500;
 }
 
 a.white:link, a.white:visited, a.white:active {
@@ -119,7 +133,7 @@ a.dark:hover {
 #Top {
 	height: 40px;
 	background-color: #222;
-	background-image: url("/static/img/bg_top.png"); 
+	background-image: url("/static/img/bg_top_light.png");
 }
 
 #TopMain {
@@ -166,13 +180,9 @@ a.dark:hover {
 	margin-left: 10px;
 }
 
-#Navigation ul li a {
-	color: #fff;
-}
-
 #Wrapper {
 	background-color: #fff;
-	background-image: url("http://static.v2ex.com/tiles/bohemian.jpg");
+	background-image: url("/static/img/bg_light.png");
 }
 
 #Main {
@@ -213,15 +223,15 @@ a.dark:hover {
 /* CLASSes */
 
 .box {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	-o-border-radius: 5px;
-	border-radius: 5px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
 
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	-o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+	-o-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);
 
 	background-color: #fff;
 	border: 2px solid #fff;
@@ -431,11 +441,50 @@ td.avatar_mini {
 	-moz-border-radius: 0px 3px 3px 0px;
 }
 
-.super.button { background-image: url("http://static.v2ex.com/static/img/bg_blended.png"); padding: 4px 15px 4px 15px; border: 1px solid rgba(0,0,0,.25); border-bottom-color: rgba(0,0,0,.35); -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; font-size: 12px; line-height: 12px; outline: none; }
+.super.button {
+	background-image: url("/static/img/bg_blended.png");
+	padding: 4px 15px 4px 15px;
+	border: 1px solid rgba(80,80,90, 0.2);
+	border-bottom-color: rgba(80,80,90, 0.35);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-size: 12px;
+	line-height: 12px;
+	outline: none;
+}
 
-.normal.button { background-color: #f5f5f5; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; font-weight: bold; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.3); }
-.normal.button:hover { background-color: #fff; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; text-decoration: none; font-weight: bold; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.2); }
-.normal.button:active { background-color: #e2e2e2; color: #333; text-shadow: 0px 1px 1px #fff; text-decoration: none; text-decoration: none; font-weight: bold; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(66, 66, 77, 0.2); }
+.normal.button {
+	background-color: #f0f4f7;
+	color: #333;
+	text-shadow: 0px 1px 0px #fff;
+	text-decoration: none;
+	font-weight: bold;
+	-moz-box-shadow: 0px 1px 0px rgba(66, 66, 77, 0.25);
+	-webkit-box-shadow: 0px 1px 0px rgba(66, 66, 77, 0.25);
+}
+
+.normal.button:hover {
+	background-color: #fff;
+	color: #333;
+	text-shadow: 0px 1px 0px #fff;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+	-moz-box-shadow: 0px 1px 0px rgba(66, 66, 77, 0.2);
+	-webkit-box-shadow: 0px 1px 0px rgba(66, 66, 77, 0.2);
+}
+
+.normal.button:active {
+	background-color: #e2e2e2;
+	color: #333;
+	text-shadow: 0px 1px 0px #fff;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+	-moz-box-shadow: 0px 1px 0px rgba(66, 66, 77, 0.2);
+	-webkit-box-shadow: 0px 1px 0px rgba(66, 66, 77, 0.2);
+}
 
 .special.button { background-color: #ffcc00; color: #532b17; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.6); text-decoration: none; font-weight: 600; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.6); border: 1px solid rgba(200, 150, 0, 0.8); }
 .special.button:hover { background-color: #ffdf00; color: #402112; text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.7); text-decoration: none; text-decoration: none; font-weight: 600; cursor: pointer; -moz-box-shadow: 0px 1px 2px rgba(233, 175, 0, 0.5); border: 1px solid rgba(200, 150, 0, 1); }
