@@ -63,11 +63,12 @@ class NotificationsHandler(BaseHandler):
                     n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在创建主题 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
                     notifications.append(n)
                 i = i + 1
+            self.member.notifications = 0
+            self.member.put()
+            memcache.delete('Member_' + str(self.member.num))
             self.values['notifications'] = notifications
             self.set_title(u'提醒系统')
             self.finalize(template_name='notifications')
-            self.member.notifications = 0
-            self.member.put()
         else:
             self.redirect('/signin')
 
@@ -82,6 +83,7 @@ class NotificationsCheckHandler(BaseHandler):
             if count > 0:
                 member.notifications = count
                 member.put()
+                memcache.delete('Member_' + str(member.num))
 
 # For mentions in reply content
 class NotificationsReplyHandler(BaseHandler):
