@@ -65,7 +65,7 @@ class NotificationsHandler(BaseHandler):
                 i = i + 1
             self.member.notifications = 0
             self.member.put()
-            memcache.delete('Member_' + str(self.member.num))
+            memcache.set('Member_' + str(member.num), self.member, 86400)
             self.values['notifications'] = notifications
             self.set_title(u'提醒系统')
             self.finalize(template_name='notifications')
@@ -83,7 +83,7 @@ class NotificationsCheckHandler(BaseHandler):
             if count > 0:
                 member.notifications = count
                 member.put()
-                memcache.delete('Member_' + str(member.num))
+                memcache.set('Member_' + str(member.num), member, 86400)
 
 # For mentions in reply content
 class NotificationsReplyHandler(BaseHandler):

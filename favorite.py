@@ -55,6 +55,7 @@ class FavoriteNodeHandler(webapp.RequestHandler):
                     member = db.get(member.key())
                     member.favorited_nodes = member.favorited_nodes + 1
                     member.put()
+                    memcache.set('Member_' + str(member.num), member, 86400)
                     n = 'r/n' + str(node.num) + '/m' + str(member.num)
                     memcache.set(n, True, 86400 * 14)
         self.redirect(go)
@@ -76,6 +77,7 @@ class UnfavoriteNodeHandler(webapp.RequestHandler):
                     member = db.get(member.key())
                     member.favorited_nodes = member.favorited_nodes - 1
                     member.put()
+                    memcache.set('Member_' + str(member.num), member, 86400)
                     n = 'r/n' + str(node.num) + '/m' + str(member.num)
                     memcache.delete(n)
         self.redirect(go)
@@ -99,6 +101,7 @@ class FavoriteTopicHandler(webapp.RequestHandler):
                     member = db.get(member.key())
                     member.favorited_topics = member.favorited_topics + 1
                     member.put()
+                    memcache.set('Member_' + str(member.num), member, 86400)
                     n = 'r/t' + str(topic.num) + '/m' + str(member.num)
                     memcache.set(n, True, 86400 * 14)
                     taskqueue.add(url='/add/star/topic/' + str(topic.key()))
@@ -121,6 +124,7 @@ class UnfavoriteTopicHandler(webapp.RequestHandler):
                     member = db.get(member.key())
                     member.favorited_topics = member.favorited_topics - 1
                     member.put()
+                    memcache.set('Member_' + str(member.num), member, 86400)
                     n = 'r/t' + str(topic.num) + '/m' + str(member.num)
                     memcache.delete(n)
                     taskqueue.add(url='/minus/star/topic/' + str(topic.key()))
@@ -150,6 +154,7 @@ class FollowMemberHandler(webapp.RequestHandler):
                             bookmark.member_num = member.num
                             bookmark.put()
                             member.put()
+                            memcache.set('Member_' + str(member.num), member, 86400)
                             n = 'r/m' + str(one.num) + '/m' + str(member.num)
                             memcache.set(n, True, 86400 * 14)
                             one = db.get(one.key())
@@ -179,6 +184,7 @@ class UnfollowMemberHandler(webapp.RequestHandler):
                         member = db.get(member.key())
                         member.favorited_members = member.favorited_members - 1
                         member.put()
+                        memcache.set('Member_' + str(member.num), member, 86400)
                         n = 'r/m' + str(one.num) + '/m' + str(member.num)
                         memcache.delete(n)
                         one = db.get(one.key())
