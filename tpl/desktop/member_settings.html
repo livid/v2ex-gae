@@ -188,6 +188,26 @@
         			        </td>
         			    </tr>
         			    {% endifequal %}
+        			    <tr>
+        			        <td align="right">
+        			            <span class="small">Use My CSS</span>
+        			        </td>
+        			        <td width="200" align="left">
+        			            {% ifequal member_use_my_css 1 %}
+        			            <input type="checkbox" name="use_my_css" checked="checked" />
+        			            {% else %}
+        			            <input type="checkbox" name="use_my_css" />
+        			            {% endifequal %}
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td align="right">
+        			            <span class="small">My CSS</span>
+        			        </td>
+        			        <td width="200" align="left">
+        			            <textarea class="ml" name="my_css">{{ member_my_css|escape }}</textarea>
+        			        </td>
+        			    </tr>
                         <tr>
         			        <td align="right">
         			        </td>

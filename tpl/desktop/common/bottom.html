@@ -26,4 +26,11 @@
       })();
     </script>
     {% endif %}
+    {% if member %}
+    {% ifequal member.use_my_css 1 %}
+    <style type="text/css">
+    {{ member.my_css }}
+    </style>
+    {% endifequal %}
+    {% endif %}
 </div>

@@ -182,6 +182,11 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['s'] = s
             if member.twitter_sync == 1:
                 template_values['member_twitter_sync'] = 1
+            if member.use_my_css == 1:
+                template_values['member_use_my_css'] = 1
+            if (member.my_css == None):
+                member.my_css = ''
+            template_values['member_my_css'] = member.my_css
             if 'message' in self.session:
                 message = self.session['message']
                 del self.session['message']
@@ -414,7 +419,6 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_bio'] = member_bio
             template_values['member_bio_error'] = member_bio_error
             template_values['member_bio_error_message'] = member_bio_error_messages[member_bio_error]
-            template_values['errors'] = errors
             # Verification: show_home_top and show_quick_post
             try:
                 member_show_home_top = int(self.request.get('show_home_top'))
@@ -447,6 +451,29 @@ class SettingsHandler(webapp.RequestHandler):
                 else:
                     member_twitter_sync = 0
                 template_values['member_twitter_sync'] = member_twitter_sync
+            # Verification: use_my_css
+            member_use_my_css = self.request.get('use_my_css')
+            if member_use_my_css == 'on':
+                member_use_my_css = 1
+            else:
+                member_use_my_css = 0
+            template_values['member_use_my_css'] = member_use_my_css
+            # Verification: my_css
+            member_my_css_error = 0
+            member_my_css_error_messages = ['',
+                u'CSS Hack cannot be longer than 2000 characters'
+            ]
+            member_my_css = self.request.get('my_css').strip()
+            if (len(member_my_css) == 0):
+                member_my_css = ''    
+            else:
+                if (len(member_my_css) > 2000):
+                    errors = errors + 1
+                    member_my_css_error = 1
+            template_values['member_my_css'] = member_my_css
+            template_values['member_my_css_error'] = member_my_css_error
+            template_values['member_my_css_error_message'] = member_my_css_error_messages[member_my_css_error]
+            template_values['errors'] = errors
             if (errors == 0):
                 member.email = member_email.lower()
                 member.website = member_website
@@ -457,14 +484,16 @@ class SettingsHandler(webapp.RequestHandler):
                 member.tagline = member_tagline
                 if member.twitter_oauth == 1:
                     member.twitter_sync = member_twitter_sync
+                member.use_my_css = member_use_my_css
+                member.my_css = member_my_css
                 member.bio = member_bio
                 member.show_home_top = member_show_home_top
                 member.show_quick_post = member_show_quick_post
                 member.l10n = member_l10n
                 member.put()
-                memcache.delete('Member_' + str(member.num))
                 memcache.delete('Member::' + str(member.username))
                 memcache.delete('Member::' + str(member.username_lower))
+                memcache.set('Member_' + str(member.num), member, 86400)
                 self.session['message'] = '个人设置成功更新'
                 self.redirect('/settings')
             else:
