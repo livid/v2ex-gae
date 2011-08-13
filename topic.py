@@ -112,6 +112,7 @@ class NewTopicHandler(webapp.RequestHandler):
             self.redirect('/signin')
 
     def post(self, node_name):
+        site = GetSite()
         ### BEGIN: CAN CONTINUE
         can_continue = True
         if ('Host' in self.request.headers):
@@ -139,6 +140,8 @@ class NewTopicHandler(webapp.RequestHandler):
                 has_v2ex = True
             if ('http://beta.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
+            if ('http://' + str(site.domain) in self.request.headers['Referer']):
+                has_v2ex = True
             if has_v2ex is False:
                 can_continue = False
         else:
@@ -149,9 +152,8 @@ class NewTopicHandler(webapp.RequestHandler):
         else:
             can_continue = False
         if can_continue is False:
-            return self.redirect('http://www.v2ex.com/')
+            return self.redirect('http://' + site.domain + '/')
         ### END: CAN CONTINUE
-        site = GetSite()
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
@@ -549,6 +551,7 @@ class TopicHandler(webapp.RequestHandler):
         self.response.out.write(output)
         
     def post(self, topic_num):
+        site = GetSite()
         ### BEGIN: CAN CONTINUE
         can_continue = True
         if ('Host' in self.request.headers):
@@ -576,6 +579,8 @@ class TopicHandler(webapp.RequestHandler):
                 has_v2ex = True
             if ('http://beta.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
+            if ('http://' + site.domain in self.request.headers['Referer']):
+                has_v2ex = True
             if has_v2ex is False:
                 can_continue = False
         else:
@@ -586,9 +591,8 @@ class TopicHandler(webapp.RequestHandler):
         else:
             can_continue = False
         if can_continue is False:
-            return self.redirect('http://www.v2ex.com/')
+            return self.redirect('http://' + site.domain + '/')
         ### END: CAN CONTINUE
-        site = GetSite()
         browser = detect(self.request)
         template_values = {}
         template_values['site'] = site
