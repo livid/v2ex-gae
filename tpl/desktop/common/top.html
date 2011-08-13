@@ -1,6 +1,6 @@
 <div id="Top"><a href="#;" name="_top"></a>
     <div id="TopMain">
-        <a href="/"><img src="/static/img/logo.png" border="0" style="display: block; float: left; margin-top: 11px; margin-left: 20px;" /></a>
+        <a href="/"><img src="/static/img/logo_20110809.png" border="0" style="display: block; float: left; margin-top: 9px; margin-left: 20px;" /></a>
         <div id="Navigation">
             {% if member %}
             <ul>
@@ -38,6 +38,6 @@
                 }
             }
         </script>
-        <div id="Search"><form onsubmit="return dispatch()"><input type="text" class="search" maxlength="40" name="q" value="{{ q|escape }}" id="q" /><input type="submit" class="super normal button" value="Search" style="-moz-border-radius: 0px 5px 5px 0px; border: none;" /></form></div>
+        <div id="Search"><form onsubmit="return dispatch()"><!--<input type="text" class="search" maxlength="40" name="q" value="{{ q|escape }}" id="q" /><input type="submit" class="super normal button" value="Search" style="-moz-border-radius: 0px 5px 5px 0px; border: none;" />--><div style="width: 276px; height: 28px; background-image: url('/static/img/qbar.png'); background-repeat: no-repeat; display: inline-block;"><input type="text" maxlength="40" name="q" id="q" value="{{ q|escape }}" /></div></form></div>
     </div>
 </div>
