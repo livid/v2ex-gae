@@ -613,7 +613,7 @@ class ForgotHandler(webapp.RequestHandler):
         q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1 AND email = :2", username, email)
         if q.count() == 1:
             one = q[0]
-            q2 = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE timestamp > :1", (int(time.time()) - 86400))
+            q2 = db.GqlQuery("SELECT * FROM PasswordResetToken WHERE timestamp > :1 AND email = :2", (int(time.time()) - 86400), email)
             if q2.count() > 2:
                 error_message = '你不能在 24 小时内进行超过 2 次的密码重设操作。'
                 template_values['errors'] = 1
@@ -638,8 +638,8 @@ class ForgotHandler(webapp.RequestHandler):
                 mail_template_values['ip'] = self.request.remote_addr
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'mail', 'reset_password.txt')
                 output = template.render(path, mail_template_values)
-                result = mail.send_mail(sender="V2EX <v2ex.livid@gmail.com>",
-                              to= one.email,
+                result = mail.send_mail(sender="v2ex.livid@me.com",
+                              to=one.email,
                               subject="=?UTF-8?B?" + base64.b64encode((u"[" + site.title + u"] 重新设置密码").encode('utf-8')) + "?=",
                               body=output)
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'forgot_sent.html')

@@ -21,3 +21,5 @@ recaptcha_public_key = 'your recaptcha_public_key'
 recaptcha_private_key = 'your recaptcha_private_key'
 
 daydream_secret = ''
+
+site_key = ''

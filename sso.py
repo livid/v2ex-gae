@@ -9,6 +9,8 @@ import hashlib
 import string
 import random
 
+import config
+
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
 from google.appengine.ext import db
@@ -59,9 +61,37 @@ class SSOV0Handler(webapp.RequestHandler):
         else:
             self.response.out.write(failed)
 
+class SSOX0Handler(webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-type'] = 'application/json'
+        x = self.request.get('x').strip()
+        n = self.request.get('n').strip().lower()
+        failed = '{"ok" : 0}'
+        if x == config.ssox:
+            q = db.GqlQuery("SELECT * FROM Member WHERE username_lower = :1", n)
+            if q.count() > 0:
+                member = q[0]
+                if member.avatar_mini_url:
+                    site = GetSite()
+                    if (member.avatar_mini_url[0:1] == '/'):
+                        member.avatar_mini_url = 'http://' + site.domain + member.avatar_mini_url
+                        member.avatar_normal_url = 'http://' +  site.domain + member.avatar_normal_url
+                        member.avatar_large_url = 'http://' + site.domain + member.avatar_large_url
+                else:
+                    member.avatar_mini_url = 'http://' + site.domain + '/static/img/avatar_mini.png'
+                    member.avatar_normal_url = 'http://' + site.domain + '/static/img/avatar_normal.png'
+                    member.avatar_large_url = 'http://' + site.domain + '/static/img/avatar_large.png'
+                self.response.out.write('{"ok" : 1, "num" : ' + str(member.num) + ', "username" : "' + member.username + '", "username_lower" : "' + member.username_lower + '", "email" : "' + member.email + '", "password" : "' + member.password + '", "avatar_mini_url" : "' + member.avatar_mini_url + '", "avatar_normal_url" : "' + member.avatar_normal_url + '", "avatar_large_url" : "' + member.avatar_large_url + '", "created" : ' + str(time.mktime(member.created.timetuple())) + ', "last_modified" : ' + str(time.mktime(member.last_modified.timetuple())) + '}')
+            else:
+                self.response.out.write(failed)
+        else:
+            self.response.out.write(failed)
+            
+
 def main():
     application = webapp.WSGIApplication([
-    ('/sso/v0', SSOV0Handler)
+    ('/sso/v0', SSOV0Handler),
+    ('/sso/x0', SSOX0Handler)
     ],
                                          debug=True)
     util.run_wsgi_app(application)

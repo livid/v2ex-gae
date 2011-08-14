@@ -104,6 +104,11 @@ indexes:
   - name: minisite
   - name: weight
 
+- kind: PasswordResetToken
+  properties:
+  - name: email
+  - name: timestamp
+
 - kind: PlaceMessage
   properties:
   - name: place
