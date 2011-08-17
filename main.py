@@ -66,6 +66,9 @@ class HomeHandler(webapp.RequestHandler):
         template_values['page_title'] = site.title
         template_values['system_version'] = SYSTEM_VERSION
         member = CheckAuth(self)
+        if member:
+            if member.my_home != None and len(member.my_home) > 0:
+                return self.redirect(member.my_home)
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         if member:

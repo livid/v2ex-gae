@@ -37,6 +37,7 @@ class Member(db.Model):
     twitter_favourites_count = db.IntegerProperty(required=False)
     use_my_css = db.IntegerProperty(required=False, default=0)
     my_css = db.TextProperty(required=False, default='')
+    my_home = db.StringProperty(required=False, default='')
     location = db.StringProperty(required=False, default='')
     tagline = db.TextProperty(required=False, default='')
     bio = db.TextProperty(required=False, default='')

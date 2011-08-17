@@ -165,6 +165,9 @@ class SettingsHandler(webapp.RequestHandler):
             if member.psn is None:
                 member.psn = ''
             template_values['member_psn'] = member.psn
+            if (member.my_home == None):
+                member.my_home = ''
+            template_values['member_my_home'] = member.my_home
             template_values['member_btc'] = member.btc
             template_values['member_location'] = member.location
             if (member.tagline == None):
@@ -351,6 +354,29 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_psn'] = member_psn
             template_values['member_psn_error'] = member_psn_error
             template_values['member_psn_error_message'] = member_psn_error_messages[member_psn_error]
+            # Verification: my_home
+            member_my_home_error = 0
+            member_my_home_error_messages = ['',
+                u'不是一个合法的自定义首页跳转位置',
+                u'自定义首页跳转位置长度不能超过 32 个字符',
+                u'自定义首页跳转位置必须以 / 开头'
+            ]
+            member_my_home = self.request.get('my_home').strip()
+            if len(member_my_home) > 0:
+                if member_my_home == '/' or member_my_home.startswith('/signout'):
+                    member_my_home_error = 1
+                    errors = errors + 1
+                else:
+                    if len(member_my_home) > 32:
+                        member_my_home_error = 2
+                        errors = errors + 1
+                    else:
+                        if member_my_home.startswith('/') is not True:
+                            member_my_home_error = 3
+                            errors = errors + 1
+            template_values['member_my_home'] = member_my_home
+            template_values['member_my_home_error'] = member_my_home_error
+            template_values['member_my_home_error_message'] = member_my_home_error_messages[member_my_home_error]
             # Verification: btc
             member_btc_error = 0
             member_btc_error_messages = ['',
@@ -486,6 +512,11 @@ class SettingsHandler(webapp.RequestHandler):
                     member.twitter_sync = member_twitter_sync
                 member.use_my_css = member_use_my_css
                 member.my_css = member_my_css
+                if member_my_home_error == 0 and len(member_my_home) > 0:
+                    member.my_home = member_my_home
+                else:
+                    if member_my_home_error == 0:
+                        member.my_home = None
                 member.bio = member_bio
                 member.show_home_top = member_show_home_top
                 member.show_quick_post = member_show_quick_post
