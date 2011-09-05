@@ -45,27 +45,30 @@ class NotificationsHandler(BaseHandler):
             if self.member.private_token is None:
                 self.member.private_token = hashlib.sha256(str(self.member.num) + ';' + config.site_key).hexdigest()
                 self.member.put()
-            q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 50", self.member.num)
-            notifications = []
-            i = 0
-            for n in q:
-                if i == 0:
-                    if self.member.notification_position != n.num:
-                        self.member.notification_position = n.num
-                        self.member.put()
-                if n.type == 'reply':
-                    n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 里回复了你'
-                    notifications.append(n)
-                if n.type == 'mention_reply':
-                    n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在回复 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
-                    notifications.append(n)
-                if n.type == 'mention_topic':
-                    n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在创建主题 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
-                    notifications.append(n)
-                i = i + 1
-            self.member.notifications = 0
-            self.member.put()
-            memcache.set('Member_' + str(self.member.num), self.member, 86400)
+            notifications = memcache.get('nn::' + self.member.username_lower)
+            if notifications is None:
+                q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 50", self.member.num)
+                notifications = []
+                i = 0
+                for n in q:
+                    if i == 0:
+                        if self.member.notification_position != n.num:
+                            self.member.notification_position = n.num
+                            self.member.put()
+                    if n.type == 'reply':
+                        n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 里回复了你'
+                        notifications.append(n)
+                    if n.type == 'mention_reply':
+                        n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在回复 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
+                        notifications.append(n)
+                    if n.type == 'mention_topic':
+                        n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在创建主题 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
+                        notifications.append(n)
+                    i = i + 1
+                self.member.notifications = 0
+                self.member.put()
+                memcache.set('Member_' + str(self.member.num), self.member, 86400)
+                memcache.set('nn::' + self.member.username_lower, notifications, 360)
             self.values['notifications'] = notifications
             self.set_title(u'提醒系统')
             self.finalize(template_name='notifications')
@@ -190,27 +193,35 @@ class NotificationsFeedHandler(BaseHandler):
         pass
             
     def get(self, private_token):
-        q = db.GqlQuery("SELECT * FROM Member WHERE private_token = :1", private_token)
-        count = q.count()
-        if count > 0:
-            member = q[0]
-            q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 50", member.num)
-            notifications = []
-            i = 0
-            for n in q:
-                if n.type == 'reply':
-                    n.title = u'' + n.member.username + u' 在 ' + self.escape(n.label1) + u' 里回复了你'
-                    n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 里回复了你'
-                    notifications.append(n)
-                if n.type == 'mention_reply':
-                    n.title = u'' + n.member.username + u' 在回复 ' + self.escape(n.label1) + u' 时提到了你'
-                    n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在回复 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
-                    notifications.append(n)
-                i = i + 1
-            self.values['notifications'] = notifications
+        n = memcache.get('n_' + private_token)
+        if n is not None:
+            self.values['notification'] = n
             self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
-            self.values['member'] = member
+            self.values['member'] = self.member
             self.finalize(template_name='notifications', template_root='feed', template_type='xml')
+        else:
+            q = db.GqlQuery("SELECT * FROM Member WHERE private_token = :1", private_token)
+            count = q.count()
+            if count > 0:
+                member = q[0]
+                q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 50", member.num)
+                notifications = []
+                i = 0
+                for n in q:
+                    if n.type == 'reply':
+                        n.title = u'' + n.member.username + u' 在 ' + self.escape(n.label1) + u' 里回复了你'
+                        n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 里回复了你'
+                        notifications.append(n)
+                    if n.type == 'mention_reply':
+                        n.title = u'' + n.member.username + u' 在回复 ' + self.escape(n.label1) + u' 时提到了你'
+                        n.text = u'<a href="/member/' + n.member.username + u'"><strong>' + n.member.username + u'</strong></a> 在回复 <a href="' + n.link1 + '">' + self.escape(n.label1) + u'</a> 时提到了你'
+                        notifications.append(n)
+                    i = i + 1
+                self.values['notifications'] = notifications
+                memcache.set('n_' + private_token, notifications, 600)
+                self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
+                self.values['member'] = member
+                self.finalize(template_name='notifications', template_root='feed', template_type='xml')
 
 def main():
     application = webapp.WSGIApplication([
