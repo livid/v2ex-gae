@@ -1008,7 +1008,48 @@ class RouterHandler(webapp.RequestHandler):
             parts = path.split('/')
             if len(parts) == 2:
                 minisite_name = parts[0]
-                page_name = parts[1]
+                if parts[1] == '':
+                    page_name = 'index.html'
+                else:
+                    page_name = parts[1]
+                minisite = GetKindByName('Minisite', minisite_name)
+                if minisite is not False:
+                    page = memcache.get(path)
+                    if page is None:
+                        q = db.GqlQuery("SELECT * FROM Page WHERE name = :1 AND minisite = :2", page_name, minisite)
+                        if q.count() == 1:
+                            page = q[0]
+                            memcache.set(path, page, 864000)
+                    if page.mode == 1:
+                        # Dynamic embedded page
+                        template_values = {}
+                        site = GetSite()
+                        template_values['site'] = site
+                        member = CheckAuth(self)
+                        if member:
+                            template_values['member'] = member
+                        l10n = GetMessages(self, member, site)
+                        template_values['l10n'] = l10n
+                        template_values['rnd'] = random.randrange(1, 100)
+                        template_values['page'] = page
+                        template_values['minisite'] = page.minisite
+                        template_values['page_title'] = site.title + u' › ' + page.minisite.title.decode('utf-8') + u' › ' + page.title.decode('utf-8')
+                        taskqueue.add(url='/hit/page/' + str(page.key()))
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'page.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
+                    else:
+                        # Static standalone page
+                        taskqueue.add(url='/hit/page/' + str(page.key()))
+                        expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
+                        expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+                        self.response.headers.add_header("Expires", expires_str)
+                        self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
+                        self.response.headers['Content-Type'] = page.content_type
+                        self.response.out.write(page.content)
+            else:
+                minisite_name = parts[0]
+                page_name = 'index.html'
                 minisite = GetKindByName('Minisite', minisite_name)
                 if minisite is not False:
                     page = memcache.get(path)
@@ -1074,6 +1115,40 @@ class RouterHandler(webapp.RequestHandler):
                     self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
                     self.response.headers['Content-Type'] = page.content_type
                     self.response.out.write(page.content)
+            else:
+                minisite_name = path
+                minisite = GetKindByName('Minisite', minisite_name)
+                q = db.GqlQuery("SELECT * FROM Page WHERE name = :1 AND minisite = :2", 'index.html', minisite)
+                if q.count() == 1:
+                    page = q[0]
+                    memcache.set(path + '/index.html', page, 864000)
+                    if page.mode == 1:
+                        # Dynamic embedded page
+                        template_values = {}
+                        site = GetSite()
+                        template_values['site'] = site
+                        member = CheckAuth(self)
+                        if member:
+                            template_values['member'] = member
+                        l10n = GetMessages(self, member, site)
+                        template_values['l10n'] = l10n
+                        template_values['rnd'] = random.randrange(1, 100)
+                        template_values['page'] = page
+                        template_values['minisite'] = page.minisite
+                        template_values['page_title'] = site.title + u' › ' + page.minisite.title.decode('utf-8') + u' › ' + page.title.decode('utf-8')
+                        taskqueue.add(url='/hit/page/' + str(page.key()))
+                        path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'page.html')
+                        output = template.render(path, template_values)
+                        self.response.out.write(output)
+                    else:
+                        # Static standalone page
+                        taskqueue.add(url='/hit/page/' + str(page.key()))
+                        expires_date = datetime.datetime.utcnow() + datetime.timedelta(days=10)
+                        expires_str = expires_date.strftime("%d %b %Y %H:%M:%S GMT")
+                        self.response.headers.add_header("Expires", expires_str)
+                        self.response.headers['Cache-Control'] = 'max-age=864000, must-revalidate'
+                        self.response.headers['Content-Type'] = page.content_type
+                        self.response.out.write(page.content)
 
 class ChangesHandler(webapp.RequestHandler):
     def get(self):
@@ -1142,15 +1217,6 @@ class ChangesHandler(webapp.RequestHandler):
         output = template.render(path, template_values)
         self.response.out.write(output)
 
-class NotificationsHandler(webapp.RequestHandler):
-    def get(self):
-        if browser['ios']:
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'notifications.html')
-        else:
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'notifications.html')
-        output = template.render(path, template_values)
-        self.response.out.write(output)
-
 def main():
     application = webapp.WSGIApplication([
     ('/', HomeHandler),
@@ -1168,7 +1234,6 @@ def main():
     ('/q/(.*)', SearchHandler),
     ('/_dispatcher', DispatcherHandler),
     ('/changes', ChangesHandler),
-    ('/notifications', NotificationsHandler),
     ('/(.*)', RouterHandler)
     ],
                                          debug=True)
