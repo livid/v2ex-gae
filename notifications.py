@@ -47,7 +47,7 @@ class NotificationsHandler(BaseHandler):
                 self.member.put()
             notifications = memcache.get('nn::' + self.member.username_lower)
             if notifications is None:
-                q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 50", self.member.num)
+                q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 20", self.member.num)
                 notifications = []
                 i = 0
                 for n in q:
@@ -81,11 +81,12 @@ class NotificationsCheckHandler(BaseHandler):
         if member:
             if member.notification_position is None:
                 member.notification_position = 0
-            q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 AND num > :2 ORDER BY num DESC", member.num, member.notification_position)
+            q = db.GqlQuery("SELECT __key__ FROM Notification WHERE for_member_num = :1 AND num > :2 ORDER BY num DESC", member.num, member.notification_position)
             count = q.count()
             if count > 0:
                 member.notifications = count
                 member.put()
+                memcache.delete('nn::' + member.username_lower)
                 memcache.set('Member_' + str(member.num), member, 86400)
 
 # For mentions in reply content
@@ -204,7 +205,7 @@ class NotificationsFeedHandler(BaseHandler):
             count = q.count()
             if count > 0:
                 member = q[0]
-                q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 50", member.num)
+                q = db.GqlQuery("SELECT * FROM Notification WHERE for_member_num = :1 ORDER BY num DESC LIMIT 20", member.num)
                 notifications = []
                 i = 0
                 for n in q:
