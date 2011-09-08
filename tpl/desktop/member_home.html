@@ -90,7 +90,7 @@
                 {% endif %}
                 {% if one.bio %}
                 <div class="inner">
-                    {{ one.bio|escape|imgly|mentions|urlize|linebreaksbr }}
+                    {{ one.bio|escape|imgly|mentions|autolink|linebreaksbr }}
                 </div>
                 {% endif %}
             </div>

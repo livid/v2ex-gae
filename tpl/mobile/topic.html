@@ -21,7 +21,7 @@
     			    <div class="sep5"></div>
                     <span class="fade">By <a href="/member/{{ topic.created_by }}">{{ topic.created_by }}</a>{% if topic.source %} <span class="fade">via {{ topic.source }}</span>{% endif %} at {{ topic.created|timesince }} ago - {{ topic.hits }} views</span>
                     <div class="sep10"></div>
-                    {{ topic.content|escape|imgly|mentions|urlize|linebreaksbr }}
+                    {{ topic.content|escape|imgly|mentions|autolink|linebreaksbr }}
     			</td>
     			</tr>
     		</table>

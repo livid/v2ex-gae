@@ -32,7 +32,7 @@
                     	    <div class="sep3"></div>
                     	    <strong>{{ message.sender.name }}</strong> @<a href="/twitter/user/{{ message.sender.screen_name }}" class="dark">{{ message.sender.screen_name }}</a>
                     	    <div class="sep3"></div>
-                    	    <div class="status">{{ message.text|urlize }}</div>
+                    	    <div class="status">{{ message.text|autolink }}</div>
                     	</td>
                     	</tr>
                     </table>
