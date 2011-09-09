@@ -1674,6 +1674,9 @@ class BackstageMoveTopicHandler(webapp.RequestHandler):
                             memcache.delete('Node_' + str(node_new.num))
                             memcache.delete('Node::' + str(node_old.name))
                             memcache.delete('Node::' + str(node_new.name))
+                            memcache.delete('q_latest_16')
+                            memcache.delete('home_rendered')
+                            memcache.delete('home_rendered_mobile')
                             self.redirect('/t/' + str(topic.num))
                         else:
                             errors = errors + 1
