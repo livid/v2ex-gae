@@ -2276,6 +2276,7 @@ class BackstageRemoveNotificationHandler(BaseHandler):
             if type(o).__name__ == 'Notification':
                 if o.for_member_num == self.member.num:
                     o.delete()
+                    memcache.delete('nn::' + self.member.username_lower)
         self.redirect('/notifications')
 
 def main():

@@ -95,16 +95,20 @@ class NotificationsReplyHandler(BaseHandler):
         reply = db.get(db.Key(reply_key))
         topic = GetKindByNum('Topic', reply.topic_num)
         ms = re.findall('(@[a-zA-Z0-9\_]+\.?)\s?', reply.content)
+        unique = []
+        for m in ms:
+            if m.lower() not in unique:
+                unique.append(m.lower())
         keys = []
-        if (len(ms) > 0):
-            for m in ms:
+        if (len(unique) > 0):
+            for m in unique:
                 m_id = re.findall('@([a-zA-Z0-9\_]+\.?)', m)
                 if (len(m_id) > 0):
                     if (m_id[0].endswith('.') != True):
                         member_username = m_id[0]
                         member = GetMemberByUsername(member_username)
                         if member:
-                            if member.key() != topic.member.key() and member.key() != reply.member.key() and member.key() not in keys:
+                            if (member.key() != topic.member.key()) and (member.key() != reply.member.key()) and (member.key() not in keys):
                                 q = db.GqlQuery('SELECT * FROM Counter WHERE name = :1', 'notification.max')
                                 if (q.count() == 1):
                                     counter = q[0]
@@ -145,9 +149,13 @@ class NotificationsTopicHandler(BaseHandler):
         topic = db.get(db.Key(topic_key))
         combined = topic.title + " " + topic.content
         ms = re.findall('(@[a-zA-Z0-9\_]+\.?)\s?', combined)
+        unique = []
+        for m in ms:
+            if m.lower() not in unique:
+                unique.append(m.lower())
         keys = []
-        if (len(ms) > 0):
-            for m in ms:
+        if (len(unique) > 0):
+            for m in unique:
                 m_id = re.findall('@([a-zA-Z0-9\_]+\.?)', m)
                 if (len(m_id) > 0):
                     if (m_id[0].endswith('.') != True):
