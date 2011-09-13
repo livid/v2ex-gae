@@ -604,7 +604,8 @@ td.avatar_mini {
 	border: 1px solid #ccc;
 	display: block;
 	width: 628px;
-	height: 100px;
+	height: 8em;
+	overflow-y: auto;
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
