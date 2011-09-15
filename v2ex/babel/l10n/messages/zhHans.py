@@ -74,7 +74,7 @@ replies = "回复"
 till = "直到"
 sure_to_delete = "确认删除？"
 no_pointless = '请认真考虑自己的回复能够如何帮助到别人。这里不欢迎无意义的“顶”，“沙发”，“不懂”。'
-for_good = '<a href="/t/10740" class="node">技术类问题回答指南</a>'
+for_good = '<a href="/t/10740" class="node">技术类问题回答指南</a> <a href="http://www.v2ex.com/t/18160" class="node">不要让敷衍成为一种习惯</a>'
 
 # Messages on /go/
 
