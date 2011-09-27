@@ -1454,8 +1454,8 @@ class BackstageNodeAvatarHandler(BaseHandler):
                     if response.status == 201 or response.status == 204:
                         node.avatar_large_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/navatars/' + str(shard) + '/large/' + str(node.num) + '.png?r=' + timestamp
                     node.put()
-                memcache.set('Node_' + str(node.num), node, 86400 * 365)
-                memcache.set('Node::' + node.name, node, 86400 * 365)
+                memcache.set('Node_' + str(node.num), node, 86400 * 14)
+                memcache.set('Node::' + node.name, node, 86400 * 14)
                 memcache.delete('Avatar::node_' + str(node.num) + '_large')
                 memcache.delete('Avatar::node_' + str(node.num) + '_normal')
                 memcache.delete('Avatar::node_' + str(node.num) + '_mini')

@@ -116,7 +116,7 @@ class NewTopicHandler(webapp.RequestHandler):
         ### BEGIN: CAN CONTINUE
         can_continue = True
         if ('Host' in self.request.headers):
-            if (self.request.headers['Host'] not in ['www.v2ex.com', 'v2ex.appspot.com', 'fast.v2ex.com', 'beta.v2ex.com', 'localhost:10000']):
+            if (self.request.headers['Host'] not in ['www.v2ex.com', 'v2ex.appspot.com', 'fast.v2ex.com', 'beta.v2ex.com', 'us.v2ex.com', 'jp.v2ex.com', 'eu.v2ex.com', 'localhost:10000']):
                 can_continue = False
         else:
             can_continue = False
@@ -133,6 +133,12 @@ class NewTopicHandler(webapp.RequestHandler):
             if ('http://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('https://www.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://jp.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://eu.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://us.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('https://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True
@@ -555,7 +561,7 @@ class TopicHandler(webapp.RequestHandler):
         ### BEGIN: CAN CONTINUE
         can_continue = True
         if ('Host' in self.request.headers):
-            if (self.request.headers['Host'] not in ['www.v2ex.com', 'v2ex.appspot.com', 'fast.v2ex.com', 'beta.v2ex.com', 'localhost:10000']):
+            if (self.request.headers['Host'] not in ['www.v2ex.com', 'v2ex.appspot.com', 'fast.v2ex.com', 'beta.v2ex.com', 'us.v2ex.com', 'eu.v2ex.com', 'jp.v2ex.com', 'localhost:10000']):
                 can_continue = False
         else:
             can_continue = False
@@ -572,6 +578,12 @@ class TopicHandler(webapp.RequestHandler):
             if ('http://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('https://www.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://eu.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://us.v2ex.com' in self.request.headers['Referer']):
+                has_v2ex = True
+            if ('http://jp.v2ex.com' in self.request.headers['Referer']):
                 has_v2ex = True
             if ('https://v2ex.appspot.com' in self.request.headers['Referer']):
                 has_v2ex = True

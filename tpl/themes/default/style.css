@@ -62,7 +62,7 @@ code {
 	font-family: "Panic Sans", "Menlo", "DejaVu Sans Mono", "Luxi Mono", "Courier New", Monaco, "Hiragino Sans GB", STHeiti !important;
 }
 
-ul {
+ul, ol {
 	margin: 0px;
 	padding: 0px;
 }
@@ -71,6 +71,11 @@ ul li {
 	list-style: square;
 	padding: 0px;
 	margin: 0px 0px 0px 1.2em;
+}
+
+ol li {
+	padding: 0px;
+	margin: 0px 0px 0px 1.5em;
 }
 
 a:link, a:visited, a:active {

@@ -11,7 +11,7 @@ from v2ex.babel.ext.cookies import Cookies
 
 def CheckAuth(handler):
     ip = GetIP(handler)
-    cookies = Cookies(handler, max_age = 86400 * 365, path = '/')
+    cookies = Cookies(handler, max_age = 86400 * 14, path = '/')
     if 'auth' in cookies:
         auth = cookies['auth']
         member_num = memcache.get(auth)
@@ -21,7 +21,7 @@ def CheckAuth(handler):
                 q = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member_num)
                 if q.count() == 1:
                     member = q[0]
-                    memcache.set('Member_' + str(member_num), member, 86400 * 365)
+                    memcache.set('Member_' + str(member_num), member, 86400 * 14)
                 else:
                     member = False
             if member:
@@ -32,8 +32,8 @@ def CheckAuth(handler):
             if (q.count() == 1):
                 member_num = q[0].num
                 member = q[0]
-                memcache.set(auth, member_num, 86400 * 365)
-                memcache.set('Member_' + str(member_num), member, 86400 * 365)
+                memcache.set(auth, member_num, 86400 * 14)
+                memcache.set('Member_' + str(member_num), member, 86400 * 14)
                 member.ip = ip
                 return member
             else:
