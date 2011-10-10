@@ -90,6 +90,17 @@ def clly(value):
         return value
 register.filter(clly)
 
+# auto convert *.sinaimg.cn/*/*.jpg links to image tags
+def sinaimg(value):
+    imgs = re.findall('(http://ww[0-9]{1}.sinaimg.cn/[a-zA-Z0-9]+/[a-zA-Z0-9]+.[a-z]{3})\s?', value)
+    if (len(imgs) > 0):
+        for img in imgs:
+            value = value.replace(img, '<a href="' + img + '" target="_blank"><img src="' + img + '" class="imgly" border="0" /></a>')
+        return value
+    else:
+        return value
+register.filter(sinaimg)
+
 # auto convert youtube.com links to player
 def youtube(value):
     videos = re.findall('(http://www.youtube.com/watch\?v=[a-zA-Z0-9\-\_]+)\s?', value)
