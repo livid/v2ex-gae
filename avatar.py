@@ -14,18 +14,18 @@ from v2ex.babel.da import *
 class AvatarHandler(webapp.RequestHandler):
     def get(self, member_num, size):
         avatar = GetKindByName('Avatar', 'avatar_' + str(member_num) + '_' + str(size))
-        if avatar is not None:
+        if avatar:
             self.response.headers['Content-Type'] = "image/png"
             self.response.headers['Cache-Control'] = "max-age=172800, public, must-revalidate"
             self.response.headers['Expires'] = "Sun, 25 Apr 2011 20:00:00 GMT"
             self.response.out.write(avatar.content)
         else:
-            self.error(404)
+            self.redirect('/static/img/avatar_' + str(size) + '.png')
 
 class NodeAvatarHandler(webapp.RequestHandler):
     def get(self, node_num, size):
         avatar = GetKindByName('Avatar', 'node_' + str(node_num) + '_' + str(size))
-        if avatar is not None:
+        if avatar:
             self.response.headers['Content-Type'] = "image/png"
             self.response.headers['Cache-Control'] = "max-age=172800, public, must-revalidate"
             self.response.headers['Expires'] = "Sun, 25 Apr 2011 20:00:00 GMT"
