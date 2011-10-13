@@ -4,6 +4,7 @@
 home = 'Home'
 images = 'Images'
 mentions = 'Mentions'
+workspace = 'Workspace'
 notes = 'Notes'
 nearby = 'Nearby'
 settings = 'Settings'

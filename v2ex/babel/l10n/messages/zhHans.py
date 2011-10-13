@@ -4,6 +4,7 @@
 home = '首页'
 images = '图片上传'
 mentions = '提到我的'
+workspace = '工作空间'
 notes = '记事本'
 nearby = '附近'
 settings = '设置'
