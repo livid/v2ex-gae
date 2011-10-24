@@ -297,6 +297,10 @@ a.dark:hover {
 	display: inline-block;
 }
 
+.cell:hover, .inner:hover {
+	background-color: #fbfbfb;
+}
+
 td.avatar {
 	width: 48px;
 	text-align: center;
