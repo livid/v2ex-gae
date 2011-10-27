@@ -63,6 +63,7 @@ class SSOV0Handler(webapp.RequestHandler):
 
 class SSOX0Handler(webapp.RequestHandler):
     def get(self):
+        site = GetSite()
         self.response.headers['Content-type'] = 'application/json'
         x = self.request.get('x').strip()
         n = self.request.get('n').strip().lower()
@@ -72,7 +73,6 @@ class SSOX0Handler(webapp.RequestHandler):
             if q.count() > 0:
                 member = q[0]
                 if member.avatar_mini_url:
-                    site = GetSite()
                     if (member.avatar_mini_url[0:1] == '/'):
                         member.avatar_mini_url = 'http://' + site.domain + member.avatar_mini_url
                         member.avatar_normal_url = 'http://' +  site.domain + member.avatar_normal_url
