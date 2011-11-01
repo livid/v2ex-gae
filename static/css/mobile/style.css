@@ -157,8 +157,12 @@ h1 {
 
 #Sponsored {
 	background-image: url("/static/img/bg_mobile_sponsored.png");
-	height: 44px;
-	border-top: 1px solid #ccc;
+	height: 50px;
+}
+
+#iAd {
+	background-image: url("http://static.v2ex.com/iads/steve_jobs_and_v2ex_mobile.jpg");
+	height: 50px;
 }
 
 #SponsoredLeft {
@@ -462,5 +466,10 @@ input.btn {
 	#EjectIcon {
 		background-image: url("/static/img/eject48.png");
 		background-size: 24px 24px;
+	}
+	
+	#iAd {
+		background-image: url("http://static.v2ex.com/iads/steve_jobs_and_v2ex_mobile@2x.jpg");
+		background-size: 320px 50px;
 	}
 }
