@@ -94,7 +94,7 @@ class HomeHandler(webapp.RequestHandler):
                 for node in qnew:
                     nodes_new.append(node)
                     i = i + 1
-            memcache.set('home_nodes_new', nodes_new, 3600)
+            memcache.set('home_nodes_new', nodes_new, 86400)
         template_values['nodes_new'] = nodes_new
         if browser['ios']:
             s = ''
@@ -117,7 +117,7 @@ class HomeHandler(webapp.RequestHandler):
                                 fs = random.randrange(12, 16)
                                 n = n + '<a href="/go/' + node.name + '" style="font-size: ' + str(fs) + 'px;">' + node.title + '</a>&nbsp; '
                         s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
-                memcache.set('home_sections_neue', s, 600)
+                memcache.set('home_sections_neue', s, 86400)
             template_values['s'] = s
         ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise']
         if browser['ios']:
@@ -165,7 +165,7 @@ class HomeHandler(webapp.RequestHandler):
                 member_total = q3[0].value
             else:
                 member_total = 0
-            memcache.set('member_total', member_total, 600)
+            memcache.set('member_total', member_total, 3600)
         template_values['member_total'] = member_total
         topic_total = memcache.get('topic_total')
         if topic_total is None:
@@ -174,7 +174,7 @@ class HomeHandler(webapp.RequestHandler):
                 topic_total = q4[0].value
             else:
                 topic_total = 0
-            memcache.set('topic_total', topic_total, 600)
+            memcache.set('topic_total', topic_total, 3600)
         template_values['topic_total'] = topic_total
         reply_total = memcache.get('reply_total')
         if reply_total is None:
@@ -183,7 +183,7 @@ class HomeHandler(webapp.RequestHandler):
                 reply_total = q5[0].value
             else:
                 reply_total = 0
-            memcache.set('reply_total', reply_total, 600)
+            memcache.set('reply_total', reply_total, 3600)
         template_values['reply_total'] = reply_total
         if (browser['ios']):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'index.html')
@@ -194,7 +194,7 @@ class HomeHandler(webapp.RequestHandler):
                 hottest = u''
                 for node in qhot:
                     hottest = hottest + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
-                memcache.set('index_hottest_sidebar', hottest, 5000)
+                memcache.set('index_hottest_sidebar', hottest, 86400)
             template_values['index_hottest_sidebar'] = hottest
             c = memcache.get('index_categories')
             if c is None:
@@ -216,7 +216,7 @@ class HomeHandler(webapp.RequestHandler):
                     for node in qx:
                         c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
                     c = c + '</td></tr></table></div>'
-                    memcache.set('index_categories', c, 3600)
+                    memcache.set('index_categories', c, 86400)
             template_values['c'] = c
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'index.html')
         output = template.render(path, template_values)
@@ -248,8 +248,8 @@ class PlanesHandler(BaseHandler):
                             n = n + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
                             c = c + 1
                     s = s + '<div class="sep20"></div><div class="box"><div class="cell"><div class="fr"><strong class="snow">' + section.title_alternative + u'</strong><small class="snow"> • ' + str(section.nodes) + ' nodes</small></div>' + section.title + '</div><div class="inner" align="center">' + n + '</div></div>'
-            memcache.set('planes', s, 3600)
-            memcache.set('planes_c', c, 3600)
+            memcache.set('planes', s, 86400)
+            memcache.set('planes_c', c, 86400)
         self.values['c'] = c
         self.values['s'] = s
         self.values['page_title'] = self.site.title.decode('utf-8') + u' › ' + self.l10n.planes.decode('utf-8')

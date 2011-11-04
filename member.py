@@ -61,14 +61,25 @@ class MemberHandler(webapp.RequestHandler):
             template_values['page_title'] = site.title + u' › ' + one.username
             template_values['canonical'] = 'http://' + site.domain + '/member/' + one.username
         if one is not False:
-            blog = db.GqlQuery("SELECT * FROM Topic WHERE node_name = :1 AND member_num = :2 ORDER BY created DESC LIMIT 1", 'blog', one.num)
-            if blog.count() > 0:
-                template_values['blog'] = blog[0]
-            q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
-            template_values['topics'] = q2
+            member_blog = memcache.get('member::' + str(one.num) + '::blog')
+            if member_blog == None:
+                blog = db.GqlQuery("SELECT * FROM Topic WHERE node_name = :1 AND member_num = :2 ORDER BY created DESC LIMIT 1", 'blog', one.num)
+                if blog.count() > 0:
+                    template_values['blog'] = blog[0]
+                    memcache.set('member::' + str(one.num) + '::blog', blog[0], 7200)
+            else:
+                template_values['blog'] = member_blog
+            member_topics = memcache.get('member::' + str(one.num) + '::topics')
+            if member_topics != None:
+                template_values['topics']
+            else:
+                q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
+                template_values['topics'] = q2
+                memcache.set('member::' + str(one.num) + '::topics', q2, 7200)
             replies = memcache.get('member::' + str(one.num) + '::participated')
+            
             if replies is None:
-                q3 = db.GqlQuery("SELECT * FROM Reply WHERE member_num = :1 ORDER BY created DESC LIMIT 100", one.num)
+                q3 = db.GqlQuery("SELECT * FROM Reply WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
                 ids = []
                 replies = []
                 i = 0
