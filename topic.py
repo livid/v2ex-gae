@@ -153,7 +153,7 @@ class NewTopicHandler(webapp.RequestHandler):
         else:
             can_continue = False
         if ('Content-Type' in self.request.headers):
-            if self.request.headers['Content-Type'] != 'application/x-www-form-urlencoded':
+            if self.request.headers['Content-Type'].startswith( 'application/x-www-form-urlencoded') is False:
                 can_continue = False
         else:
             can_continue = False
@@ -598,7 +598,7 @@ class TopicHandler(webapp.RequestHandler):
         else:
             can_continue = False
         if ('Content-Type' in self.request.headers):
-            if self.request.headers['Content-Type'] != 'application/x-www-form-urlencoded':
+            if self.request.headers['Content-Type'].startswith( 'application/x-www-form-urlencoded') is False:
                 can_continue = False
         else:
             can_continue = False
