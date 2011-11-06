@@ -71,7 +71,7 @@ class MemberHandler(webapp.RequestHandler):
                 template_values['blog'] = member_blog
             member_topics = memcache.get('member::' + str(one.num) + '::topics')
             if member_topics != None:
-                template_values['topics']
+                template_values['topics'] = member_topics
             else:
                 q2 = db.GqlQuery("SELECT * FROM Topic WHERE member_num = :1 ORDER BY created DESC LIMIT 10", one.num)
                 template_values['topics'] = q2
