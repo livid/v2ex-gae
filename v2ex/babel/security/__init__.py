@@ -21,7 +21,8 @@ def CheckAuth(handler):
                 q = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member_num)
                 if q.count() == 1:
                     member = q[0]
-                    memcache.set('Member_' + str(member_num), member, 86400 * 14)
+                    memcache.set(auth, member.num)
+                    memcache.set('Member_' + str(member_num), member)
                 else:
                     member = False
             if member:
@@ -32,8 +33,8 @@ def CheckAuth(handler):
             if (q.count() == 1):
                 member_num = q[0].num
                 member = q[0]
-                memcache.set(auth, member_num, 86400 * 14)
-                memcache.set('Member_' + str(member_num), member, 86400 * 14)
+                memcache.set(auth, member_num)
+                memcache.set('Member_' + str(member_num), member)
                 member.ip = ip
                 return member
             else:
