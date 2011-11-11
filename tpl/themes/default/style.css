@@ -313,6 +313,7 @@ td.avatar_mini {
 	font-weight: bold;
 	color: #ccc;
 	display: block;
+	-webkit-text-size-adjust: none;
 }
 
 .avatar_normal {
