@@ -1056,3 +1056,7 @@ a.fade:hover {
 	color: #666;
 	text-decoration: none;
 }
+
+small {
+	-webkit-text-size-adjust: none;
+}
