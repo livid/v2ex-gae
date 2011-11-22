@@ -819,10 +819,6 @@ class BackstageSectionHandler(webapp.RequestHandler):
                 else:
                     template_values['section'] = section
                 if (section):
-                    q = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY topics DESC", section.num)
-                    template_values['nodes'] = q
-                    section.nodes = q.count()
-                    section.put()
                     template_values['section'] = section
                     q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY last_modified DESC LIMIT 10", section.num)
                     template_values['recent_modified'] = q2
