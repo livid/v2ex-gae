@@ -33,7 +33,7 @@
             var dispatch = function() {
                 q = document.getElementById("q");
                 if (q.value != "") {
-                    location.href = '/q/' + q.value;
+                    window.open('http://www.google.com/search?q=site:v2ex.com/t%20' + q.value, "_blank");
                     return false;
                 } else {
                     return false;
