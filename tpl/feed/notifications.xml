@@ -10,14 +10,14 @@
 {% for n in notifications %}<entry>
 	<title>{{ n.title|escape }}</title>
 	<link rel="alternate" type="text/html" href="http://{{ site.domain }}{{ n.link1 }}" />
-	<id>tag:{{ site_domain }},{{ n.created|date:"Y-m-d" }}:{{ n.link1 }}</id>
+	<id>tag:{{ site.domain }},{{ n.created|date:"Y-m-d" }}:{{ n.link1 }}</id>
 	<published>{{ n.created|date:"Y-m-d\TH:i:s\Z" }}</published>
 	<updated>{{ n.created|date:"Y-m-d\TH:i:s\Z" }}</updated>
 	<author>
 		<name>{{ n.member.username }}</name>
-		<uri>http://{{ site_domain }}/member/{{ n.member.name }}</uri>
+		<uri>http://{{ site.domain }}/member/{{ n.member.username }}</uri>
 	</author>
-	<content type="html" xml:base="http://{{ site_domain }}/" xml:lang="en"><![CDATA[
+	<content type="html" xml:base="http://{{ site.domain }}/" xml:lang="en"><![CDATA[
 	{{ n.payload|escape|urlize|linebreaksbr }}
 	]]></content>
 </entry>{% endfor %}

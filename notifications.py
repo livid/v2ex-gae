@@ -229,6 +229,7 @@ class NotificationsFeedHandler(BaseHandler):
                 self.values['notifications'] = notifications
                 memcache.set('n_' + private_token, notifications, 600)
                 self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
+                self.values['site'] = GetSite()
                 self.values['member'] = member
                 self.finalize(template_name='notifications', template_root='feed', template_type='xml')
 
