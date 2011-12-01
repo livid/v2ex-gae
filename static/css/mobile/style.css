@@ -161,7 +161,7 @@ h1 {
 }
 
 #iAd {
-	background-image: url("http://static.v2ex.com/iads/steve_jobs_and_v2ex_mobile.jpg");
+	background-image: url("http://static.v2ex.com/iads/strangers_v2ex_mobile.png");
 	height: 50px;
 }
 
@@ -469,7 +469,7 @@ input.btn {
 	}
 	
 	#iAd {
-		background-image: url("http://static.v2ex.com/iads/steve_jobs_and_v2ex_mobile@2x.jpg");
+		background-image: url("http://static.v2ex.com/iads/strangers_v2ex_mobile@2x.png");
 		background-size: 320px 50px;
 	}
 }

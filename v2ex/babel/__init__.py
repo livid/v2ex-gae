@@ -1,4 +1,4 @@
-SYSTEM_VERSION = '2.5.0-dev-3'
+SYSTEM_VERSION = '2.5.0-dev-5'
 
 import datetime
 import hashlib
@@ -250,6 +250,7 @@ class Site(db.Model):
     topic_view_level = db.IntegerProperty(required=True, default=-1)
     topic_create_level = db.IntegerProperty(required=True, default=1000)
     topic_reply_level = db.IntegerProperty(required=True, default=1000)
+    data_migration_mode = db.IntegerProperty(required=True, default=0)
     
 class Minisite(db.Model):
     num = db.IntegerProperty(required=False, indexed=True)
