@@ -11,7 +11,7 @@ from v2ex.babel.ext.cookies import Cookies
 
 def CheckAuth(handler):
     ip = GetIP(handler)
-    cookies = Cookies(handler, max_age = 86400 * 14, path = '/')
+    cookies = handler.request.cookies
     if 'auth' in cookies:
         auth = cookies['auth']
         member_num = memcache.get(auth)
