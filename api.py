@@ -38,32 +38,40 @@ from django.utils import simplejson as json
 template.register_template_library('v2ex.templatetags.filters')
 
 
+class ApiHandler(webapp.RequestHandler):
+    def write(self, output):
+        callback = self.request.get('callback', None)
+        if callback:
+            self.response.headers['Content-type'] = 'application/javascript'
+            output = '%s(%s)' % (callback, output)
+        else:
+            self.response.headers['Content-type'] = 'application/json'
+        self.response.out.write(output)
+
 # Site
 # /api/site/stats.json
-class SiteStatsHandler(webapp.RequestHandler):
+class SiteStatsHandler(ApiHandler):
     def get(self):
         template_values = {}
         template_values['topic_max'] = GetKindByName('Counter', 'topic.max')
         template_values['member_max'] = GetKindByName('Counter', 'member.max')
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'site_stats.json')
         output = template.render(path, template_values)
-        self.response.headers['Content-type'] = 'application/json'
-        self.response.out.write(output)
+        self.write(output)
 
 # /api/site/info.json
-class SiteInfoHandler(webapp.RequestHandler):
+class SiteInfoHandler(ApiHandler):
     def get(self):
         site = GetSite()
         template_values = {}
         template_values['site'] = site
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'site_info.json')
         output = template.render(path, template_values)
-        self.response.headers['Content-type'] = 'application/json'
-        self.response.out.write(output)
+        self.write(output)
 
 # Nodes
 # /api/nodes/all.json
-class NodesAllHandler(webapp.RequestHandler):
+class NodesAllHandler(ApiHandler):
     def get(self):
         output = memcache.get('api_nodes_all')
         if output is None:
@@ -78,11 +86,10 @@ class NodesAllHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'nodes_all.json')
             output = template.render(path, template_values)
             memcache.set('api_nodes_all', output, 86400)
-        self.response.headers['Content-type'] = 'application/json'
-        self.response.out.write(output)
+        self.write(output)
 
 # /api/nodes/show.json
-class NodesShowHandler(webapp.RequestHandler):
+class NodesShowHandler(ApiHandler):
     def get(self):
         site = GetSite()
         template_values = {}
@@ -104,24 +111,21 @@ class NodesShowHandler(webapp.RequestHandler):
                 template_values['node'] = node
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'nodes_show.json')
                 output = template.render(path, template_values)
-                self.response.headers['Content-type'] = 'application/json'
-                self.response.out.write(output)
+                self.write(output)
             else:
                 template_values['message'] = 'Node not found'
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
                 output = template.render(path, template_values)
-                self.response.headers['Content-type'] = 'application/json'
-                self.response.out.write(output)
+                self.write(output)
         else:
             template_values['message'] = "Required parameter id or name is missing"
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
             output = template.render(path, template_values)
-            self.response.headers['Content-type'] = 'application/json'
-            self.response.out.write(output)
+            self.write(output)
 
 # Topics
 # /api/topics/latest.json
-class TopicsLatestHandler(webapp.RequestHandler):
+class TopicsLatestHandler(ApiHandler):
     def get(self):
         site = GetSite()
         template_values = {}
@@ -134,11 +138,10 @@ class TopicsLatestHandler(webapp.RequestHandler):
         template_values['topics_count'] = topics.count()
         path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'topics_latest.json')
         output = template.render(path, template_values)
-        self.response.headers['Content-type'] = 'application/json'
-        self.response.out.write(output)
+        self.write(output)
 
 # /api/topics/show.json
-class TopicsShowHandler(webapp.RequestHandler):
+class TopicsShowHandler(ApiHandler):
     def get(self):
         site = GetSite()
         template_values = {}
@@ -167,8 +170,7 @@ class TopicsShowHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
             output = template.render(path, template_values)
             self.response.set_status(400, 'Bad Request')
-            self.response.headers['Content-type'] = 'application/json'
-            self.response.out.write(output)
+            self.write(output)
         else:
             topics = False
             topic = False
@@ -205,15 +207,13 @@ class TopicsShowHandler(webapp.RequestHandler):
             if topic or topics:
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'topics_show.json')
                 output = template.render(path, template_values)
-                self.response.headers['Content-type'] = 'application/json'
-                self.response.out.write(output)
+                self.write(output)
             else:
                 template_values['message'] = "Failed to get topics"
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
                 output = template.render(path, template_values)
                 self.response.set_status(400, 'Bad Request')
-                self.response.headers['Content-type'] = 'application/json'
-                self.response.out.write(output)
+                self.write(output)
 
 # /api/topics/create.json
 class TopicsCreateHandler(webapp.RequestHandler):
@@ -239,7 +239,7 @@ class TopicsCreateHandler(webapp.RequestHandler):
 
 # Members
 # /api/members/show.json
-class MembersShowHandler(webapp.RequestHandler):
+class MembersShowHandler(ApiHandler):
     def get(self):
         site = GetSite()
         template_values = {}
@@ -256,24 +256,21 @@ class MembersShowHandler(webapp.RequestHandler):
                 template_values['member'] = one
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'members_show.json')
                 output = template.render(path, template_values)
-                self.response.headers['Content-type'] = 'application/json'
-                self.response.out.write(output)
+                self.write(output)
             else:
                 template_values['message'] = "Member not found"
                 path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
                 output = template.render(path, template_values)
                 self.response.set_status(400, 'Bad Request')
-                self.response.headers['Content-type'] = 'application/json'
-                self.response.out.write(output)
+                self.write(output)
         else:
             template_values['message'] = "Required parameter username is missing"
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
             output = template.render(path, template_values)
             self.response.set_status(400, 'Bad Request')
-            self.response.headers['Content-type'] = 'application/json'
-            self.response.out.write(output)
+            self.write(output)
                 
-class CurrencyHandler(webapp.RequestHandler):
+class CurrencyHandler(ApiHandler):
     def get(self):
         codes = ['EUR', 'JPY', 'CNY', 'CHF', 'AUD', 'TWD', 'CAD', 'GBP', 'HKD', 'MYR', 'NZD', 'PHP', 'SGD', 'THB']
         template_values = {}
@@ -293,8 +290,7 @@ class CurrencyHandler(webapp.RequestHandler):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'currency.json')
             o = template.render(path, template_values)
             memcache.set('currency.json', o, 86400)
-        self.response.headers['Content-type'] = 'application/json'
-        self.response.out.write(o)
+        self.write(o)
 
 def main():
     application = webapp.WSGIApplication([
