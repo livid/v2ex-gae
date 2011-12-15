@@ -48,10 +48,10 @@ class MyNodesHandler(webapp.RequestHandler):
             template_values['rnd'] = random.randrange(1, 100)
             if member.favorited_nodes > 0:
                 template_values['has_nodes'] = True
-                q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE member = :1 ORDER BY created DESC LIMIT 0,10", member)
+                q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE member = :1 ORDER BY created DESC LIMIT 0,15", member)
                 template_values['column_1'] = q
-                if member.favorited_nodes > 10:
-                    q2 = db.GqlQuery("SELECT * FROM NodeBookmark WHERE member = :1 ORDER BY created DESC LIMIT 10,10", member)
+                if member.favorited_nodes > 15:
+                    q2 = db.GqlQuery("SELECT * FROM NodeBookmark WHERE member = :1 ORDER BY created DESC LIMIT 15,15", member)
                     template_values['column_2'] = q2
             else:
                 template_values['has_nodes'] = False

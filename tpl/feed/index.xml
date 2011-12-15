@@ -18,7 +18,7 @@
 		<uri>http://{{ site_domain }}/member/{{ topic.member.name }}</uri>
 	</author>
 	<content type="html" xml:base="http://{{ site_domain }}/" xml:lang="en"><![CDATA[
-	{{ topic.content|escape|imgly|mentions|urlize|linebreaksbr }}
+	{{ topic.content|escape|youtube|youku|sinaimg|imgly|mentions|urlize|linebreaksbr }}
 	]]></content>
 </entry>{% endfor %}
 </feed>
