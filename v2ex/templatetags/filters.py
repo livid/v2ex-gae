@@ -79,15 +79,16 @@ register.filter(imgly)
 
 # auto convert cl.ly/abcd links to image tags
 def clly(value):
-    imgs = re.findall('(http://cl.ly/[a-zA-Z0-9]+)\s?', value)
-    if (len(imgs) > 0):
-        for img in imgs:
-            img_id = re.findall('http://cl.ly/([a-zA-Z0-9]+)', img)
-            if (img_id[0] != 'demo' and img_id[0] != 'whatever'):
-                value = value.replace('http://cl.ly/' + img_id[0], '<a href="http://cl.ly/' + img_id[0] + '" target="_blank"><img src="http://cl.ly/' + img_id[0] + '/content" class="imgly" border="0" /></a>')
-        return value
-    else:
-        return value
+    #imgs = re.findall('(http://cl.ly/[a-zA-Z0-9]+)\s?', value)
+    #if (len(imgs) > 0):
+    #    for img in imgs:
+    #        img_id = re.findall('http://cl.ly/([a-zA-Z0-9]+)', img)
+    #        if (img_id[0] != 'demo' and img_id[0] != 'whatever'):
+    #            value = value.replace('http://cl.ly/' + img_id[0], '<a href="http://cl.ly/' + img_id[0] + '" target="_blank"><img src="http://cl.ly/' + img_id[0] + '/content" class="imgly" border="0" /></a>')
+    #    return value
+    #else:
+    #    return value
+    return value
 register.filter(clly)
 
 # auto convert *.sinaimg.cn/*/*.jpg and bcs.baidu.com/*.jpg links to image tags

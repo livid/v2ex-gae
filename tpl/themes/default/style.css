@@ -313,6 +313,7 @@ td.avatar_mini {
 	font-weight: bold;
 	color: #ccc;
 	display: block;
+	-webkit-text-size-adjust: none;
 }
 
 .avatar_normal {
@@ -352,7 +353,6 @@ td.avatar_mini {
 	font-size: 14px;
 	line-height: 180%;
 	color: #000;
-	text-overflow: ellipsis;
 	overflow:hidden;
 	word-break: break-word;
 }
@@ -1054,4 +1054,8 @@ a.fade:link, a.fade:visited, a.fade:active {
 a.fade:hover {
 	color: #666;
 	text-decoration: none;
+}
+
+small {
+	-webkit-text-size-adjust: none;
 }

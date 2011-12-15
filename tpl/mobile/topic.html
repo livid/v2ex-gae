@@ -3,10 +3,11 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta content='True' name='HandheldFriendly' />
-	<meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
 	<title>{% if topic %}{{ site.title }} › {{ topic.title|escape }}{% else %}{{ site.title }} › 主题未找到{% endif %}</title>
 	<link rel="stylesheet" type="text/css" media="screen"  href="/static/css/mobile/style.css?v={{ system_version }}" />
 	<link rel="shortcut icon" href="/favicon.ico" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
 </head>
 <body>
 	{% include 'common/top.html' %}

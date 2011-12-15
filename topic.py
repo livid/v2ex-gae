@@ -153,7 +153,7 @@ class NewTopicHandler(webapp.RequestHandler):
         else:
             can_continue = False
         if ('Content-Type' in self.request.headers):
-            if self.request.headers['Content-Type'] != 'application/x-www-form-urlencoded':
+            if self.request.headers['Content-Type'].startswith( 'application/x-www-form-urlencoded') is False:
                 can_continue = False
         else:
             can_continue = False
@@ -179,16 +179,12 @@ class NewTopicHandler(webapp.RequestHandler):
         if (member):
             template_values['member'] = member
             if can_create:
-                q = db.GqlQuery("SELECT * FROM Node WHERE name = :1", node_name)
                 node = False
-                if (q.count() == 1):
-                    node = q[0]
+                node = GetKindByName('Node', node_name)
                 template_values['node'] = node
                 section = False
                 if node:
-                    q2 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                    if (q2.count() == 1):
-                        section = q2[0]
+                    section = GetKindByNum('Section', node.section_num)
                 template_values['section'] = section
                 errors = 0
                 # Verification: title
@@ -197,7 +193,7 @@ class NewTopicHandler(webapp.RequestHandler):
                     u'请输入主题标题',
                     u'主题标题长度不能超过 120 个字符'
                     ]
-                topic_title = self.request.get('title').strip()
+                topic_title = self.request.get('title').strip().replace("\n", " ")
                 if (len(topic_title) == 0):
                     errors = errors + 1
                     topic_title_error = 1
@@ -598,7 +594,7 @@ class TopicHandler(webapp.RequestHandler):
         else:
             can_continue = False
         if ('Content-Type' in self.request.headers):
-            if self.request.headers['Content-Type'] != 'application/x-www-form-urlencoded':
+            if self.request.headers['Content-Type'].startswith( 'application/x-www-form-urlencoded') is False:
                 can_continue = False
         else:
             can_continue = False
@@ -624,14 +620,7 @@ class TopicHandler(webapp.RequestHandler):
             return
         if (member):
             topic = False
-            q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
-            if (q.count() == 1):
-                topic = q[0]
-                try:
-                    topic.hits = topic.hits + 1
-                    topic.put()
-                except:
-                    topic.hits = topic.hits - 1
+            topic = GetKindByNum('Topic', int(topic_num))
             template_values['topic'] = topic
             errors = 0
             # Verification: content
@@ -673,10 +662,13 @@ class TopicHandler(webapp.RequestHandler):
                 node = False
                 section = False
                 if topic:
-                    q3 = db.GqlQuery("SELECT * FROM Node WHERE num = :1", topic.node_num)
-                    node = q3[0]
-                    q4 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                    section = q4[0]
+                    node = False
+                    section = False
+                    node = GetKindByNum('Node', topic.node_num)
+                    if (node):
+                        section = GetKindByNum('Section', node.section_num)
+                    template_values['node'] = node
+                    template_values['section'] = section
                 reply.num = counter.value
                 reply.content = reply_content
                 reply.topic = topic
@@ -704,11 +696,6 @@ class TopicHandler(webapp.RequestHandler):
                 topic.put()
                 counter.put()
                 counter2.put()
-                
-                # Update member.ua
-                
-                member.ua = ua.replace(',gzip(gfe),gzip(gfe),gzip(gfe)', '')
-                member.put()
                 
                 # Notifications
                 
@@ -813,11 +800,9 @@ class TopicHandler(webapp.RequestHandler):
             else:
                 node = False
                 section = False
-                if topic:
-                    q2 = db.GqlQuery("SELECT * FROM Node WHERE num = :1", topic.node_num)
-                    node = q2[0]
-                    q3 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                    section = q3[0]
+                node = GetKindByNum('Node', topic.node_num)
+                if (node):
+                    section = GetKindByNum('Section', node.section_num)
                 template_values['node'] = node
                 template_values['section'] = section
                 if browser['ios']:
@@ -843,9 +828,8 @@ class TopicEditHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         topic = False
-        q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
-        if (q.count() == 1):
-            topic = q[0]
+        topic = GetKindByNum('Topic', int(topic_num))
+        if topic:
             template_values['topic'] = topic
         can_edit = False
         ttl = 0
@@ -867,11 +851,9 @@ class TopicEditHandler(webapp.RequestHandler):
                     template_values['topic_content'] = topic.content
                     node = False
                     section = False
-                    if topic:
-                        q2 = db.GqlQuery("SELECT * FROM Node WHERE num = :1", topic.node_num)
-                        node = q2[0]
-                        q3 = db.GqlQuery("SELECT * FROM Section WHERE num = :1", node.section_num)
-                        section = q3[0]
+                    node = GetKindByNum('Node', topic.node_num)
+                    if (node):
+                        section = GetKindByNum('Section', node.section_num)
                     template_values['node'] = node
                     template_values['section'] = section
                     if site.use_topic_types:
@@ -914,9 +896,8 @@ class TopicEditHandler(webapp.RequestHandler):
         l10n = GetMessages(self, member, site)
         template_values['l10n'] = l10n
         topic = False
-        q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
-        if (q.count() == 1):
-            topic = q[0]
+        topic = GetKindByNum('Topic', int(topic_num))
+        if (topic):
             template_values['topic'] = topic
         can_edit = False
         ttl = 0

@@ -85,7 +85,7 @@ class TwitterCallbackHandler(webapp.RequestHandler):
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 user = twitter.GetUserInfo()
                 memcache.delete('Member_' + str(member.num))
-                member = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member.num)[0]
+                member = db.get(member.key())
                 member.twitter_oauth = 1
                 member.twitter_oauth_key = access_token.key
                 member.twitter_oauth_secret = access_token.secret
@@ -116,7 +116,7 @@ class TwitterCallbackHandler(webapp.RequestHandler):
                 twitter = OAuthApi(CONSUMER_KEY, CONSUMER_SECRET, access_token)
                 user = twitter.GetUserInfo()
                 memcache.delete('Member_' + str(member.num))
-                member = db.GqlQuery("SELECT * FROM Member WHERE num = :1", member.num)[0]
+                member = db.get(member.key())
                 member.twitter_oauth = 1
                 member.twitter_oauth_key = access_token.key
                 member.twitter_oauth_secret = access_token.secret

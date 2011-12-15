@@ -819,10 +819,6 @@ class BackstageSectionHandler(webapp.RequestHandler):
                 else:
                     template_values['section'] = section
                 if (section):
-                    q = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY topics DESC", section.num)
-                    template_values['nodes'] = q
-                    section.nodes = q.count()
-                    section.put()
                     template_values['section'] = section
                     q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY last_modified DESC LIMIT 10", section.num)
                     template_values['recent_modified'] = q2
@@ -1742,6 +1738,10 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     template_values['site_theme'] = site.theme
                 else:
                     template_values['site_theme'] = 'default'
+                if site.data_migration_mode is not None:
+                    template_values['site_data_migration_mode'] = site.data_migration_mode
+                else:
+                    template_values['site_data_migration_mode'] = 0
                 s = GetLanguageSelect(site.l10n)
                 template_values['s'] = s
                 template_values['member'] = member
@@ -1921,7 +1921,13 @@ class BackstageSiteHandler(webapp.RequestHandler):
                 else:
                     site_theme = 'default'
                     template_values['site_theme'] = site_theme
-
+                # Verification: data_migration_mode
+                site_data_migration_mode = self.request.get('data_migration_mode')
+                if site_data_migration_mode == 'on':
+                    template_values['site_data_migration_mode'] = 1
+                else:
+                    template_values['site_data_migration_mode'] = 0
+                
                 template_values['errors'] = errors
                 
                 if errors == 0:
@@ -1940,6 +1946,7 @@ class BackstageSiteHandler(webapp.RequestHandler):
                     site.meta = site_meta
                     site.home_top = site_home_top
                     site.theme = site_theme
+                    site.data_migration_mode = template_values['site_data_migration_mode']
                     site.put()
                     memcache.delete('index_categories')
                     template_values['message'] = l10n.site_settings_updated;

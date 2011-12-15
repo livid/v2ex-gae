@@ -35,17 +35,20 @@ class FeedHomeHandler(BaseHandler):
             self.values['site_slogan'] = self.site.slogan
             self.values['feed_url'] = 'http://' + self.values['site_domain'] + '/index.xml'
             self.values['site_updated'] = datetime.datetime.now()
-            q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")
-            topics = []
-            IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood']
-            for topic in q:
-                if topic.node.name not in IGNORED:
-                    topics.append(topic)
+            topics = memcache.get('feed_home')
+            if topics is None:
+                q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")
+                topics = []
+                IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood']
+                for topic in q:
+                    if topic.node.name not in IGNORED:
+                        topics.append(topic)
+                memcache.set('feed_home', topics, 3600)
             self.values['topics'] = topics
             self.values['feed_title'] = self.site.title
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'feed', 'index.xml')
             output = template.render(path, self.values)
-            memcache.set('feed_index', output, 600)
+            memcache.set('feed_index', output, 3600)
         self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
         self.response.out.write(output)
 
@@ -76,7 +79,7 @@ class FeedNodeHandler(webapp.RequestHandler):
             template_values['feed_title'] = site.title + u' › ' + node.title
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'feed', 'index.xml')
             output = template.render(path, template_values)
-            memcache.set('feed_node_' + node.name, output, 600)
+            memcache.set('feed_node_' + node.name, output, 7200)
         self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
         self.response.out.write(output)
 

@@ -166,6 +166,18 @@
         			    </tr>
         			    <tr>
         			        <td width="100" align="right">
+        			            Data Migration Mode
+        			        </td>
+        			        <td width="200" align="left">
+        			            {% ifequal site_data_migration_mode 1 %}
+        			            <input type="checkbox" name="data_migration_mode" checked="checked" />
+        			            {% else %}
+        			            <input type="checkbox" name="data_migration_mode" />
+        			            {% endifequal %}
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td width="100" align="right">
         			        </td>
         			        <td width="200" align="left">
         			            <input type="submit" value="{{ l10n.save }}" class="super normal button" />
