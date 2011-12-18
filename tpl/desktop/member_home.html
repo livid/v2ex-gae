@@ -70,6 +70,14 @@
                                     {% endif %}</td>
                                     <td width="50%"></td>
                                 </tr>
+                                {% if one.github %}
+                                <tr>
+                                    <td width="50%">
+                                    <span style="line-height: 16px;"><img src="/static/img/github.png" align="absmiddle" /> &nbsp;<a href="http://github.com/{{ one.github }}" target="_blank">{{ one.github }}</a></span>
+                                    </td>
+                                    <td width="50%"></td>
+                                </tr>
+                                {% endif %}
                                 {% if one.btc %}
                                 <tr>
                                     <td width="50%">

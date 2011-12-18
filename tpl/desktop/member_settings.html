@@ -52,7 +52,10 @@
         				{% if member_btc_error %}
         				<li>{{ member_btc_error_message }}</li>
         				{% endif %}
-        				{% if member_location_error %}
+        				{% if member_github_error %}
+        				<li>{{ member_github_error_message }}</li>
+        				{% endif %}
+                        {% if member_location_error %}
         				<li>{{ member_location_error_message }}</li>
         				{% endif %}
         				{% if member_tagline_error %}
@@ -135,6 +138,14 @@
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="btc" value="{{ member_btc|escape }}" />
+        			        </td>
+        			    </tr>
+        			    <tr>
+        			        <td align="right">
+        			            GitHub Username
+        			        </td>
+        			        <td width="200" align="left">
+        			            <input type="text" class="sl" name="github" value="{{ member_github|escape }}" />
         			        </td>
         			    </tr>
         			    <tr>

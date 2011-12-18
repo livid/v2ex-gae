@@ -119,7 +119,7 @@ class HomeHandler(webapp.RequestHandler):
                         s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
                 memcache.set('home_sections_neue', s, 86400)
             template_values['s'] = s
-        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise']
+        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise', 'diary']
         if browser['ios']:
             home_rendered = memcache.get('home_rendered_mobile')
             if home_rendered is None:
@@ -281,7 +281,7 @@ class RecentHandler(webapp.RequestHandler):
         else:
             q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16,50")
             topics = []
-            IGNORED_RECENT = ['flamewar', 'pointless', 'in', 'autistic', 'chamber', 'flood']
+            IGNORED_RECENT = ['flamewar', 'pointless', 'in', 'autistic', 'chamber', 'flood', 'diary']
             for topic in q2:
                 if topic.node_name not in IGNORED_RECENT:
                     topics.append(topic)

@@ -180,6 +180,10 @@ class SettingsHandler(webapp.RequestHandler):
                 member.my_home = ''
             template_values['member_my_home'] = member.my_home
             template_values['member_btc'] = member.btc
+            if member.github:
+                template_values['member_github'] = member.github
+            else:
+                template_values['member_github'] = u''
             template_values['member_location'] = member.location
             if (member.tagline == None):
                 member.tagline = ''
@@ -411,6 +415,29 @@ class SettingsHandler(webapp.RequestHandler):
             template_values['member_btc'] = member_btc
             template_values['member_btc_error'] = member_btc_error
             template_values['member_btc_error_message'] = member_btc_error_messages[member_btc_error]
+            # Verification: github
+            member_github_error = 0
+            member_github_error_messages = ['',
+                u'GitHub 用户名长度不能超过 40 个字符',
+                u'GitHub 用户名不符合规则'
+            ]
+            member_github = self.request.get('github').strip()
+            if (len(member_github) == 0):
+                member_github = ''
+            else:
+                if (len(member_github) > 40):
+                    errors = errors + 1
+                    member_github_error = 1
+                else:
+                    p = re.compile('^[a-zA-Z0-9\_]+$')
+                    if (p.search(member_github)):
+                        errors = errors
+                    else:
+                        errors = errors + 1
+                        member_github_error = 2
+            template_values['member_github'] = member_github
+            template_values['member_github_error'] = member_github_error
+            template_values['member_github_error_message'] = member_github_error_messages[member_github_error]
             # Verification: location
             member_location_error = 0
             member_location_error_messages = ['',
@@ -517,6 +544,7 @@ class SettingsHandler(webapp.RequestHandler):
                 member.twitter = member_twitter
                 member.psn = member_psn
                 member.btc = member_btc
+                member.github = member_github
                 member.location = member_location
                 member.tagline = member_tagline
                 if member.twitter_oauth == 1:
