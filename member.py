@@ -11,8 +11,11 @@ import httplib
 import string
 import pickle
 
+from django.utils import simplejson as json
+
 from google.appengine.ext import webapp
 from google.appengine.api import memcache
+from google.appengine.api import urlfetch
 from google.appengine.api import images
 from google.appengine.ext import db
 from google.appengine.ext.webapp import util
@@ -60,6 +63,15 @@ class MemberHandler(webapp.RequestHandler):
             template_values['one'] = one
             template_values['page_title'] = site.title + u' › ' + one.username
             template_values['canonical'] = 'http://' + site.domain + '/member/' + one.username
+            if one.github:
+                github = memcache.get('Member::' + one.username_lower + '::github')
+                if github is None:
+                    response = urlfetch.fetch("https://api.github.com/users/" + one.github + "/repos")
+                    if response.status_code == 200:
+                        github = response.content
+                        memcache.set('Member::' + one.username_lower + '::github', github, 86400)
+                if github is not None:
+                    template_values['github_repos'] = json.loads(github)
         if one is not False:
             member_blog = memcache.get('member::' + str(one.num) + '::blog')
             if member_blog == None:

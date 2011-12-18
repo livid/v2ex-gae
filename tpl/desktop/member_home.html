@@ -7,7 +7,14 @@
             
         </div>
         <div id="Rightbar">
-            {% include 'rightbar/user.html' %}
+            {% if github_repos %}
+            <div class="box">
+                <div class="cell"><span class="fade">GitHub Public Repos</span></div>
+                {% for repo in github_repos %}
+                {% if forloop.last %}<div class="inner">{% else %}<div class="cell">{% endif %}<div class="fr"><strong class="fade">{% if repo.language %}{{ repo.language }}{% endif %}</strong></div><strong><a href="{{ repo.html_url }}" target="_blank" class="black">{{ repo.name }}</a></strong><div class="sep5"></div><span class="fade">{{ repo.description|escape|urlize }}</span></div>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         <div id="Content">
             {% if message %}
@@ -146,6 +153,7 @@
                 </div>
             </div>
             {% endif %}
+            
         </div>
     <div class="c"></div>
     </div>
