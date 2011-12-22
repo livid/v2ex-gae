@@ -40,8 +40,12 @@ template.register_template_library('v2ex.templatetags.filters')
 
 class ApiHandler(webapp.RequestHandler):
     def write(self, output):
+        if output is None:
+            output = ''
         callback = self.request.get('callback', None)
         if callback:
+            if not isinstance(output, unicode):
+                output = output.decode('utf-8')
             self.response.headers['Content-type'] = 'application/javascript'
             output = '%s(%s)' % (callback, output)
         else:
