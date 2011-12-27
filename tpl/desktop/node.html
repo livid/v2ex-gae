@@ -27,7 +27,7 @@
                     <td width="73" align="center" valign="top">{{ node|avatar:"large" }}</td>
                     <td width="10"></td>
                     {% endif %}
-                    <td width="auto" valign="top"><div class="fr" align="right"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong>{% if member %} &nbsp;<span class="snow">•</span>&nbsp; {% if favorited %}<a href="/unfavorite/node/{{ node.name }}">取消收藏</a>{% else %}<a href="/favorite/node/{{ node.name }}">加入收藏</a>{% endif %}{% if can_manage %} &nbsp;<span class="snow">•</span>&nbsp; <a href="/backstage/node/{{ node.name }}">管理节点信息</a>{% endif %}{% endif %}</span></div>
+                    <td width="auto" valign="top"><div class="fr" align="right"><span class="snow">{{ l10n.total_topics }}</span> <span class="fade"><strong>{{ node.topics }}</strong>{% if member %} &nbsp;<span class="snow">•</span>&nbsp; {% if favorited %}<a href="/unfavorite/node/{{ node.name }}?t={{ member.created_ts }}">取消收藏</a>{% else %}<a href="/favorite/node/{{ node.name }}?t={{ member.created_ts }}">加入收藏</a>{% endif %}{% if can_manage %} &nbsp;<span class="snow">•</span>&nbsp; <a href="/backstage/node/{{ node.name }}">管理节点信息</a>{% endif %}{% endif %}</span></div>
                     <span class="bigger"><a href="/">{{ site.title }}</a> <span class="chevron">&nbsp;›&nbsp;</span> {{ node.title|escape }}</span>
                     {% if node.header %}
                     <div class="sep10"></div>

@@ -65,6 +65,14 @@ class Member(db.Model):
     btc = db.StringProperty(required=False, default='')
     github = db.StringProperty(required=False, default='')
     
+    @property
+    def username_lower_md5(self):
+        return hashlib.md5(self.username_lower).hexdigest()
+    
+    @property
+    def created_ts(self):
+        return self.created.strftime("%s")
+    
     def hasFavorited(self, something):
         if type(something).__name__ == 'Node':
             n = 'r/n' + str(something.num) + '/m' + str(self.num)
@@ -303,3 +311,17 @@ class Notification(db.Model):
     label2 = db.StringProperty(required=False, indexed=False)
     link2 = db.StringProperty(required=False, indexed=False)
     created = db.DateTimeProperty(auto_now_add=True)
+
+class Item(db.Model):
+    title = db.StringProperty(required=False, indexed=False, default='')
+    description = db.TextProperty(required=False, default='')
+    price = db.StringProperty(required=False, indexed=False, default='')
+    category = db.StringProperty(required=False, indexed=False, default='gadgets')
+    column = db.IntegerProperty(required=False, default=1, indexed=True)
+    link_official = db.StringProperty(required=False, indexed=False, default='')
+    link_picture = db.StringProperty(required=False, indexed=False, default='')
+    link_buy = db.StringProperty(required=False, indexed=False, default='')
+    node_name = db.StringProperty(required=False, indexed=False, default='')
+    published = db.IntegerProperty(required=False, default=0, indexed=True)
+    created = db.DateTimeProperty(auto_now_add=True)
+    last_modified = db.DateTimeProperty(auto_now=True)

@@ -1041,11 +1041,16 @@ class TopicDeleteHandler(webapp.RequestHandler):
     def get(self, topic_num):
         site = GetSite()
         member = CheckAuth(self)
+        t = self.request.get('t')
         if member:
-            if member.level == 0:
+            if member.level == 0 and (str(member.created_ts) == str(t)):
                 q = db.GqlQuery("SELECT * FROM Topic WHERE num = :1", int(topic_num))
                 if q.count() == 1:
                     topic = q[0]
+                    # Bookmarks
+                    q5 = db.GqlQuery("SELECT * FROM TopicBookmark WHERE topic = :1", topic)
+                    for bookmark in q5:
+                        bookmark.delete()
                     # Take care of Node                
                     node = topic.node
                     node.topics = node.topics - 1

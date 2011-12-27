@@ -1466,8 +1466,9 @@ class BackstageNodeAvatarHandler(BaseHandler):
 class BackstageRemoveReplyHandler(webapp.RequestHandler):
     def get(self, reply_key):
         member = CheckAuth(self)
+        t = self.request.get('t')
         if (member):
-            if (member.level == 0):
+            if (member.level == 0) and (str(member.created_ts) == str(t)):
                 reply = db.get(db.Key(reply_key))
                 if reply:
                     topic = reply.topic

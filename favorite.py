@@ -43,21 +43,23 @@ class FavoriteNodeHandler(webapp.RequestHandler):
         else:
             go = '/'
         member = CheckAuth(self)
+        t = self.request.get('t')
         if member:
-            node = GetKindByName('Node', node_name)
-            if node is not False:
-                q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE node = :1 AND member = :2", node, member)
-                if q.count() == 0:
-                    bookmark = NodeBookmark(parent=member)
-                    bookmark.node = node
-                    bookmark.member = member
-                    bookmark.put()
-                    member = db.get(member.key())
-                    member.favorited_nodes = member.favorited_nodes + 1
-                    member.put()
-                    memcache.set('Member_' + str(member.num), member, 86400)
-                    n = 'r/n' + str(node.num) + '/m' + str(member.num)
-                    memcache.set(n, True, 86400 * 14)
+            if str(member.created_ts) == str(t):
+                node = GetKindByName('Node', node_name)
+                if node is not False:
+                    q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE node = :1 AND member = :2", node, member)
+                    if q.count() == 0:
+                        bookmark = NodeBookmark(parent=member)
+                        bookmark.node = node
+                        bookmark.member = member
+                        bookmark.put()
+                        member = db.get(member.key())
+                        member.favorited_nodes = member.favorited_nodes + 1
+                        member.put()
+                        memcache.set('Member_' + str(member.num), member, 86400)
+                        n = 'r/n' + str(node.num) + '/m' + str(member.num)
+                        memcache.set(n, True, 86400 * 14)
         self.redirect(go)
     
 class UnfavoriteNodeHandler(webapp.RequestHandler):
@@ -67,19 +69,21 @@ class UnfavoriteNodeHandler(webapp.RequestHandler):
         else:
             go = '/'
         member = CheckAuth(self)
+        t = self.request.get('t')
         if member:
-            node = GetKindByName('Node', node_name)
-            if node is not False:
-                q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE node = :1 AND member = :2", node, member)
-                if q.count() > 0:
-                    bookmark = q[0]
-                    bookmark.delete()
-                    member = db.get(member.key())
-                    member.favorited_nodes = member.favorited_nodes - 1
-                    member.put()
-                    memcache.set('Member_' + str(member.num), member, 86400)
-                    n = 'r/n' + str(node.num) + '/m' + str(member.num)
-                    memcache.delete(n)
+            if str(member.created_ts) == str(t):
+                node = GetKindByName('Node', node_name)
+                if node is not False:
+                    q = db.GqlQuery("SELECT * FROM NodeBookmark WHERE node = :1 AND member = :2", node, member)
+                    if q.count() > 0:
+                        bookmark = q[0]
+                        bookmark.delete()
+                        member = db.get(member.key())
+                        member.favorited_nodes = member.favorited_nodes - 1
+                        member.put()
+                        memcache.set('Member_' + str(member.num), member, 86400)
+                        n = 'r/n' + str(node.num) + '/m' + str(member.num)
+                        memcache.delete(n)
         self.redirect(go)
 
 class FavoriteTopicHandler(webapp.RequestHandler):
@@ -89,22 +93,24 @@ class FavoriteTopicHandler(webapp.RequestHandler):
         else:
             go = '/'
         member = CheckAuth(self)
+        t = self.request.get('t').strip()
         if member:
-            topic = GetKindByNum('Topic', int(topic_num))
-            if topic is not False:
-                q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE topic = :1 AND member = :2", topic, member)
-                if q.count() == 0:
-                    bookmark = TopicBookmark(parent=member)
-                    bookmark.topic = topic
-                    bookmark.member = member
-                    bookmark.put()
-                    member = db.get(member.key())
-                    member.favorited_topics = member.favorited_topics + 1
-                    member.put()
-                    memcache.set('Member_' + str(member.num), member, 86400)
-                    n = 'r/t' + str(topic.num) + '/m' + str(member.num)
-                    memcache.set(n, True, 86400 * 14)
-                    taskqueue.add(url='/add/star/topic/' + str(topic.key()))
+            if member.username_lower_md5 == t:
+                topic = GetKindByNum('Topic', int(topic_num))
+                if topic is not False:
+                    q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE topic = :1 AND member = :2", topic, member)
+                    if q.count() == 0:
+                        bookmark = TopicBookmark(parent=member)
+                        bookmark.topic = topic
+                        bookmark.member = member
+                        bookmark.put()
+                        member = db.get(member.key())
+                        member.favorited_topics = member.favorited_topics + 1
+                        member.put()
+                        memcache.set('Member_' + str(member.num), member, 86400)
+                        n = 'r/t' + str(topic.num) + '/m' + str(member.num)
+                        memcache.set(n, True, 86400 * 14)
+                        taskqueue.add(url='/add/star/topic/' + str(topic.key()))
         self.redirect(go)
 
 class UnfavoriteTopicHandler(webapp.RequestHandler):
@@ -114,20 +120,22 @@ class UnfavoriteTopicHandler(webapp.RequestHandler):
         else:
             go = '/'
         member = CheckAuth(self)
+        t = self.request.get('t').strip()
         if member:
-            topic = GetKindByNum('Topic', int(topic_num))
-            if topic is not False:
-                q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE topic = :1 AND member = :2", topic, member)
-                if q.count() > 0:
-                    bookmark = q[0]
-                    bookmark.delete()
-                    member = db.get(member.key())
-                    member.favorited_topics = member.favorited_topics - 1
-                    member.put()
-                    memcache.set('Member_' + str(member.num), member, 86400)
-                    n = 'r/t' + str(topic.num) + '/m' + str(member.num)
-                    memcache.delete(n)
-                    taskqueue.add(url='/minus/star/topic/' + str(topic.key()))
+            if member.username_lower_md5 == t:
+                topic = GetKindByNum('Topic', int(topic_num))
+                if topic is not False:
+                    q = db.GqlQuery("SELECT * FROM TopicBookmark WHERE topic = :1 AND member = :2", topic, member)
+                    if q.count() > 0:
+                        bookmark = q[0]
+                        bookmark.delete()
+                        member = db.get(member.key())
+                        member.favorited_topics = member.favorited_topics - 1
+                        member.put()
+                        memcache.set('Member_' + str(member.num), member, 86400)
+                        n = 'r/t' + str(topic.num) + '/m' + str(member.num)
+                        memcache.delete(n)
+                        taskqueue.add(url='/minus/star/topic/' + str(topic.key()))
         self.redirect(go)
         
 class FollowMemberHandler(webapp.RequestHandler):
@@ -137,33 +145,35 @@ class FollowMemberHandler(webapp.RequestHandler):
         else:
             go = '/'
         member = CheckAuth(self)
+        t = self.request.get('t')
         if member:
-            one = GetKindByNum('Member', int(one_num))
-            if one is not False:
-                if one.num != member.num:
-                    q = db.GqlQuery("SELECT * FROM MemberBookmark WHERE one = :1 AND member_num = :2", one, member.num)
-                    if q.count() == 0:
-                        member = db.get(member.key())
-                        member.favorited_members = member.favorited_members + 1
-                        if member.favorited_members > 30:
-                            self.session = Session()
-                            self.session['message'] = '最多只能添加 30 位特别关注'
-                        else:
-                            bookmark = MemberBookmark(parent=member)
-                            bookmark.one = one
-                            bookmark.member_num = member.num
-                            bookmark.put()
-                            member.put()
-                            memcache.set('Member_' + str(member.num), member, 86400)
-                            n = 'r/m' + str(one.num) + '/m' + str(member.num)
-                            memcache.set(n, True, 86400 * 14)
-                            one = db.get(one.key())
-                            one.followers_count = one.followers_count + 1
-                            one.put()
-                            memcache.set('Member_' + str(one.num), one, 86400)
-                            memcache.set('Member::' + str(one.username_lower), one, 86400)
-                            self.session = Session()
-                            self.session['message'] = '特别关注添加成功，还可以添加 ' + str(30 - member.favorited_members) + ' 位'
+            if str(member.created_ts) == str(t):
+                one = GetKindByNum('Member', int(one_num))
+                if one is not False:
+                    if one.num != member.num:
+                        q = db.GqlQuery("SELECT * FROM MemberBookmark WHERE one = :1 AND member_num = :2", one, member.num)
+                        if q.count() == 0:
+                            member = db.get(member.key())
+                            member.favorited_members = member.favorited_members + 1
+                            if member.favorited_members > 30:
+                                self.session = Session()
+                                self.session['message'] = '最多只能添加 30 位特别关注'
+                            else:
+                                bookmark = MemberBookmark(parent=member)
+                                bookmark.one = one
+                                bookmark.member_num = member.num
+                                bookmark.put()
+                                member.put()
+                                memcache.set('Member_' + str(member.num), member, 86400)
+                                n = 'r/m' + str(one.num) + '/m' + str(member.num)
+                                memcache.set(n, True, 86400 * 14)
+                                one = db.get(one.key())
+                                one.followers_count = one.followers_count + 1
+                                one.put()
+                                memcache.set('Member_' + str(one.num), one, 86400)
+                                memcache.set('Member::' + str(one.username_lower), one, 86400)
+                                self.session = Session()
+                                self.session['message'] = '特别关注添加成功，还可以添加 ' + str(30 - member.favorited_members) + ' 位'
         self.redirect(go)
 
 class UnfollowMemberHandler(webapp.RequestHandler):
@@ -173,25 +183,27 @@ class UnfollowMemberHandler(webapp.RequestHandler):
         else:
             go = '/'
         member = CheckAuth(self)
+        t = self.request.get('t')
         if member:
-            one = GetKindByNum('Member', int(one_num))
-            if one is not False:
-                if one.num != member.num:
-                    q = db.GqlQuery("SELECT * FROM MemberBookmark WHERE one = :1 AND member_num = :2", one, member.num)
-                    if q.count() > 0:
-                        bookmark = q[0]
-                        bookmark.delete()
-                        member = db.get(member.key())
-                        member.favorited_members = member.favorited_members - 1
-                        member.put()
-                        memcache.set('Member_' + str(member.num), member, 86400)
-                        n = 'r/m' + str(one.num) + '/m' + str(member.num)
-                        memcache.delete(n)
-                        one = db.get(one.key())
-                        one.followers_count = one.followers_count - 1
-                        one.put()
-                        memcache.set('Member_' + str(one.num), one, 86400)
-                        memcache.set('Member::' + str(one.username_lower), one, 86400)
+            if str(member.created_ts) == str(t):
+                one = GetKindByNum('Member', int(one_num))
+                if one is not False:
+                    if one.num != member.num:
+                        q = db.GqlQuery("SELECT * FROM MemberBookmark WHERE one = :1 AND member_num = :2", one, member.num)
+                        if q.count() > 0:
+                            bookmark = q[0]
+                            bookmark.delete()
+                            member = db.get(member.key())
+                            member.favorited_members = member.favorited_members - 1
+                            member.put()
+                            memcache.set('Member_' + str(member.num), member, 86400)
+                            n = 'r/m' + str(one.num) + '/m' + str(member.num)
+                            memcache.delete(n)
+                            one = db.get(one.key())
+                            one.followers_count = one.followers_count - 1
+                            one.put()
+                            memcache.set('Member_' + str(one.num), one, 86400)
+                            memcache.set('Member::' + str(one.username_lower), one, 86400)
         self.redirect(go)
 
 def main():

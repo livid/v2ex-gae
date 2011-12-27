@@ -47,7 +47,7 @@
                 }
             }
             if (is_admin) {
-                $(this).find("span.ops").html(' &nbsp; <a href="/backstage/tidy/reply/' + replies_ids[index] + '">TIDY</a> &nbsp; <a href="/edit/reply/' + replies_ids[index] + '">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm(\'确认删除此回复？\')) { location.href = \'/backstage/remove/reply/' + replies_keys[index] + '\'; }">DEL</a> &nbsp;<img src="/static/img/' + (replies_parents[index] ? 'dot_green.png' : 'dot_red.png') + '" align="absmiddle" />');
+                $(this).find("span.ops").html(' &nbsp; <a href="/backstage/tidy/reply/' + replies_ids[index] + '">TIDY</a> &nbsp; <a href="/edit/reply/' + replies_ids[index] + '">EDIT</a> &nbsp; <a href="#;" onclick="if (confirm(\'确认删除此回复？\')) { location.href = \'/backstage/remove/reply/' + replies_keys[index] + '?t={{ member.created_ts }}\'; }">DEL</a> &nbsp;<img src="/static/img/' + (replies_parents[index] ? 'dot_green.png' : 'dot_red.png') + '" align="absmiddle" />');
             }
         });
         </script>
