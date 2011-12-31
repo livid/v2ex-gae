@@ -300,7 +300,7 @@ class SettingsHandler(webapp.RequestHandler):
                     errors = errors + 1
                     member_email_error = 2
                 else:
-                    p = re.compile(r"(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE)
+                    p = re.compile(r"(?:^|\s)[-a-z0-9_.+]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE)
                     if (p.search(member_email)):
                         q = db.GqlQuery('SELECT * FROM Member WHERE email = :1 AND num != :2', member_email.lower(), member.num)
                         if (q.count() > 0):
