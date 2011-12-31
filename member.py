@@ -630,6 +630,8 @@ class SettingsPasswordHandler(webapp.RequestHandler):
             template_values['password_error'] = password_error
             template_values['password_error_message'] = password_error_messages[password_error]
             if ((password_error == 0) and (password_update == True)):
+                old_auth = member.auth
+                memcache.delete(old_auth)
                 member.password = hashlib.sha1(password_new).hexdigest()
                 member.auth = hashlib.sha1(str(member.num) + ':' + member.password).hexdigest()
                 member.put()

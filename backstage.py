@@ -1561,8 +1561,9 @@ class BackstageTidyTopicHandler(webapp.RequestHandler):
 class BackstageDeactivateUserHandler(webapp.RequestHandler):
     def get(self, key):
         member = CheckAuth(self)
+        t = self.request.get('t')
         if member:
-            if member.level == 0:
+            if (member.level == 0) and (str(member.created_ts) == str(t)):
                 one = db.get(db.Key(key))
                 if one:
                     if one.num != 1:

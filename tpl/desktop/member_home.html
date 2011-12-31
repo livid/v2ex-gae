@@ -30,14 +30,14 @@
                             {% if show_block %}
                             <div class="sep10"></div>
                             {% if one_is_blocked %}
-                            <input type="button" value="撤销屏蔽" class="super normal button" onclick="recordOutboundLink(this, 'Social Graph', 'unblock'); location.href = '/unblock/{{ one.key }}';" />
+                            <input type="button" value="撤销屏蔽" class="super normal button" onclick="recordOutboundLink(this, 'Social Graph', 'unblock'); location.href = '/unblock/{{ one.key }}?t={{ member.created_ts }}';" />
                             {% else %}
-                            <input type="button" value="屏蔽此人" class="super normal button" onclick="recordOutboundLink(this, 'Social Graph', 'block'); location.href = '/block/{{ one.key }}';" />
+                            <input type="button" value="屏蔽此人" class="super normal button" onclick="recordOutboundLink(this, 'Social Graph', 'block'); location.href = '/block/{{ one.key }}?t={{ member.created_ts }}';" />
                             {% endif %}
                             {% endif %}
                             {% if show_extra_options %}
                             <div class="sep10"></div>
-                            <div align="center"><small><strong><a href="/backstage/deactivate/user/{{ one.key }}" class="dark">DEACTIVATE</a></strong></small></div>
+                            <div align="center"><small><strong><a href="/backstage/deactivate/user/{{ one.key }}?t={{ member.created_ts }}" class="dark">DEACTIVATE</a></strong></small></div>
                             {% endif %}
                             {% if member %}{% ifequal member.level 0 %}<div class="sep10"></div><div align="center"><a href="/backstage/member/{{ one.username }}"><img src="/static/img/gear.png" border="0" alt="管理" /></a></div>{% endifequal %}{% endif %}
                         </td>
