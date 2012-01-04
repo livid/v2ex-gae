@@ -411,6 +411,11 @@ class TopicHandler(webapp.RequestHandler):
         can_edit = False
         can_move = False
         if topic:
+            if topic.content:
+                template_values['page_description'] = topic.content[:60] + ' - ' + topic.member.username
+            else:
+                template_values['page_description'] = topic.title[:60] + ' - ' + topic.member.username
+            template_values['page_description'] = template_values['page_description'].replace("\r\n", " ")
             if member:
                 if member.level == 0:
                     can_edit = True

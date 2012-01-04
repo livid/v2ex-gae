@@ -26,4 +26,9 @@
     </script>
     {% endif %}
     {{ site.meta }}
+    {% if page_description %}
+    <meta name="description" content="{{ page_description|escape }}" />
+    {% else %}
+    <meta name="description" content="{{ site.title }} - {{ site.description }}" />
+    {% endif %}
 </head>

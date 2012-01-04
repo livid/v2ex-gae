@@ -39,11 +39,13 @@
                     </script>
         			<table cellpadding="5" cellspacing="0" border="0">
         			    <tr>
-        			        <td width="80" align="right">
+        			        <td width="80" align="right" valign="top">
+        			            <div class="sep5"></div>
         			            {{ l10n.username }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="username" value="{{ member_username|escape }}" />
+        			            <div class="sep5"></div><span class="fade">请使用半角的 a-z 或数字 0-9</span>
         			        </td>
         			    </tr>
         			    <tr>
@@ -55,11 +57,13 @@
         			        </td>
         			    </tr>
         			    <tr>
-        			        <td width="80" align="right">
+        			        <td width="80" align="right" valign="top">
+        			            <div class="sep5"></div>
         			            {{ l10n.email }}
         			        </td>
         			        <td width="200" align="left">
         			            <input type="text" class="sl" name="email" value="{{ member_email|escape }}" />
+        			            <div class="sep5"></div><span class="fade">请使用真实邮箱注册</span>
         			        </td>
         			    </tr>
         			    <tr>
@@ -78,6 +82,34 @@
         			    </tr>
         			</table>
                     </form>
+                </div>
+            </div>
+            <div class="sep20"></div>
+            <div class="box">
+                <div class="cell"><span class="fade">关于注册 V2EX</span></div>
+                <div class="cell" style="font-size: 13px; line-height: 150%;">
+                    V2EX 是一个创意工作者社区，注册并登录后，你将可以在这里和大家<a href="/go/share" target="_blank">分享你的最新发现</a>，讨论解决各种技术问题，<a href="/go/jobs" target="_blank">寻找合作伙伴</a>，<a href="/go/create" target="_blank">展示你的作品</a>，任意的<a href="/go/random" target="_blank">奇思妙想</a>，及更多<a href="/planes" target="_blank">等待你去发现的惊喜</a>。以下是在注册及将来的使用过程中你需要知道的几点：<br /><br />
+
+                    <strong>请用真实邮箱注册</strong><br /><br />
+
+                    这样如果将来你忘记了密码，那么找回密码的链接将可以被发送到你的注册邮箱。因此使用真实邮箱注册非常重要。<br /><br />
+
+                    <strong>V2EX 没有灌水</strong><br /><br />
+
+                    我们反对中文互联网中的常见无信息量行为，如「沙发」，「顶」，「路过」，「不懂」等。我们希望这里的信息是能够持续帮助到别人的，而不是无意义的宣泄。<br /><br />
+
+                    当你在回复别人的问题时，如果你不知道确切答案，那么请不要添加无意义的回复，比如「去搜索一下」，「我也不知道」，「学习了」之类。<br /><br />
+
+                    <strong>V2EX 严格禁止讨论如何获得盗版</strong><br /><br />
+
+                    请不要在 V2EX 讨论如何获得盗版软件、音乐、电影或游戏。所有此类话题会在第一时间被删除。<br /><br />
+
+                    <strong>V2EX Workspace</strong><br /><br />
+
+                    你的 V2EX 帐号同时可以在 <a href="https://workspace.v2ex.com/" target="_blank">V2EX Workspace</a> 登录，这是一个用于小团队的信息分享和整理工具。
+                </div>
+                <div class="inner" style="text-align: center; font-family: 'Big Caslon'; font-size: 20px; color: #393; padding: 20px 10px 20px 10px;">
+                    Code is serendipity.
                 </div>
             </div>
         </div>
