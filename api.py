@@ -37,6 +37,7 @@ from django.utils import simplejson as json
 
 template.register_template_library('v2ex.templatetags.filters')
 
+from topic import TOPIC_PAGE_SIZE
 
 class ApiHandler(webapp.RequestHandler):
     def write(self, output):
@@ -46,10 +47,10 @@ class ApiHandler(webapp.RequestHandler):
         if callback:
             if not isinstance(output, unicode):
                 output = output.decode('utf-8')
-            self.response.headers['Content-type'] = 'application/javascript'
+            self.response.headers['Content-type'] = 'application/javascript; charset=utf-8'
             output = '%s(%s)' % (callback, output)
         else:
-            self.response.headers['Content-type'] = 'application/json'
+            self.response.headers['Content-type'] = 'application/json; charset=utf-8'
         self.response.out.write(output)
 
 # Site
@@ -241,6 +242,40 @@ class TopicsCreateHandler(webapp.RequestHandler):
             self.response.headers['WWW-Authenticate'] = 'Basic realm="' + site.domain + '"'
             self.response.out.write(output)
 
+# Replies
+# /api/replies/show.json
+class RepliesShowHandler(ApiHandler):
+    def get(self):
+        site = GetSite()
+        template_values = {}
+        template_values['site'] = site
+        method_determined = False
+        topic_id = self.request.get('topic_id')
+        page = self.request.get('page', 1)
+        page_size = TOPIC_PAGE_SIZE
+
+        if topic_id:
+            page_start = (int(page) - 1) * page_size
+            replies = db.GqlQuery("SELECT * FROM Reply WHERE topic_num = :1 ORDER BY created ASC LIMIT " + str(page_start) + "," + str(page_size), int(topic_id))
+
+            if replies:
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'replies_show.json')
+                template_values['replies'] = replies
+                output = template.render(path, template_values)
+                self.write(output)
+            else:
+                template_values['message'] = "Failed to get replies"
+                path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
+                output = template.render(path, template_values)
+                self.response.set_status(400, 'Bad Request')
+                self.write(output)
+        else:
+            template_values['message'] = "Required parameter topic_id is missing"
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'api', 'error.json')
+            output = template.render(path, template_values)
+            self.response.set_status(400, 'Bad Request')
+            self.write(output)
+
 # Members
 # /api/members/show.json
 class MembersShowHandler(ApiHandler):
@@ -305,6 +340,7 @@ def main():
     ('/api/topics/latest.json', TopicsLatestHandler),
     ('/api/topics/show.json', TopicsShowHandler),
     ('/api/topics/create.json', TopicsCreateHandler),
+    ('/api/replies/show.json', RepliesShowHandler),
     ('/api/members/show.json', MembersShowHandler),
     ('/api/currency.json', CurrencyHandler)
     ],
