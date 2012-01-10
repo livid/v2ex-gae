@@ -1,0 +1,15 @@
+[
+    {% for reply in replies %}
+    {% ifequal forloop.counter 1 %}{% else %},{% endifequal %}
+    {
+        "id" : {{ reply.num }},
+        "content" : "{{ reply.content|escapejs }}",
+        "member" : {
+            "id" : {{ reply.member.num }},
+            "username" : "{{ reply.member.username }}"
+        },
+        "created" : "{{ reply.created }}",
+        "last_modified" : "{{ reply.last_modified }}"
+    }
+    {% endfor %}
+]

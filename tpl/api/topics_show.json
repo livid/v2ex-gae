@@ -16,6 +16,7 @@
         "node" : {
             "id" : {{ topic.node.num }},
             "name" : "{{ topic.node.name }}",
+            "title" : "{{ topic.node.title|escape }}",
             "url" : "http://{{ site.domain }}/go/{{ topic.node.name }}",
             "topics" : {{ topic.node.topics }}
         },
@@ -40,6 +41,7 @@
     "node" : {
         "id" : {{ topic.node.num }},
         "name" : "{{ topic.node.name }}",
+        "title" : "{{ topic.node.title|escape }}",
         "url" : "http://{{ site.domain }}/go/{{ topic.node.name }}",
         "topics" : {{ topic.node.topics }}
     },
