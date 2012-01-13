@@ -31,6 +31,18 @@
 		</table>
 		</div>
 		{% endfor %}
+		<div class="cell" style="text-align: center;">
+		    <div class="fl">{% if has_previous %}
+            <a href="/go/{{ node.name }}?p={{ previous }}">{{ l10n.previous }}</a>
+            {% endif %}</div>
+            <div class="fr">{% if has_more %}
+            <a href="/go/{{ node.name }}?p={{ more }}">{{ l10n.next }}</a>
+            {% endif %}</div>
+        {{ page }}/{{ pages }}
+		</div>
+		{% if node.sidebar %}
+        <div class="cell">{{ node.sidebar }}</div>
+        {% endif %}
 	</div>
 	{% include 'common/bottom.html' %}
 	{% include 'ads/running.html' %}

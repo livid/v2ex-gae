@@ -27,7 +27,8 @@
     			</tr>
     		</table>
         </div>
-		<div class="cell">
+		<div class="cell"><div class="fr">{% if topic.stars %}<strong class="fade">已有 {{ topic.stars }} 人收藏 &nbsp; </strong>{% endif %}{% if favorited %}<a href="/unfavorite/topic/{{ topic.num }}?t={{ member.username_lower_md5 }}" class="op">取消收藏</a>{% else %}<a href="/favorite/topic/{{ topic.num }}?t={{ member.username_lower_md5 }}" class="op">加入收藏</a>{% endif %}
+		</div>
         <strong class="fade">共收到 {{ topic.replies }} 条回复</strong>
         </div>
         <script type="text/javascript">
@@ -60,7 +61,7 @@
         <span class="fade">现在就加盖一层</span>{% endif %}<form action="/t/{{ topic.num }}" method="post">
         <div class="sep5"></div>
         <textarea name="content" class="mll">{{ reply_content|escape }}</textarea>
-        <div class="sep5"></div>
+        <div class="sep5"></div><div class="fr" style="font-size: 12px; margin-top: 5px; margin-right: 5px;"><a href="/">← {{ site.title }}</a></div>
         <input type="submit" value="Reply" />
         </textarea></form>
         </div>

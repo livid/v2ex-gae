@@ -2,6 +2,7 @@
 <body>
 	{% include 'common/top.html' %}
 	<div id="Main">
+	    {% if member %}{% ifequal member.notifications 0 %}{% else %}<div class="section">提醒</div><div class="cell"><img src="/static/img/dot_orange.png" align="absmiddle" />&nbsp;<strong><a href="/notifications">{{ member.notifications }} 条未读提醒</a></strong></div>{% endifequal %}{% endif %}
 		<div class="section"><div class="fr"><a href="/recent" class="black">更多最近的 50 个</a></div>最新主题</div>
 		<div id="topics_index">
         {{ home }}
@@ -18,7 +19,20 @@
         });
         </script>
         {% endif %}
-		{{ s }}
+        {% if member %}
+        <div class="section">我的收藏</div>
+        <div>
+            <table cellpadding="10" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td width="33%" align="center"><a href="/my/nodes" class="dark" style="display: block;"><span class="bigger">{{ member.favorited_nodes }}</span><div class="sep3"></div><span class="fade">节点收藏</span></a></td>
+                    <td width="34%" align="center" style="border-left: 1px solid #ccc; border-right: 1px solid #ccc;"><a href="/my/topics" class="dark" style="display: block;"><span class="bigger">{{ member.favorited_topics }}</span><div class="sep3"></div><span class="fade">主题收藏</span></a></td>
+                    <td width="33%" align="center"><a href="/my/following" class="dark" style="display: block;"><span class="bigger">{{ member.favorited_members }}</span><div class="sep3"></div><span class="fade">特别关注</span></a></td>
+                </tr>
+            </table>
+        </div>
+	    {% endif %}
+        <div class="section">{{ l10n.nodes_portal }}</div>
+		{{ c }}
 	</div>
 	{% include 'common/bottom.html' %}
 	{% include 'ads/running.html' %}

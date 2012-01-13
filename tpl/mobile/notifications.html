@@ -1,0 +1,12 @@
+{% include 'common/head.html' %}
+<body>
+	{% include 'common/top.html' %}
+	<div id="Main">
+	    <div class="section">提醒系统</div>
+		{% for n in notifications %}
+        <div class="cell"><table cellpadding="0" cellspacing="0" border="0" width="100%"><tr><td width="32" align="left" valign="top"><a href="/member/{{ n.member.username }}">{{ n.member|avatar:"mini" }}</a></td><td valign="top"><span class="fade">{{ n.text }}</span> &nbsp; <span class="snow">{{ n.created|timesince }} ago</span> <a href="/backstage/remove/notification/{{ n.key }}" class="node">删除</a><div class="sep5"></div><div class="payload">{{ n.payload|escape|mentions|urlize|linebreaksbr }}</div></td></tr></table></div>
+        {% endfor %}
+	</div>
+	{% include 'common/bottom.html' %}
+</body>
+</html>

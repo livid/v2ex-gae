@@ -96,29 +96,6 @@ class HomeHandler(webapp.RequestHandler):
                     i = i + 1
             memcache.set('home_nodes_new', nodes_new, 86400)
         template_values['nodes_new'] = nodes_new
-        if browser['ios']:
-            s = ''
-            s = memcache.get('home_sections_neue')
-            if (s == None):
-                s = ''
-                q = db.GqlQuery("SELECT * FROM Section ORDER BY created ASC")
-                if (q.count() > 0):
-                    for section in q:
-                        q2 = db.GqlQuery("SELECT * FROM Node WHERE section_num = :1 ORDER BY created ASC", section.num)
-                        n = ''
-                        if (q2.count() > 0):
-                            nodes = []
-                            i = 0
-                            for node in q2:
-                                nodes.append(node)
-                                i = i + 1
-                            random.shuffle(nodes)
-                            for node in nodes:
-                                fs = random.randrange(12, 16)
-                                n = n + '<a href="/go/' + node.name + '" style="font-size: ' + str(fs) + 'px;">' + node.title + '</a>&nbsp; '
-                        s = s + '<div class="section">' + section.title + '</div><div class="cell">' + n + '</div>'
-                memcache.set('home_sections_neue', s, 86400)
-            template_values['s'] = s
         ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise', 'diary']
         if browser['ios']:
             home_rendered = memcache.get('home_rendered_mobile')
@@ -185,39 +162,35 @@ class HomeHandler(webapp.RequestHandler):
                 reply_total = 0
             memcache.set('reply_total', reply_total, 3600)
         template_values['reply_total'] = reply_total
+        hottest = memcache.get('index_hottest_sidebar')
+        if hottest is None:
+            qhot = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 25")
+            hottest = u''
+            for node in qhot:
+                hottest = hottest + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
+            memcache.set('index_hottest_sidebar', hottest, 86400)
+        template_values['index_hottest_sidebar'] = hottest
+        c = memcache.get('index_categories')
+        if c is None:
+            c = ''
+            i = 0
+            if site.home_categories is not None:
+                categories = site.home_categories.split("\n")
+            else:
+                categories = []
+            for category in categories:
+                category = category.strip()
+                i = i + 1
+                c = c + '<div class="cell"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="60"><span class="fade">' + category + '</span></td><td style="line-height: 200%; padding-left: 10px;">'
+                qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
+                for node in qx:
+                    c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
+                c = c + '</td></tr></table></div>'
+                memcache.set('index_categories', c, 86400)
+        template_values['c'] = c
         if (browser['ios']):
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'index.html')
         else:
-            hottest = memcache.get('index_hottest_sidebar')
-            if hottest is None:
-                qhot = db.GqlQuery("SELECT * FROM Node ORDER BY topics DESC LIMIT 25")
-                hottest = u''
-                for node in qhot:
-                    hottest = hottest + '<a href="/go/' + node.name + '" class="item_node">' + node.title + '</a>'
-                memcache.set('index_hottest_sidebar', hottest, 86400)
-            template_values['index_hottest_sidebar'] = hottest
-            c = memcache.get('index_categories')
-            if c is None:
-                c = ''
-                i = 0
-                if site.home_categories is not None:
-                    categories = site.home_categories.split("\n")
-                else:
-                    categories = []
-                for category in categories:
-                    category = category.strip()
-                    i = i + 1
-                    if i == len(categories):
-                        css_class = 'inner'
-                    else:
-                        css_class = 'cell'
-                    c = c + '<div class="' + css_class + '"><table cellpadding="0" cellspacing="0" border="0"><tr><td align="right" width="60"><span class="fade">' + category + '</span></td><td style="line-height: 200%; padding-left: 15px;">'
-                    qx = db.GqlQuery("SELECT * FROM Node WHERE category = :1 ORDER BY topics DESC", category)
-                    for node in qx:
-                        c = c + '<a href="/go/' + node.name + '" style="font-size: 14px;">' + node.title + '</a>&nbsp; &nbsp; '
-                    c = c + '</td></tr></table></div>'
-                    memcache.set('index_categories', c, 86400)
-            template_values['c'] = c
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'desktop', 'index.html')
         output = template.render(path, template_values)
         self.response.out.write(output)

@@ -131,7 +131,7 @@ class BaseHandler(webapp.RequestHandler):
         Mobile optimized templates are optional. Default to False.
         """
         if self.browser['ios'] and mobile_optimized:
-            path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', template_name + '.html')
+            path = os.path.join('tpl', 'mobile', template_name + '.html')
         else:
             path = os.path.join('tpl', template_root, template_name + '.' + template_type)
         output = template.render(path, self.values)
