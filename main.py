@@ -330,6 +330,9 @@ class SigninHandler(webapp.RequestHandler):
         template_values['l10n'] = l10n
         errors = 0
         template_values['errors'] = errors
+        
+        template_values['next'] = self.request.referer
+
         if browser['ios']:
             path = os.path.join(os.path.dirname(__file__), 'tpl', 'mobile', 'signin.html')
         else:
@@ -360,7 +363,12 @@ class SigninHandler(webapp.RequestHandler):
             if (q.count() == 1):
                 member = q[0]
                 self.response.headers['Set-Cookie'] = 'auth=' + member.auth + '; expires=' + (datetime.datetime.now() + datetime.timedelta(days=365)).strftime("%a, %d-%b-%Y %H:%M:%S GMT") + '; path=/'
-                self.redirect('/')
+                next = self.request.get('next').strip()
+                host = self.request.host + '/'
+                if next.rfind(host)>0 and not next.rfind('/sign'):
+                    self.redirect(next)
+                else:
+                    self.redirect('/')
             else:
                 errors = 2
         else:
