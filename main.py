@@ -504,25 +504,25 @@ class SignupHandler(webapp.RequestHandler):
         response  = self.request.get('recaptcha_response_field')
         remoteip  = os.environ['REMOTE_ADDR']
         
-        # cResponse = captcha.submit(
-        #                  challenge,
-        #                  response,
-        #                  config.recaptcha_private_key,
-        #                  remoteip)
+        cResponse = captcha.submit(
+                         challenge,
+                         response,
+                         config.recaptcha_private_key,
+                         remoteip)
 
-        # if cResponse.is_valid:
-        #     logging.info('reCAPTCHA verification passed')
-        #     template_values['recaptcha_error'] = 0
-        # else:
-        #     errors = errors + 1
-        #     error = cResponse.error_code
-        #     chtml = captcha.displayhtml(
-        #         public_key = config.recaptcha_public_key,
-        #         use_ssl = False,
-        #         error = cResponse.error_code)
-        #     template_values['captchahtml'] = chtml
-        #     template_values['recaptcha_error'] = 1
-        #     template_values['recaptcha_error_message'] = '请重新输入 reCAPTCHA 验证码'
+        if cResponse.is_valid:
+            logging.info('reCAPTCHA verification passed')
+            template_values['recaptcha_error'] = 0
+        else:
+            errors = errors + 1
+            error = cResponse.error_code
+            chtml = captcha.displayhtml(
+                public_key = config.recaptcha_public_key,
+                use_ssl = False,
+                error = cResponse.error_code)
+            template_values['captchahtml'] = chtml
+            template_values['recaptcha_error'] = 1
+            template_values['recaptcha_error_message'] = '请重新输入 reCAPTCHA 验证码'
         template_values['errors'] = errors
         if (errors == 0):
             member = Member()
