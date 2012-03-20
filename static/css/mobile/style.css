@@ -156,8 +156,8 @@ h1 {
 }
 
 #Sponsored {
-	background-image: url("/static/img/bg_mobile_sponsored.png");
-	height: 50px;
+	border-top: 1px solid #ccc;
+	background: -webkit-linear-gradient(top, #ffffff 0%,#e5e5e5 100%); /* Chrome10+,Safari5.1+ */
 }
 
 #iAd {
@@ -171,15 +171,8 @@ h1 {
 	height: 44px;
 }
 
-#SponsoredRight {
-	float: right;
-	width: 44px;
-	height: 44px;
-}
-
 #SponsoredMain {
-	margin: 0px 44px 0px 44px;
-	height: 44px;
+	margin: 0px 10px 0px 44px;
 }
 
 /* CLASSes */

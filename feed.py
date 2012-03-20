@@ -52,6 +52,37 @@ class FeedHomeHandler(BaseHandler):
         self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
         self.response.out.write(output)
 
+        
+class FeedReadHandler(BaseHandler):
+    def head(self):
+        self.response.out.write('')
+        
+    def get(self):
+        output = memcache.get('feed_read_output')
+        if output is None:
+            self.values['site_domain'] = self.site.domain
+            self.values['site_name'] = self.site.title
+            self.values['site_slogan'] = self.site.slogan
+            self.values['feed_url'] = 'http://' + self.values['site_domain'] + '/read.xml'
+            self.values['site_updated'] = datetime.datetime.now()
+            topics = memcache.get('feed_home')
+            if topics is None:
+                q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")
+                topics = []
+                IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood']
+                for topic in q:
+                    if topic.node.name not in IGNORED:
+                        topics.append(topic)
+                memcache.set('feed_home', topics, 3600)
+            self.values['topics'] = topics
+            self.values['feed_title'] = self.site.title
+            path = os.path.join(os.path.dirname(__file__), 'tpl', 'feed', 'read.xml')
+            output = template.render(path, self.values)
+            memcache.set('feed_read_output', output, 3600)
+        self.response.headers['Content-type'] = 'application/xml;charset=UTF-8'
+        self.response.out.write(output)
+
+
 class FeedNodeHandler(webapp.RequestHandler):
     def head(self):
         self.response.out.write('')
@@ -86,6 +117,7 @@ class FeedNodeHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([
     ('/index.xml', FeedHomeHandler),
+    ('/read.xml', FeedReadHandler),
     ('/feed/v2ex.rss', FeedHomeHandler),
     ('/feed/([0-9a-zA-Z\-\_]+).xml', FeedNodeHandler)
     ],

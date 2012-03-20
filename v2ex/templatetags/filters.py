@@ -1,5 +1,6 @@
 import re, string
 import logging
+from v2ex.babel.ext import bleach
 
 from django import template
 
@@ -32,6 +33,10 @@ def timezone(value, offset):
     return value + timedelta(hours=offset)
 register.filter(timezone)
 
+def autolink2(text):
+    return bleach.linkify(text)
+register.filter(autolink2)
+
 def autolink(text, trim_url_limit=None, nofollow=False):
     """
     Converts any URLs in text into clickable links. Works on http://, https:// and
@@ -50,7 +55,7 @@ def autolink(text, trim_url_limit=None, nofollow=False):
         match = punctuation_re.match(word)
         if match:
             lead, middle, trail = match.groups()
-            if middle.startswith('www.') or ('@' not in middle and not middle.startswith('http://') and \
+            if middle.startswith('www.') or ('@' not in middle and not middle.startswith('http://') and not middle.startswith('https://') and \
                     len(middle) > 0 and middle[0] in string.letters + string.digits and \
                     (middle.endswith('.org') or middle.endswith('.net') or middle.endswith('.com'))):
                 middle = '<a href="http://%s"%s target="_blank">%s</a>' % (middle, nofollow_attr, trim_url(middle))
@@ -128,6 +133,21 @@ def youku(value):
     else:
         return value
 register.filter(youku)
+
+# auto convert tudou.com links to player
+# example: http://www.tudou.com/programs/view/ro1Yt1S75bA/
+def tudou(value):
+    videos = re.findall('(http://www.tudou.com/programs/view/[a-zA-Z0-9\=]+/)\s?', value)
+    logging.error(value)
+    logging.error(videos)
+    if (len(videos) > 0):
+        for video in videos:
+            video_id = re.findall('http://www.tudou.com/programs/view/([a-zA-Z0-9\=]+)/', video)
+            value = value.replace('http://www.tudou.com/programs/view/' + video_id[0] + '/', '<embed src="http://www.tudou.com/v/' + video_id[0] + '/" quality="high" width="638" height="420" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"></embed>')
+        return value
+    else:
+        return value
+register.filter(tudou)
 
 # auto convert @username to clickable links
 def mentions(value):

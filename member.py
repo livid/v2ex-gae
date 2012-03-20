@@ -11,6 +11,8 @@ import httplib
 import string
 import pickle
 
+from StringIO import StringIO
+
 from django.utils import simplejson as json
 
 from google.appengine.ext import webapp
@@ -30,6 +32,7 @@ from v2ex.babel.da import *
 from v2ex.babel.l10n import *
 from v2ex.babel.ext.cookies import Cookies
 from v2ex.babel.ext.sessions import Session
+from v2ex.babel.ext.upyun import UpYun, md5, md5file
 
 from v2ex.babel import SYSTEM_VERSION
 
@@ -798,6 +801,31 @@ class SettingsAvatarHandler(webapp.RequestHandler):
                 if response.status == 201 or response.status == 204:
                     member.avatar_large_url = 'http://web.me.com/' + config.mobileme_username + '/v2ex/avatars/' + str(shard) + '/large/' + str(member.num) + '.png?r=' + timestamp
                 member.put()
+            # Upload to UpYun
+            if config.upyun_enabled:
+                u = UpYun(config.upyun_bucket, config.upyun_username, config.upyun_password)
+                # Mini
+                mini = avatar_24
+                u.setContentMD5(md5(mini))
+                mini_suffix = '/avatars/mini/' + str(member.num) + '.png'
+                r = u.writeFile(mini_suffix, mini, True)
+                if r == True:
+                    member.avatar_mini_url = 'http://' + config.upyun_bucket + '.b0.upaiyun.com' + mini_suffix + '?r=' + timestamp
+                # Normal
+                normal = avatar_48
+                u.setContentMD5(md5(normal))
+                normal_suffix = '/avatars/normal/' + str(member.num) + '.png'
+                r = u.writeFile(normal_suffix, normal, True)
+                if r == True:
+                    member.avatar_normal_url = 'http://' + config.upyun_bucket + '.b0.upaiyun.com' + normal_suffix + '?r=' + timestamp
+                # Large
+                large = avatar_73
+                u.setContentMD5(md5(large))
+                large_suffix = '/avatars/large/' + str(member.num) + '.png'
+                r = u.writeFile(large_suffix, large, True)
+                if r == True:
+                    member.avatar_large_url = 'http://' + config.upyun_bucket + '.b0.upaiyun.com' + large_suffix + '?r=' + timestamp
+                member.put()
             memcache.set('Member_' + str(member.num), member, 86400 * 14)
             memcache.set('Member::' + member.username_lower, member, 86400 * 14)
             memcache.delete('Avatar::avatar_' + str(member.num) + '_large')
@@ -807,6 +835,12 @@ class SettingsAvatarHandler(webapp.RequestHandler):
             self.redirect('/settings/avatar')
         else:
             self.redirect('/signin')
+
+
+class AvatarStringIO(StringIO):
+    def __len__(self):
+        content = self.read()
+        return len(content)
 
 class MemberBlockHandler(webapp.RequestHandler):
     def get(self, key):

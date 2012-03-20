@@ -96,7 +96,7 @@ class HomeHandler(webapp.RequestHandler):
                     i = i + 1
             memcache.set('home_nodes_new', nodes_new, 86400)
         template_values['nodes_new'] = nodes_new
-        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise', 'diary']
+        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise', 'diary', 'fanfou']
         if browser['ios']:
             home_rendered = memcache.get('home_rendered_mobile')
             if home_rendered is None:
@@ -254,7 +254,7 @@ class RecentHandler(webapp.RequestHandler):
         else:
             q2 = db.GqlQuery("SELECT * FROM Topic ORDER BY last_touched DESC LIMIT 16,50")
             topics = []
-            IGNORED_RECENT = ['flamewar', 'pointless', 'in', 'autistic', 'chamber', 'flood', 'diary']
+            IGNORED_RECENT = ['flamewar', 'pointless', 'in', 'autistic', 'chamber', 'flood', 'diary', 'fanfou']
             for topic in q2:
                 if topic.node_name not in IGNORED_RECENT:
                     topics.append(topic)
