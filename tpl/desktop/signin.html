@@ -32,13 +32,13 @@
         			        </td>
         			        <td width="200" align="left">
         			            <input type="password" class="sl" name="p" value="{{ p|escape }}" />
-                                            <input type="hidden" value="{{next}}" class="sl" name="next" />
         			        </td>
         			    </tr>
         			    <tr>
         			        <td width="80" align="right">
         			        </td>
         			        <td width="200" align="left">
+        			            <input type="hidden" value="{{ next }}" name="next" />
         			            <input type="submit" value="{{ l10n.signin }}" class="super normal button" />
         			        </td>
         			    </tr>

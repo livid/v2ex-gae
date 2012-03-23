@@ -39,7 +39,7 @@ class FeedHomeHandler(BaseHandler):
             if topics is None:
                 q = db.GqlQuery("SELECT * FROM Topic ORDER BY created DESC LIMIT 10")
                 topics = []
-                IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood']
+                IGNORED = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'fanfou', 'closed']
                 for topic in q:
                     if topic.node.name not in IGNORED:
                         topics.append(topic)

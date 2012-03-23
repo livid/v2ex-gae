@@ -96,7 +96,7 @@ class HomeHandler(webapp.RequestHandler):
                     i = i + 1
             memcache.set('home_nodes_new', nodes_new, 86400)
         template_values['nodes_new'] = nodes_new
-        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise', 'diary', 'fanfou']
+        ignored = ['newbie', 'in', 'flamewar', 'pointless', 'tuan', '528491', 'chamber', 'autistic', 'blog', 'love', 'flood', 'beforesunrise', 'diary', 'fanfou', 'closed']
         if browser['ios']:
             home_rendered = memcache.get('home_rendered_mobile')
             if home_rendered is None:
