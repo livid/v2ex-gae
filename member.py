@@ -74,7 +74,7 @@ class MemberHandler(webapp.RequestHandler):
                         github = response.content
                         memcache.set('Member::' + one.username_lower + '::github', github, 86400)
                 if github is not None:
-                    template_values['github_repos'] = json.loads(github)
+                    template_values['github_repos'] = sorted(json.loads(github), key=lambda x:x['stargazers_count'], reverse=True)
         if one is not False:
             member_blog = memcache.get('member::' + str(one.num) + '::blog')
             if member_blog == None:
