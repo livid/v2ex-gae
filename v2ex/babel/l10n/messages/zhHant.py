@@ -102,9 +102,7 @@ save_settings = "儲存設定"
 avatar = "大頭照"
 current_avatar = "目前大頭照"
 upload_new_avatar = "上傳新大頭照"
-gravatar_support = '本站亦支援　<a href="http://www.gravatar.com/" 
-
-target="_blank">Gravatar</a>'
+gravatar_support = '本站亦支援　<a href="http://www.gravatar.com/" target="_blank">Gravatar</a>'
 security = "資安"
 leave_blank = "若你不想變更密碼，請將這些欄位留白。"
 current_password = "目前密碼"
@@ -112,9 +110,7 @@ new_password = "新密碼"
 change_password = "變更密碼"
 account_status = "帳號狀態"
 twitter_not_linked = "Twitter 帳號尚未連結"
-twitter_link_explained = "透過 OAuth 可以安全地連結你的 Twitter 帳號，之後即可同步
-
-你的主題與回覆。"
+twitter_link_explained = "透過 OAuth 可以安全地連結你的 Twitter 帳號，之後即可同步你的主題與回覆。"
 personal_records = "私人記錄"
 blocked = "封鎖"
 updated_every_4_hours = "每 4 個时更新一次"
@@ -131,9 +127,7 @@ recent_participated_topics = '近期參與主題'
 # Messages on /backstage
 
 site_settings = '網站設定'
-site_settings_explained = '網站名稱，標語，描述以及其他詳細資料。誰能建立主題，以及
-
-誰能回覆。'
+site_settings_explained = '網站名稱，標語，描述以及其他詳細資料。誰能建立主題，以及誰能回覆。'
 topic_settings = '主題設定'
 topic_settings_explained = '設定主題類別。'
 sections = '區段'
@@ -142,9 +136,7 @@ minisites = '迷你站'
 add_new_minisite = '新增新迷你站'
 data_management = '資料管理'
 delete_specified_cached_item = '刪除指定的快取項'
-delete_specified_cached_item_explained = '你可以在此處輸入指定的快取項的名稱且清除
-
-之。'
+delete_specified_cached_item_explained = '你可以在此處輸入指定的快取項的名稱且清除之。'
 mapreduce_explained = 'MapReduce 是一個用於資料整理的極強工具，請謹慎使用。'
 latest_joined = '最後加入'
 sure_to_delete_minisite = '確認刪除此迷你站以及一切內容？'
